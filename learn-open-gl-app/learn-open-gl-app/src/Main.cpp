@@ -15,6 +15,12 @@ OpenGL tries to be as OS-independant as possible. So,
 it's our responsibility to create the windows based on
 the OS the application is running on. GLFW simplify this process for us. */
 #include <GLFW/glfw3.h>
+/* OpenGL Mathematics is a header-only library that implements a lot
+of the required mathematics constructs and operations that we need for
+graphics programming with OpenGL. */
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 const char* vertexShaderPath = "./shaders/default.vs";
 const char* fragmentShaderPath = "./shaders/default.fs";
@@ -202,6 +208,8 @@ int main()
 	defaultShader.setInt("texture1", 0);
 	defaultShader.setInt("texture2", 1);
 
+	
+
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
@@ -214,6 +222,23 @@ int main()
 		/* It's a good practice to always activate the texture unit before binding the
 		texture. Some drivers will use 0 as the default texture unit, but other drivers
 		may not. */
+
+		/* Here, we create a trivial transformation matrix. */
+		/* Note that the actual transformation order should be read in reverse: even though in
+		code we first translate and then later rotate, the actual transformations first apply
+		a rotation and then a translation. The recommended order is: scaling, rotation and then
+		translation. Otherwise, the transformations would affect each other in unexpected ways, like
+		the translation being scaled. */
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		/* Then, we pass the transformation matrix data (glm::value_ptr call is important since
+		glm doesn't always store the data in a way that doesn't always match OpenGL's expectations)
+		to the proper uniform. */
+		unsigned int transformLocation = glGetUniformLocation(defaultShader.id, "transform");
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(transform));
+
 		// We assign the first texture to the unit 0.
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
