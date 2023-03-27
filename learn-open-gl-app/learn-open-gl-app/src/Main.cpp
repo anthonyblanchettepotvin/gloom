@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Shader.h"
+#include "stb_image.h" // Image loading library by Sean Barrett.
 
 /* OpenGL functions location aren't known at compile-time.
 Normally, we need to fetch each function's location at run-time
@@ -74,10 +75,10 @@ int main()
 	/* Unlike usual screen coordinates, the positive y-axis points in the up-direction
 	and the (0, 0) coordinates are at the center of the viewport. */
 	float vertices[] = {
-		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
-		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f // top left
+		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
 	};
 
 	/* Our goal is to draw a rectangle, which is formed of two triangles. The following
@@ -116,15 +117,20 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	/* Here, we indicate how OpenGL should interpret the vertex data. In our case,
-	each vertex is composed of a 3D position and a RGB color. So, each vertex has 3 floats
-	of 4 bytes for the 3D position and 3 floats of 4 bytes for the color. So, each vertex
-	has a stride of 24 bytes. */
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	each vertex is composed of a 3D position, a RGB color and texture coordiates.
+	So, each vertex has 3 floats of 4 bytes for the 3D position, 3 floats of 4 bytes
+	for the color and 2 floats of 4 bytes for the texture coordinates. So, each vertex
+	has a stride of 32 bytes. */
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	/* Note that the color attribute is placed after the position attribute, so
 	we need an offset of 12 bytes. */
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	/* Note that the texture coordinates attribute is placed after the color attribute, so
+	we need an offset of 24 bytes. */
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	/* Here, we create the Element Buffer Object (EBO) that contains the order, using the
 	vertices' index, in which OpenGL should draw our triangles. */
@@ -134,6 +140,48 @@ int main()
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	int width, height, channelCount;
+	unsigned char* data;
+	/* OpenGL expects the 0.0 coordinate on the y-axis to be on the bottom side of the image,
+	but images usually have 0.0 at the top of the y-axis. */
+	stbi_set_flip_vertically_on_load(true);
+
+	/* Here, we create a first texture. */
+	unsigned int texture1;
+	glGenTextures(1, &texture1);
+	/* We bind our texture so any subsequent texture commands will configure the currently
+	bound texture. */
+	glBindTexture(GL_TEXTURE_2D, texture1);
+
+	/* Here, we load an image from a file. */
+	data = stbi_load("./images/container.jpg", &width, &height, &channelCount, 0);
+	if (data) {
+		/* We assign the loaded image's data to the currently bound texture. */
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	/* Here, we create a second texture. The steps are the same as the previous one. */
+	unsigned int texture2;
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+
+	data = stbi_load("./images/awesomeface.png", &width, &height, &channelCount, 0);
+	if (data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	/* All the configuration made until this point should between bind/unbind calls. */
 	glBindVertexArray(0);
@@ -148,6 +196,12 @@ int main()
 
 	Shader defaultShader(vertexShaderPath, fragmentShaderPath);
 
+	/* Even if we activate the shader position 0 and 1 (in the render loop), OpenGL doesn't
+	know which sampler should be associated to which texture unit. */
+	defaultShader.use();
+	defaultShader.setInt("texture1", 0);
+	defaultShader.setInt("texture2", 1);
+
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
@@ -157,6 +211,15 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		defaultShader.use();
+		/* It's a good practice to always activate the texture unit before binding the
+		texture. Some drivers will use 0 as the default texture unit, but other drivers
+		may not. */
+		// We assign the first texture to the unit 0.
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		// We assign the second texture to the unit 1.
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
