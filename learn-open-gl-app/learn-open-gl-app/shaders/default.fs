@@ -1,6 +1,5 @@
 #version 330 core
 
-in vec3 passedColor;
 in vec2 passedTexCoords;
 
 out vec4 color;

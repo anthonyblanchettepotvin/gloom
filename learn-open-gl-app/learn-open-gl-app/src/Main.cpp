@@ -73,18 +73,54 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
 	/* A vertex is a collection of data per 3D coordinate. We can put anything in our
-	vertices. Here, we have a position attribute (3 first floats/line) and a color attribute
-	(3 last floats/line). */
+	vertices. */
 	/* Note that our coordinates are all between -1 and 1, which is called the
 	Normalized Device Coordinates (NDC). Any values outside this range will not be visible
 	in the viewport. */
 	/* Unlike usual screen coordinates, the positive y-axis points in the up-direction
 	and the (0, 0) coordinates are at the center of the viewport. */
 	float vertices[] = {
-		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
 	/* Our goal is to draw a rectangle, which is formed of two triangles. The following
@@ -122,21 +158,11 @@ int main()
 	bound buffer. */
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	/* Here, we indicate how OpenGL should interpret the vertex data. In our case,
-	each vertex is composed of a 3D position, a RGB color and texture coordiates.
-	So, each vertex has 3 floats of 4 bytes for the 3D position, 3 floats of 4 bytes
-	for the color and 2 floats of 4 bytes for the texture coordinates. So, each vertex
-	has a stride of 32 bytes. */
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	/* Here, we indicate how OpenGL should interpret the vertex data. */
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	/* Note that the color attribute is placed after the position attribute, so
-	we need an offset of 12 bytes. */
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	/* Note that the texture coordinates attribute is placed after the color attribute, so
-	we need an offset of 24 bytes. */
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
 	/* Here, we create the Element Buffer Object (EBO) that contains the order, using the
 	vertices' index, in which OpenGL should draw our triangles. */
@@ -208,7 +234,38 @@ int main()
 	defaultShader.setInt("texture1", 0);
 	defaultShader.setInt("texture2", 1);
 
-	
+	/* Here, we create our view transformation matrix. This simulates our camera. */
+	/* Note that if we want to move the camera backward, it's like we're pushing the
+	entire world forward. In other words, we want to translate the whole world reversed of
+	the translation we want to apply to our camera. This is because OpenGL is a right-handed
+	system. */
+	glm::mat4 viewTransform = glm::mat4(1.0f);
+	viewTransform = glm::translate(viewTransform, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	/* Here, we crate our (perspective) projection transformation matrix. This will allow us to
+	project our 3D space coordinates to a 2D space coordinates (i.e., from view space to clip space). */
+	glm::mat4 projectionTransform = glm::mat4(1.0f);
+	projectionTransform = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
+	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
+	on the order of triangles rendered (within the same draw call), some triangles are drawn
+	on top of each other even though one should clearly be in front of the other.*/
+	/* Note that if we enable depth testing, we need to clear the depth buffer in each frame. */
+	glEnable(GL_DEPTH_TEST);
+
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -216,29 +273,20 @@ int main()
 		processInput(window);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		defaultShader.use();
+
+		/* We set view and projection transformation matrices' uniform. This
+		is done in the render loop since it tends to change a lot (i.e., when the camere moves). */
+		int viewLocation = glGetUniformLocation(defaultShader.id, "view");
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(viewTransform));
+		int projectionLocation = glGetUniformLocation(defaultShader.id, "projection");
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projectionTransform));
+
 		/* It's a good practice to always activate the texture unit before binding the
 		texture. Some drivers will use 0 as the default texture unit, but other drivers
 		may not. */
-
-		/* Here, we create a trivial transformation matrix. */
-		/* Note that the actual transformation order should be read in reverse: even though in
-		code we first translate and then later rotate, the actual transformations first apply
-		a rotation and then a translation. The recommended order is: scaling, rotation and then
-		translation. Otherwise, the transformations would affect each other in unexpected ways, like
-		the translation being scaled. */
-		glm::mat4 transform = glm::mat4(1.0f);
-		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-		/* Then, we pass the transformation matrix data (glm::value_ptr call is important since
-		glm doesn't always store the data in a way that doesn't always match OpenGL's expectations)
-		to the proper uniform. */
-		unsigned int transformLocation = glGetUniformLocation(defaultShader.id, "transform");
-		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(transform));
-
 		// We assign the first texture to the unit 0.
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
@@ -246,7 +294,27 @@ int main()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			/* Here, we create our model transformation matrix. This will allows us to transform the
+			model vertices which are in local space coordinates into world space coordinates. */
+			/* Note that the actual transformation order should be read in reverse: even though in
+			code we first translate and then later rotate, the actual transformations first apply
+			a rotation and then a translation. The recommended order is: scaling, rotation and then
+			translation. Otherwise, the transformations would affect each other in unexpected ways, like
+			the translation being scaled. */
+			/* Note that glm::value_ptr call is important since glm doesn't always store the data
+			in a way that doesn't always match OpenGL's expectations. */
+			glm::mat4 modelTransform = glm::mat4(1.0f);
+			modelTransform = glm::translate(modelTransform, cubePositions[i]);
+			modelTransform = glm::rotate(modelTransform, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
+
+			/* We set a model transformation matrix for each cube position. */
+			int modelLocation = glGetUniformLocation(defaultShader.id, "model");
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(modelTransform));
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 		glBindVertexArray(0);
 
 		/* Rendering applications often have two buffers: the back and the front buffers.
