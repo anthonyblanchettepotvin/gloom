@@ -26,18 +26,18 @@ graphics programming with OpenGL. */
 const char* vertexShaderPath = "./shaders/default.vs";
 const char* fragmentShaderPath = "./shaders/default.fs";
 
-// settings
+// Settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-// camera
+// Camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-// timing
-float deltaTime = 0.0f;	// time between current frame and last frame
+// Timing
+float deltaTime = 0.0f;	// Time between current frame and last frame.
 float lastFrame = 0.0f;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -134,8 +134,7 @@ int main()
 	vertices. */
 	/* Note that our coordinates are all between -1 and 1, which is called the
 	Normalized Device Coordinates (NDC). Any values outside this range will not be visible
-	in the viewport. */
-	/* Unlike usual screen coordinates, the positive y-axis points in the up-direction
+	in the viewport. Unlike usual screen coordinates, the positive y-axis points in the up-direction
 	and the (0, 0) coordinates are at the center of the viewport. */
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -273,7 +272,7 @@ int main()
 	stbi_image_free(data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	/* All the configuration made until this point should between bind/unbind calls. */
+	/* All the configuration made until this point should be between bind/unbind calls. */
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	/* Note that the VAO stores the last glBindBuffer call when the target is
@@ -315,7 +314,7 @@ int main()
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
-		// Update deltaTime and lastFrame
+		// Update deltaTime and lastFrame.
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -333,8 +332,8 @@ int main()
 		project our 3D space coordinates to a 2D space coordinates (i.e., from view space to clip space). */
 		glm::mat4 projectionTransform = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-		/* We set view and projection transformation matrices' uniform. This
-		is done in the render loop since it tends to change a lot (i.e., when the camere moves). */
+		/* We set the view and projection transformation matrices' uniform. This
+		is done in the render loop since it tends to change a lot (e.g., when the camera moves). */
 		int viewLocation = glGetUniformLocation(defaultShader.id, "view");
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(viewTransform));
 		int projectionLocation = glGetUniformLocation(defaultShader.id, "projection");
@@ -360,7 +359,7 @@ int main()
 			a rotation and then a translation. The recommended order is: scaling, rotation and then
 			translation. Otherwise, the transformations would affect each other in unexpected ways, like
 			the translation being scaled. */
-			/* Note that glm::value_ptr call is important since glm doesn't always store the data
+			/* Note that glm::value_ptr call is important since glm may store the data
 			in a way that doesn't always match OpenGL's expectations. */
 			glm::mat4 modelTransform = glm::mat4(1.0f);
 			modelTransform = glm::translate(modelTransform, cubePositions[i]);

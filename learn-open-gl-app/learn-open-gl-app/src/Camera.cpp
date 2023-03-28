@@ -24,10 +24,10 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 
 glm::mat4 Camera::GetViewMatrix()
 {
-    /* Here, we create our view transformation matrix. This simulates our camera. */
+    /* Here, we create our view transformation matrix. */
     /* Note that we want to rotate and translate the world in the opposite direction
     of where we want the camera to move. This is because OpenGL is a right-handed system. */
-    /* Normally, with all the camera properties, we would form a look at matrix.
+    /* Normally, with all the camera properties, we would form a "look at" matrix.
     See https://learnopengl.com/Getting-started/Camera for more details. */
     /* glm::lookAt does all the above for us. */
     return glm::lookAt(position, position + front, up);
