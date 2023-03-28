@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Shader.h"
+#include "Camera.h"
 #include "stb_image.h" // Image loading library by Sean Barrett.
 
 /* OpenGL functions location aren't known at compile-time.
@@ -25,10 +26,50 @@ graphics programming with OpenGL. */
 const char* vertexShaderPath = "./shaders/default.vs";
 const char* fragmentShaderPath = "./shaders/default.fs";
 
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+// camera
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
+
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	// The OpenGL viewport is relative to the lower left corner of the window.
 	glViewport(0, 0, width, height);
+}
+
+void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
+{
+	float fxpos = static_cast<float>(xpos);
+	float fypos = static_cast<float>(ypos);
+
+	if (firstMouse)
+	{
+		lastX = fxpos;
+		lastY = fypos;
+		firstMouse = false;
+	}
+
+	float xoffset = fxpos - lastX;
+	float yoffset = lastY - fypos; // Reversed since y-axis coordinates go from bottom to top.
+
+	lastX = fxpos;
+	lastY = fypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 void processInput(GLFWwindow* window)
@@ -37,6 +78,15 @@ void processInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 int main()
@@ -45,10 +95,11 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	// The following instruction is required on macOS.
-	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
 	if (!window)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -70,7 +121,14 @@ int main()
 		return -1;
 	}
 
+	/* Tell GLFW that it should hide the cursor and capture it. Capturing a cursor
+	means that, once the application has focus, the mouse cursor stays within the
+	center of the window (unless the application loses focus or quits). */
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+	glfwSetCursorPosCallback(window, cursorPosCallback);
+	glfwSetScrollCallback(window, scrollCallback);
 
 	/* A vertex is a collection of data per 3D coordinate. We can put anything in our
 	vertices. */
@@ -234,19 +292,6 @@ int main()
 	defaultShader.setInt("texture1", 0);
 	defaultShader.setInt("texture2", 1);
 
-	/* Here, we create our view transformation matrix. This simulates our camera. */
-	/* Note that if we want to move the camera backward, it's like we're pushing the
-	entire world forward. In other words, we want to translate the whole world reversed of
-	the translation we want to apply to our camera. This is because OpenGL is a right-handed
-	system. */
-	glm::mat4 viewTransform = glm::mat4(1.0f);
-	viewTransform = glm::translate(viewTransform, glm::vec3(0.0f, 0.0f, -3.0f));
-
-	/* Here, we crate our (perspective) projection transformation matrix. This will allow us to
-	project our 3D space coordinates to a 2D space coordinates (i.e., from view space to clip space). */
-	glm::mat4 projectionTransform = glm::mat4(1.0f);
-	projectionTransform = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
 	on the order of triangles rendered (within the same draw call), some triangles are drawn
@@ -270,12 +315,23 @@ int main()
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
+		// Update deltaTime and lastFrame
+		float currentFrame = static_cast<float>(glfwGetTime());
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		processInput(window);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		defaultShader.use();
+
+		glm::mat4 viewTransform = camera.GetViewMatrix();
+
+		/* Here, we crate our (perspective) projection transformation matrix. This will allow us to
+		project our 3D space coordinates to a 2D space coordinates (i.e., from view space to clip space). */
+		glm::mat4 projectionTransform = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
 		/* We set view and projection transformation matrices' uniform. This
 		is done in the render loop since it tends to change a lot (i.e., when the camere moves). */
@@ -293,6 +349,7 @@ int main()
 		// We assign the second texture to the unit 1.
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
+
 		glBindVertexArray(vao);
 		for (unsigned int i = 0; i < 10; i++)
 		{
