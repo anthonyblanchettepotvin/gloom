@@ -27,7 +27,8 @@ const char* vertexShaderPath = "./shaders/default.vs";
 const char* fragmentShaderPath = "./shaders/default.fs";
 const char* lightVertexShaderPath = "./shaders/light.vs";
 const char* lightFragmentShaderPath = "./shaders/light.fs";
-const char* containerTexturePath = "./images/container.jpg";
+const char* diffuseMapPath = "./images/containerDiffuseMap.png";
+const char* specularMapPath = "./images/containerSpecularMap.png";
 
 // Settings
 const unsigned int SCR_WIDTH = 800;
@@ -252,17 +253,37 @@ int main()
 	stbi_set_flip_vertically_on_load(true);
 
 	/* Here, we create a texture. */
-	unsigned int texture1;
-	glGenTextures(1, &texture1);
+	unsigned int diffuseMap;
+	glGenTextures(1, &diffuseMap);
 	/* We bind our texture so any subsequent texture commands will configure the currently
 	bound texture. */
-	glBindTexture(GL_TEXTURE_2D, texture1);
+	glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
 	/* Here, we load an image from a file. */
-	data = stbi_load(containerTexturePath, &width, &height, &channelCount, 0);
+	data = stbi_load(diffuseMapPath, &width, &height, &channelCount, 0);
 	if (data) {
 		/* We assign the loaded image's data to the currently bound texture. */
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	/* Here, we create a texture. */
+	unsigned int specularMap;
+	glGenTextures(1, &specularMap);
+	/* We bind our texture so any subsequent texture commands will configure the currently
+	bound texture. */
+	glBindTexture(GL_TEXTURE_2D, specularMap);
+
+	/* Here, we load an image from a file. */
+	data = stbi_load(specularMapPath, &width, &height, &channelCount, 0);
+	if (data) {
+		/* We assign the loaded image's data to the currently bound texture. */
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
@@ -307,9 +328,10 @@ int main()
 	Shader defaultShader(vertexShaderPath, fragmentShaderPath);
 
 	defaultShader.use();
-	defaultShader.setFloatVec3("material.ambientColor", glm::vec3(1.0f, 0.5f, 0.31f));
-	defaultShader.setFloatVec3("material.diffuseColor", glm::vec3(1.0f, 0.5f, 0.31f));
-	defaultShader.setFloatVec3("material.specularColor", glm::vec3(0.5f));
+	/* Even if we activate the texture units (in the render loop), OpenGL doesn't
+	know which sampler should be associated to which texture unit. */
+	defaultShader.setInt("material.diffuseMap", 0);
+	defaultShader.setInt("material.specularMap", 1);
 	defaultShader.setFloat("material.shininess", 32.0f);
 	defaultShader.setFloatVec3("light.position", lightPosition);
 	defaultShader.setFloatVec3("light.ambientColor", glm::vec3(0.2f));
@@ -401,7 +423,9 @@ int main()
 		texture. Some drivers will use 0 as the default texture unit, but other drivers
 		may not. */
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
+		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specularMap);
 
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
