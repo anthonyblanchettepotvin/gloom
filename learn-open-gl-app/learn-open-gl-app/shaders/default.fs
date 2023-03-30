@@ -1,35 +1,53 @@
 #version 330 core
 
+struct Material {
+	vec3 ambientColor;
+	vec3 diffuseColor;
+	vec3 specularColor;
+	float shininess;
+};
+
+struct Light {
+	vec3 position;
+
+	vec3 ambientColor;
+	vec3 diffuseColor;
+	vec3 specularColor;
+};
+
+struct Camera {
+	vec3 position;
+};
+
 in vec3 passedFragmentWorldPos;
 in vec3 passedNormal;
 in vec2 passedTexCoords;
 
 out vec4 color;
 
-uniform sampler2D texture1;
-uniform vec3 lightColor1;
-uniform vec3 lightPosition1;
-uniform vec3 cameraPosition;
+uniform Material material;
+uniform Light light;
+uniform Camera camera;
 
 void main()
 {
+	// Ambient
+	vec3 ambient = light.ambientColor * material.ambientColor;
+
+	// Diffuse
 	vec3 normNormal = normalize(passedNormal);
-	vec3 normLightDirection = normalize(lightPosition1 - passedFragmentWorldPos);
-
-	vec4 objectColor = texture(texture1, passedTexCoords);
-
-	float ambientStrength = 0.1;
-	vec3 ambient = ambientStrength * lightColor1;
-
+	vec3 normLightDirection = normalize(light.position - passedFragmentWorldPos);
+	
 	float diffuseStrength = max(dot(normNormal, normLightDirection), 0.0);
-	vec3 diffuse = diffuseStrength * lightColor1;
+	vec3 diffuse = light.diffuseColor * material.diffuseColor * diffuseStrength;
 
-	float specularStrength = 1.0;
-	vec3 viewDirection = normalize(cameraPosition - passedFragmentWorldPos);
+	// Specular
+	vec3 viewDirection = normalize(camera.position - passedFragmentWorldPos);
 	vec3 reflectDirection = reflect(-normLightDirection, normNormal);
 
-	float specularIntensity = pow(max(dot(viewDirection, reflectDirection), 0.0), 8);
-	vec3 specular = specularStrength * specularIntensity * lightColor1;
+	float specularStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
+	vec3 specular = light.specularColor * material.specularColor * specularStrength;
 
-	color = vec4(ambient + diffuse + specular, 1.0) * objectColor;
+	// Output
+	color = vec4(ambient + diffuse + specular, 1.0);
 }

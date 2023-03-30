@@ -45,7 +45,6 @@ float lastFrame = 0.0f;
 
 // Objects
 glm::vec3 cubePosition(0.0f, 0.0f, 0.0f);
-glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 glm::vec3 lightPosition(1.2f, 1.0f, 2.0f);
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -307,19 +306,22 @@ int main()
 
 	Shader defaultShader(vertexShaderPath, fragmentShaderPath);
 
-	/* Even if we activate the texture units (in the render loop), OpenGL doesn't
-	know which sampler should be associated to which texture unit. */
 	defaultShader.use();
-	defaultShader.setInt("texture1", 0);
-	defaultShader.setFloatVec3("lightColor1", lightColor);
-	defaultShader.setFloatVec3("lightPosition1", lightPosition);
+	defaultShader.setFloatVec3("material.ambientColor", glm::vec3(1.0f, 0.5f, 0.31f));
+	defaultShader.setFloatVec3("material.diffuseColor", glm::vec3(1.0f, 0.5f, 0.31f));
+	defaultShader.setFloatVec3("material.specularColor", glm::vec3(0.5f));
+	defaultShader.setFloat("material.shininess", 32.0f);
+	defaultShader.setFloatVec3("light.position", lightPosition);
+	defaultShader.setFloatVec3("light.ambientColor", glm::vec3(0.2f));
+	defaultShader.setFloatVec3("light.diffuseColor", glm::vec3(0.5f));
+	defaultShader.setFloatVec3("light.specularColor", glm::vec3(1.0f));
 
 	// --- Light shader ---
 
 	Shader lightShader(lightVertexShaderPath, lightFragmentShaderPath);
 
 	lightShader.use();
-	lightShader.setFloatVec3("lightColor", lightColor);
+	lightShader.setFloatVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
 	// --- Cube model transformation matrix ---
 
@@ -334,8 +336,6 @@ int main()
 	in a way that doesn't always match OpenGL's expectations. */
 	glm::mat4 cubeModelTransform = glm::mat4(1.0f);
 	cubeModelTransform = glm::translate(cubeModelTransform, cubePosition);
-	cubeModelTransform = glm::rotate(cubeModelTransform, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	cubeModelTransform = glm::scale(cubeModelTransform, glm::vec3(1.0f, 5.0f, 1.0f));
 
 	// --- Cube normal transformation matrix ---
 
@@ -391,11 +391,11 @@ int main()
 		defaultShader.use();
 		/* We set the model, view, projection and normal transformation matrices' uniform. This
 		is done in the render loop since it tends to change a lot (e.g., when the camera moves). */
-		defaultShader.setFloatMat4("model", cubeModelTransform);
-		defaultShader.setFloatMat4("view", viewTransform);
-		defaultShader.setFloatMat4("projection", projectionTransform);
+		defaultShader.setFloatMat4("modelXform", cubeModelTransform);
+		defaultShader.setFloatMat4("viewXform", viewTransform);
+		defaultShader.setFloatMat4("projectionXform", projectionTransform);
 		defaultShader.setFloatMat3("normalXform", cubeNormalTransform);
-		defaultShader.setFloatVec3("cameraPosition", camera.position);
+		defaultShader.setFloatVec3("camera.position", camera.position);
 
 		/* It's a good practice to always activate the texture unit before binding the
 		texture. Some drivers will use 0 as the default texture unit, but other drivers
@@ -410,9 +410,9 @@ int main()
 		// --- Light drawing ---
 
 		lightShader.use();
-		lightShader.setFloatMat4("model", lightModelTransform);
-		lightShader.setFloatMat4("view", viewTransform);
-		lightShader.setFloatMat4("projection", projectionTransform);
+		lightShader.setFloatMat4("modelXform", lightModelTransform);
+		lightShader.setFloatMat4("viewXform", viewTransform);
+		lightShader.setFloatMat4("projectionXform", projectionTransform);
 
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
