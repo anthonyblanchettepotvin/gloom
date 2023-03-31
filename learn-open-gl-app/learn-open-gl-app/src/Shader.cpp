@@ -44,7 +44,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	int success;
 	char infoLog[512];
 
-
 	/* Here, we compile our vertex shader (yes, at run-time). */
 	vertexId = glCreateShader(GL_VERTEX_SHADER);
 	/* The following function binds the vertex shader source to the vertex shader object.

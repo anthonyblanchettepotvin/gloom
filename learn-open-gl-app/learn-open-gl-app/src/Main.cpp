@@ -2,6 +2,10 @@
 
 #include "Shader.h"
 #include "Camera.h"
+#include "Texture.h"
+#include "PointLight.h"
+#include "DirectionalLight.h"
+
 #include "stb_image.h" // Image loading library by Sean Barrett.
 
 /* OpenGL functions location aren't known at compile-time.
@@ -22,7 +26,6 @@ graphics programming with OpenGL. */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Texture.h"
 
 const char* vertexShaderPath = "./shaders/default.vs";
 const char* fragmentShaderPath = "./shaders/default.fs";
@@ -293,13 +296,36 @@ int main()
 	defaultShader.setInt("material.diffuseMap", 0);
 	defaultShader.setInt("material.specularMap", 1);
 	defaultShader.setFloat("material.shininess", 32.0f);
-	defaultShader.setFloatVec3("light.position", lightPosition);
-	defaultShader.setFloatVec3("light.ambientColor", glm::vec3(0.2f));
-	defaultShader.setFloatVec3("light.diffuseColor", glm::vec3(0.5f));
-	defaultShader.setFloatVec3("light.specularColor", glm::vec3(1.0f));
-	defaultShader.setFloat("light.constant", 1.0f);
-	defaultShader.setFloat("light.linear", 0.09f);
-	defaultShader.setFloat("light.quadratic", 0.032f);
+
+	glm::vec3 ambientColor = glm::vec3(0.2f);
+	glm::vec3 diffuseColor = glm::vec3(0.5f);
+	glm::vec3 specularColor = glm::vec3(1.0f);
+	float constant = 1.0f;
+	float linear = 0.14f;
+	float quadratic = 0.07f;
+	PointLight pointLights[] = {
+		PointLight(glm::vec3(0.7f, 0.2f, 2.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic),
+		PointLight(glm::vec3(2.3f, -3.3f, -4.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic),
+		PointLight(glm::vec3(-4.0f, 2.0f, -12.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic),
+		PointLight(glm::vec3(0.0f, 0.0f, -3.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic)
+	};
+
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].position", pointLights[i].position);
+		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].ambientColor", pointLights[i].ambientColor);
+		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].diffuseColor", pointLights[i].diffuseColor);
+		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].specularColor", pointLights[i].specularColor);
+		defaultShader.setFloat("pointLights[" + std::to_string(i) + "].constant", pointLights[i].constant);
+		defaultShader.setFloat("pointLights[" + std::to_string(i) + "].linear", pointLights[i].linear);
+		defaultShader.setFloat("pointLights[" + std::to_string(i) + "].quadratic", pointLights[i].quadratic);
+	}
+
+	DirectionalLight directionalLight(glm::vec3(-0.2f, -1.0f, -0.3f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.5f, 0.5f, 0.5f));
+	defaultShader.setFloatVec3("directionalLight.direction", directionalLight.direction);
+	defaultShader.setFloatVec3("directionalLight.ambientColor", directionalLight.ambientColor);
+	defaultShader.setFloatVec3("directionalLight.diffuseColor", directionalLight.diffuseColor);
+	defaultShader.setFloatVec3("directionalLight.specularColor", directionalLight.specularColor);
 
 	// --- Light shader ---
 
@@ -307,12 +333,6 @@ int main()
 
 	lightShader.use();
 	lightShader.setFloatVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-
-	// --- Light model transformation matrix ---
-
-	glm::mat4 lightModelTransform = glm::mat4(1.0f);
-	lightModelTransform = glm::translate(lightModelTransform, lightPosition);
-	lightModelTransform = glm::scale(lightModelTransform, glm::vec3(0.2f));
 
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
@@ -374,8 +394,8 @@ int main()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specularMap.id);
 
-		for (unsigned int i = 0; i < 10; i++) {
-
+		for (unsigned int i = 0; i < 10; i++)
+		{
 			// --- Cube model transformation matrix ---
 
 			/* Here, we create our model transformation matrix. This will allows us to transform the
@@ -415,13 +435,23 @@ int main()
 		// --- Light drawing ---
 
 		lightShader.use();
-		lightShader.setFloatMat4("modelXform", lightModelTransform);
 		lightShader.setFloatMat4("viewXform", viewTransform);
 		lightShader.setFloatMat4("projectionXform", projectionTransform);
 
-		glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			// --- Light model transformation matrix ---
+
+			glm::mat4 lightModelTransform = glm::mat4(1.0f);
+			lightModelTransform = glm::translate(lightModelTransform, pointLights[i].position);
+			lightModelTransform = glm::scale(lightModelTransform, glm::vec3(0.2f));
+
+			lightShader.setFloatMat4("modelXform", lightModelTransform);
+
+			glBindVertexArray(lightVAO);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(0);
+		}
 
 		// --- Post-frame stuff ---
 
