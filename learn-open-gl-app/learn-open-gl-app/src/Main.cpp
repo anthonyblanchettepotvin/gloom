@@ -26,6 +26,9 @@ graphics programming with OpenGL. */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+/* Open Asset Import Library (assimp) is a library to load various 3D file
+formats into a shared, in-memory format. */
+#include <assimp/anim.h>
 
 const char* vertexShaderPath = "./shaders/default.vs";
 const char* fragmentShaderPath = "./shaders/default.fs";
