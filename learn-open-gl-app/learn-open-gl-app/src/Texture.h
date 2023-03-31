@@ -8,6 +8,7 @@ class Texture
 {
 public:
 	unsigned int id;
+	std::string type;
 
-	Texture(const std::string& path, bool flipVerticallyOnLoad = true);
+	Texture(const std::string& path, const std::string& type, bool flipVerticallyOnLoad = true);
 };

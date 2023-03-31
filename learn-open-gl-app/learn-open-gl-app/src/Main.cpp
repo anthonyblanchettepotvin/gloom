@@ -286,8 +286,8 @@ int main()
 
 	// --- Textures ---
 
-	Texture diffuseMap(diffuseMapPath);
-	Texture specularMap(specularMapPath);
+	Texture diffuseMap(diffuseMapPath, "texture_diffuse");
+	Texture specularMap(specularMapPath, "texture_specular");
 
 	// --- Default shader ---
 
