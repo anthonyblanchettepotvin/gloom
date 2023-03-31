@@ -12,6 +12,10 @@ struct Light {
 	vec3 ambientColor;
 	vec3 diffuseColor;
 	vec3 specularColor;
+
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 struct Camera {
@@ -49,6 +53,14 @@ void main()
 
 	float specularStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
 	vec3 specular = light.specularColor * specularMapSample * specularStrength;
+
+	// Attenuation
+	float distance = length(light.position - passedFragmentWorldPos);
+	float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+	ambient *= attenuation;
+	diffuse *= attenuation;
+	specular *= attenuation;
 
 	// Output
 	color = vec4(ambient + diffuse + specular, 1.0);
