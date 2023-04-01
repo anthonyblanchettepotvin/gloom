@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
+#include "Model.h"
 
 #include "stb_image.h" // Image loading library by Sean Barrett.
 
@@ -34,8 +35,8 @@ const char* vertexShaderPath = "./shaders/default.vs";
 const char* fragmentShaderPath = "./shaders/default.fs";
 const char* lightVertexShaderPath = "./shaders/light.vs";
 const char* lightFragmentShaderPath = "./shaders/light.fs";
-const char* diffuseMapPath = "./images/containerDiffuseMap.png";
-const char* specularMapPath = "./images/containerSpecularMap.png";
+const std::string diffuseMapPath = "./images/containerDiffuseMap.png";
+const std::string specularMapPath = "./images/containerSpecularMap.png";
 
 // Settings
 const unsigned int SCR_WIDTH = 800;
@@ -294,11 +295,6 @@ int main()
 	Shader defaultShader(vertexShaderPath, fragmentShaderPath);
 
 	defaultShader.use();
-	/* Even if we activate the texture units (in the render loop), OpenGL doesn't
-	know which sampler should be associated to which texture unit. */
-	defaultShader.setInt("material.diffuseMap", 0);
-	defaultShader.setInt("material.specularMap", 1);
-	defaultShader.setFloat("material.shininess", 32.0f);
 
 	glm::vec3 ambientColor = glm::vec3(0.2f);
 	glm::vec3 diffuseColor = glm::vec3(0.5f);
@@ -337,25 +333,16 @@ int main()
 	lightShader.use();
 	lightShader.setFloatVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
+	// --- Backpack model ---
+
+	Model model("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
+
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
 	on the order of triangles rendered (within the same draw call), some triangles are drawn
 	on top of each other even though one should clearly be in front of the other.*/
 	/* Note that if we enable depth testing, we need to clear the depth buffer in each frame. */
 	glEnable(GL_DEPTH_TEST);
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -372,6 +359,33 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// --- Cube model transformation matrix ---
+
+		/* Here, we create our model transformation matrix. This will allows us to transform the
+		model vertices which are in local space coordinates into world space coordinates. */
+		/* Note that the actual transformation order should be read in reverse: even though in
+		code we first translate and then later rotate, the actual transformations first apply
+		a rotation and then a translation. The recommended order is: scaling, rotation and then
+		translation. Otherwise, the transformations would affect each other in unexpected ways, like
+		the translation being scaled. */
+		/* Note that glm::value_ptr call is important since glm may store the data
+		in a way that doesn't always match OpenGL's expectations. */
+		glm::mat4 cubeModelTransform = glm::mat4(1.0f);
+		cubeModelTransform = glm::translate(cubeModelTransform, cubePosition);
+
+		// --- Cube normal transformation matrix ---
+
+		/* Here, we create our normal transformation matrix. Since our normals are hard-coded
+		data within the vertices data, we need to transform the normals if we apply a scaling or rotation
+		transformation on the cube. */
+		/* Note that we don't care about the translation, since normals are directions. That's why we
+		convert the 4x4 matrix into a 3x3 matrix -- to remove the translation. */
+		/* Note that if we apply a non-uniform scaling transformation, the normals may not be
+		perpendicular to the surface anymore. We then inverse then transpose the model matrix
+		that our normal transformation matrix is based on. */
+		/* See https://learnopengl.com/Lighting/Basic-Lighting for more details. */
+		glm::mat3 cubeNormalTransform = glm::mat3(glm::transpose(glm::inverse(cubeModelTransform)));
+
 		// --- View and projection transformation matrices ---
 
 		glm::mat4 viewTransform = camera.GetViewMatrix();
@@ -385,55 +399,13 @@ int main()
 		defaultShader.use();
 		/* We set the view and projection transformation matrices' uniform. This
 		is done in the render loop since it tends to change a lot (e.g., when the camera moves). */
+		defaultShader.setFloatMat4("modelXform", cubeModelTransform);
+		defaultShader.setFloatMat3("normalXform", cubeNormalTransform);
 		defaultShader.setFloatMat4("viewXform", viewTransform);
 		defaultShader.setFloatMat4("projectionXform", projectionTransform);
 		defaultShader.setFloatVec3("camera.position", camera.position);
 
-		/* It's a good practice to always activate the texture unit before binding the
-		texture. Some drivers will use 0 as the default texture unit, but other drivers
-		may not. */
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuseMap.id);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specularMap.id);
-
-		for (unsigned int i = 0; i < 10; i++)
-		{
-			// --- Cube model transformation matrix ---
-
-			/* Here, we create our model transformation matrix. This will allows us to transform the
-			model vertices which are in local space coordinates into world space coordinates. */
-			/* Note that the actual transformation order should be read in reverse: even though in
-			code we first translate and then later rotate, the actual transformations first apply
-			a rotation and then a translation. The recommended order is: scaling, rotation and then
-			translation. Otherwise, the transformations would affect each other in unexpected ways, like
-			the translation being scaled. */
-			/* Note that glm::value_ptr call is important since glm may store the data
-			in a way that doesn't always match OpenGL's expectations. */
-			glm::mat4 cubeModelTransform = glm::mat4(1.0f);
-			cubeModelTransform = glm::translate(cubeModelTransform, cubePositions[i]);
-			cubeModelTransform = glm::rotate(cubeModelTransform, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
-
-			// --- Cube normal transformation matrix ---
-
-			/* Here, we create our normal transformation matrix. Since our normals are hard-coded
-			data within the vertices data, we need to transform the normals if we apply a scaling or rotation
-			transformation on the cube. */
-			/* Note that we don't care about the translation, since normals are directions. That's why we
-			convert the 4x4 matrix into a 3x3 matrix -- to remove the translation. */
-			/* Note that if we apply a non-uniform scaling transformation, the normals may not be
-			perpendicular to the surface anymore. We then inverse then transpose the model matrix
-			that our normal transformation matrix is based on. */
-			/* See https://learnopengl.com/Lighting/Basic-Lighting for more details. */
-			glm::mat3 cubeNormalTransform = glm::mat3(glm::transpose(glm::inverse(cubeModelTransform)));
-
-			defaultShader.setFloatMat4("modelXform", cubeModelTransform);
-			defaultShader.setFloatMat3("normalXform", cubeNormalTransform);
-
-			glBindVertexArray(vao);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glBindVertexArray(0);
-		}
+		model.Draw(defaultShader);
 
 		// --- Light drawing ---
 

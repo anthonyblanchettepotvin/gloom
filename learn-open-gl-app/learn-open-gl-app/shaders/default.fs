@@ -3,8 +3,12 @@
 #define POINT_LIGHT_COUNT 4
 
 struct Material {
-	sampler2D diffuseMap;
-	sampler2D specularMap;
+	uniform sampler2D texture_diffuse1;
+	uniform sampler2D texture_diffuse2;
+	uniform sampler2D texture_diffuse3;
+	uniform sampler2D texture_specular1;
+	uniform sampler2D texture_specular2;
+	uniform sampler2D texture_specular3;
 	float shininess;
 };
 
@@ -62,8 +66,8 @@ void main()
 }
 
 vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection) {
-	vec3 diffuseMapSample = vec3(texture(material.diffuseMap, passedTexCoords));
-	vec3 specularMapSample = vec3(texture(material.specularMap, passedTexCoords));
+	vec3 diffuseMapSample = vec3(texture(material.texture_diffuse1, passedTexCoords));
+	vec3 specularMapSample = vec3(texture(material.texture_specular1, passedTexCoords));
 
 	// Ambient
 	vec3 ambient = light.ambientColor * diffuseMapSample;
@@ -85,8 +89,8 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirectio
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragmentWorldPos, vec3 viewDirection) {
-	vec3 diffuseMapSample = vec3(texture(material.diffuseMap, passedTexCoords));
-	vec3 specularMapSample = vec3(texture(material.specularMap, passedTexCoords));
+	vec3 diffuseMapSample = vec3(texture(material.texture_diffuse1, passedTexCoords));
+	vec3 specularMapSample = vec3(texture(material.texture_specular1, passedTexCoords));
 
 	// Ambient
 	vec3 ambient = light.ambientColor * diffuseMapSample;
