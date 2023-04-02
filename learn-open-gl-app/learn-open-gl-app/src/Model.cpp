@@ -32,7 +32,7 @@ void Model::LoadModel(const std::string& path)
 		return;
 	}
 
-	directory = path.substr(0, path.find_last_of('/'));
+	directory = path.substr(0, path.find_last_of('\\'));
 
 	/* Because each node (possibly) contains a set of children we want to first process
 	the node in question, and then continue processing all the node's children and so on. */
@@ -77,9 +77,9 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 		position.z = mesh->mVertices[i].z;
 
 		glm::vec3 normal;
-		normal.x = mesh->mVertices[i].x;
-		normal.y = mesh->mVertices[i].y;
-		normal.z = mesh->mVertices[i].z;
+		normal.x = mesh->mNormals[i].x;
+		normal.y = mesh->mNormals[i].y;
+		normal.z = mesh->mNormals[i].z;
 
 		glm::vec2 textureCoordinates(0.0f);
 		/* Assimp supports up to 8 different texture coordinates per vertex. But,
@@ -90,7 +90,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 			textureCoordinates.y = mesh->mTextureCoords[0][i].y;
 ;		}
 
-		Vertex vertex(position, normal, textureCoordinates);
+		Vertex vertex{ position, normal, textureCoordinates };
 
 		vertices.push_back(vertex);
 	}
@@ -142,7 +142,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 		/* Some models found over the internet use absolute paths for their texture locations,
 		which won't work on each machine. In that case you probably want to manually edit the file
 		to use local paths for the textures (if possible). */
-		std::string textureAbsolutePath = directory + textureRelativePath.C_Str();
+		std::string textureAbsolutePath = directory + "\\" + textureRelativePath.C_Str();
 
 		/* Loading textures is a lengthy process, so we want to avoid reloading textures that
 		we already loaded. */

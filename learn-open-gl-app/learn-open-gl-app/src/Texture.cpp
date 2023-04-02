@@ -22,11 +22,25 @@ Texture::Texture(const std::string& path, const std::string& type, bool flipVert
 	/* Here, we load an image from a file. */
 	unsigned char* data = stbi_load(path.c_str(), &width, &height, &channelCount, 0);
 	if (data) {
+		GLenum format;
+		if (channelCount == 1)
+			format = GL_RED;
+		else if (channelCount == 3)
+			format = GL_RGB;
+		else if (channelCount == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, id);
 		/* We assign the loaded image's data to the currently bound texture. */
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	} else {
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "ERROR::TEXTURE::LOADING::" << path << std::endl;
 	}
 
 	stbi_image_free(data);

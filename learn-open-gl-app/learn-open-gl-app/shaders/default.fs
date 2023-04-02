@@ -3,12 +3,12 @@
 #define POINT_LIGHT_COUNT 4
 
 struct Material {
-	uniform sampler2D texture_diffuse1;
-	uniform sampler2D texture_diffuse2;
-	uniform sampler2D texture_diffuse3;
-	uniform sampler2D texture_specular1;
-	uniform sampler2D texture_specular2;
-	uniform sampler2D texture_specular3;
+	sampler2D texture_diffuse1;
+	sampler2D texture_diffuse2;
+	sampler2D texture_diffuse3;
+	sampler2D texture_specular1;
+	sampler2D texture_specular2;
+	sampler2D texture_specular3;
 	float shininess;
 };
 

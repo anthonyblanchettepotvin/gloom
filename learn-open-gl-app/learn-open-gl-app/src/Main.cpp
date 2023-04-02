@@ -285,16 +285,12 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// --- Textures ---
-
-	Texture diffuseMap(diffuseMapPath, "texture_diffuse");
-	Texture specularMap(specularMapPath, "texture_specular");
-
 	// --- Default shader ---
 
 	Shader defaultShader(vertexShaderPath, fragmentShaderPath);
 
 	defaultShader.use();
+	defaultShader.setFloat("material.shininess", 4.0f);
 
 	glm::vec3 ambientColor = glm::vec3(0.2f);
 	glm::vec3 diffuseColor = glm::vec3(0.5f);
@@ -335,7 +331,7 @@ int main()
 
 	// --- Backpack model ---
 
-	Model model("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
+	Model model("D:\\git\\learn-open-gl-app\\learn-open-gl-app\\learn-open-gl-app\\models\\backpack\\backpack.obj");
 
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
