@@ -81,4 +81,10 @@
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\pointLight.fs" />
+    <None Include="shaders\pointLight.vs" />
+    <None Include="shaders\phong.fs" />
+    <None Include="shaders\phong.vs" />
+  </ItemGroup>
 </Project>

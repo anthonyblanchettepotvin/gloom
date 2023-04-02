@@ -173,6 +173,12 @@
       <FileType>Document</FileType>
     </CopyFileToFolders>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\phong.fs" />
+    <None Include="shaders\phong.vs" />
+    <None Include="shaders\pointLight.fs" />
+    <None Include="shaders\pointLight.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

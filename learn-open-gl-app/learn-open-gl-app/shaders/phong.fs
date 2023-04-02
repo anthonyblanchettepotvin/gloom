@@ -1,6 +1,7 @@
 #version 330 core
 
 #define POINT_LIGHT_COUNT 4
+#define DIRECTIONAL_LIGHT_COUNT 1
 
 struct Material {
 	sampler2D texture_diffuse1;
@@ -43,7 +44,7 @@ in vec2 passedTexCoords;
 out vec4 color;
 
 uniform Material material;
-uniform DirectionalLight directionalLight;
+uniform DirectionalLight directionalLights[DIRECTIONAL_LIGHT_COUNT];
 uniform PointLight pointLights[POINT_LIGHT_COUNT];
 uniform Camera camera;
 
@@ -55,8 +56,11 @@ void main()
 	vec3 normNormal = normalize(passedNormal);
 	vec3 viewDirection = normalize(camera.position - passedFragmentWorldPos);
 
+	vec3 result;
+
 	// Calculate directional lights contribution
-	vec3 result = CalcDirectionalLight(directionalLight, normNormal, viewDirection);
+	for (int i = 0; i < DIRECTIONAL_LIGHT_COUNT; i++)
+		result += max(CalcDirectionalLight(directionalLights[i], normNormal, viewDirection), 0.0);
 
 	// Calculate point lights contribution
 	for (int i = 0; i < POINT_LIGHT_COUNT; i++)

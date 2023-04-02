@@ -27,23 +27,18 @@ graphics programming with OpenGL. */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-/* Open Asset Import Library (assimp) is a library to load various 3D file
-formats into a shared, in-memory format. */
-#include <assimp/anim.h>
 
-const char* vertexShaderPath = "./shaders/default.vs";
-const char* fragmentShaderPath = "./shaders/default.fs";
-const char* lightVertexShaderPath = "./shaders/light.vs";
-const char* lightFragmentShaderPath = "./shaders/light.fs";
-const std::string diffuseMapPath = "./images/containerDiffuseMap.png";
-const std::string specularMapPath = "./images/containerSpecularMap.png";
+const char* PHONG_VERTEX_SHADER_PATH = "./shaders/phong.vs";
+const char* PHONG_FRAGMENT_SHADER_PATH = "./shaders/phong.fs";
+const char* POINT_LIGHT_VERTEX_SHADER_PATH = "./shaders/pointLight.vs";
+const char* POINT_LIGHT_FRAGMENT_SHADER_PATH = "./shaders/pointLight.fs";
 
 // Settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), SCR_WIDTH, SCR_HEIGHT);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -52,14 +47,12 @@ bool firstMouse = true;
 float deltaTime = 0.0f;	// Time between current frame and last frame.
 float lastFrame = 0.0f;
 
-// Objects
-glm::vec3 cubePosition(0.0f, 0.0f, 0.0f);
-glm::vec3 lightPosition(1.2f, 1.0f, 2.0f);
-
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	// The OpenGL viewport is relative to the lower left corner of the window.
 	glViewport(0, 0, width, height);
+	camera.setViewWidth(width);
+	camera.setViewHeight(height);
 }
 
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
@@ -150,188 +143,43 @@ int main()
 	glfwSetCursorPosCallback(window, cursorPosCallback);
 	glfwSetScrollCallback(window, scrollCallback);
 
-	/* A vertex is a collection of data per 3D coordinate. We can put anything in our
-	vertices. */
-	/* Note that our coordinates are all between -1 and 1, which is called the
-	Normalized Device Coordinates (NDC). Any values outside this range will not be visible
-	in the viewport. Unlike usual screen coordinates, the positive y-axis points in the up-direction
-	and the (0, 0) coordinates are at the center of the viewport. */
-	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
+	// --- Models ---
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,  0.0f, 0.0f,
+	Model light("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
+	Model backpack("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
 
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+	// --- Shaders ---
 
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-	};
-
-	/* Our goal is to draw a rectangle, which is formed of two triangles. The following
-	array indicates which vertices form which triangle and in what order OpenGL needs to
-	draw them. */
-	/* Note that we could've added more vertices in our vertices array to form the
-	rectangle, but we would've needed to duplicate the bottom right and top left vertices
-	twice each, which is an overhead of 50% (a rectangle requires only 4 vertices). */
-	unsigned int indices[] = {
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
-	};
-
-	// --- Cube VAO ---
-
-	/* We create a Vertex Array Object (VAO). Any subsequent vertex attribute calls
-	from that point on will be stored inside the VAO (including the VBAs associated
-	with the vertex attributes based on the calls). Also, the last call to
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ...), which is used to bind an EBO,
-	is stored in the VAO. We can simply bind the VAO to automatically bind the VBO,
-	make the EBO binding call and all the vertex attribute calls. */
-	/* Note that usually, when you have multiple object to draw, you first generate and
-	configurate all the VAOs (and thus the required VBO, EBO and attribute pointers) and
-	store those for later use. */
-	unsigned int vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	/* We create a Vertex Buffer Object (VBO) that contains all the vertices that we
-	want to send to the GPU's memory for fast access. */
-	/* Note that sending data to the GPU from the CPU is slow, so we want to send as much
-	data as possible at once. */
-	unsigned int vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	/* The following function is targeted to copy user-defined data into the currently
-	bound buffer. */
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	/* Here, we indicate how OpenGL should interpret the vertex data. */
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	/* Here, we create the Element Buffer Object (EBO) that contains the order, using the
-	vertices' index, in which OpenGL should draw our triangles. */
-	/* Once again, sending data to the GPU from the CPU is slow, so we want to send as much
-	data as possible at once. */
-	unsigned int ebo;
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	/* All the configuration made until this point should be between bind/unbind calls. */
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	/* Note that the VAO stores the last glBindBuffer call when the target is
-	GL_ELEMENT_ARRAY_BUFFER, which means it stores the unbind calls too (i.e., we call
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0) to unbind the EBO). That said, it's important
-	to unbind the VAO before the EBO. Otherwise, when we later bind the VAO,
-	the VAO's EBO binding call is corresponding to glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0),
-	leading to an unconfigured EBO. */
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	// --- Light VAO ---
-
-	unsigned int lightVAO;
-	glGenVertexArrays(1, &lightVAO);
-	glBindVertexArray(lightVAO);
-
-	/* We should use the cube's VBO since the data is already sent to the GPU. Reusing
-	the same VBO is more efficient, even if its vertices contains data that is not needed
-	for the light, because we avoid having to send and store the data twice. */
-	unsigned int lightVBO;
-	glGenBuffers(1, &lightVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// --- Default shader ---
-
-	Shader defaultShader(vertexShaderPath, fragmentShaderPath);
+	Shader defaultShader(PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH);
 
 	defaultShader.use();
 	defaultShader.setFloat("material.shininess", 4.0f);
 
-	glm::vec3 ambientColor = glm::vec3(0.2f);
-	glm::vec3 diffuseColor = glm::vec3(0.5f);
-	glm::vec3 specularColor = glm::vec3(1.0f);
-	float constant = 1.0f;
-	float linear = 0.14f;
-	float quadratic = 0.07f;
-	PointLight pointLights[] = {
-		PointLight(glm::vec3(0.7f, 0.2f, 2.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic),
-		PointLight(glm::vec3(2.3f, -3.3f, -4.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic),
-		PointLight(glm::vec3(-4.0f, 2.0f, -12.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic),
-		PointLight(glm::vec3(0.0f, 0.0f, -3.0f), ambientColor, diffuseColor, specularColor, constant, linear, quadratic)
+	Shader lightShader(POINT_LIGHT_VERTEX_SHADER_PATH, POINT_LIGHT_FRAGMENT_SHADER_PATH);
+
+	// --- Lights ---
+
+	std::vector<PointLight> pointLights = {
+		PointLight(glm::vec3(2.0f), &light)
 	};
 
-	for (unsigned int i = 0; i < 4; i++)
+	for (size_t i = 0; i < pointLights.size(); i++)
 	{
-		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].position", pointLights[i].position);
-		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].ambientColor", pointLights[i].ambientColor);
-		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].diffuseColor", pointLights[i].diffuseColor);
-		defaultShader.setFloatVec3("pointLights[" + std::to_string(i) + "].specularColor", pointLights[i].specularColor);
-		defaultShader.setFloat("pointLights[" + std::to_string(i) + "].constant", pointLights[i].constant);
-		defaultShader.setFloat("pointLights[" + std::to_string(i) + "].linear", pointLights[i].linear);
-		defaultShader.setFloat("pointLights[" + std::to_string(i) + "].quadratic", pointLights[i].quadratic);
+		std::string identifier = "pointLights[" + std::to_string(i) + "]";
+		
+		pointLights[i].Register(defaultShader, identifier);
 	}
 
-	DirectionalLight directionalLight(glm::vec3(-0.2f, -1.0f, -0.3f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.5f, 0.5f, 0.5f));
-	defaultShader.setFloatVec3("directionalLight.direction", directionalLight.direction);
-	defaultShader.setFloatVec3("directionalLight.ambientColor", directionalLight.ambientColor);
-	defaultShader.setFloatVec3("directionalLight.diffuseColor", directionalLight.diffuseColor);
-	defaultShader.setFloatVec3("directionalLight.specularColor", directionalLight.specularColor);
+	std::vector<DirectionalLight> directionalLights = {
+		DirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f))
+	};
 
-	// --- Light shader ---
+	for (size_t i = 0; i < directionalLights.size(); i++)
+	{
+		std::string identifier = "directionalLights[" + std::to_string(i) + "]";
 
-	Shader lightShader(lightVertexShaderPath, lightFragmentShaderPath);
-
-	lightShader.use();
-	lightShader.setFloatVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-
-	// --- Backpack model ---
-
-	Model model("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
+		directionalLights[i].Register(defaultShader, identifier);
+	}
 
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
@@ -367,7 +215,7 @@ int main()
 		/* Note that glm::value_ptr call is important since glm may store the data
 		in a way that doesn't always match OpenGL's expectations. */
 		glm::mat4 cubeModelTransform = glm::mat4(1.0f);
-		cubeModelTransform = glm::translate(cubeModelTransform, cubePosition);
+		cubeModelTransform = glm::translate(cubeModelTransform, glm::vec3(0.0f));
 
 		// --- Cube normal transformation matrix ---
 
@@ -385,12 +233,9 @@ int main()
 		// --- View and projection transformation matrices ---
 
 		glm::mat4 viewTransform = camera.GetViewMatrix();
+		glm::mat4 projectionTransform = camera.GetProjectionMatrix();
 
-		/* Here, we crate our (perspective) projection transformation matrix. This will allow us to
-		project our 3D space coordinates to a 2D space coordinates (i.e., from view space to clip space). */
-		glm::mat4 projectionTransform = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
-		// --- Cube drawing ---
+		// --- Draw models ---
 
 		defaultShader.use();
 		/* We set the view and projection transformation matrices' uniform. This
@@ -399,29 +244,19 @@ int main()
 		defaultShader.setFloatMat3("normalXform", cubeNormalTransform);
 		defaultShader.setFloatMat4("viewXform", viewTransform);
 		defaultShader.setFloatMat4("projectionXform", projectionTransform);
-		defaultShader.setFloatVec3("camera.position", camera.position);
+		defaultShader.setFloatVec3("camera.position", camera.GetPosition());
 
-		model.Draw(defaultShader);
+		backpack.Draw(defaultShader);
 
-		// --- Light drawing ---
+		// --- Draw lights ---
 
 		lightShader.use();
 		lightShader.setFloatMat4("viewXform", viewTransform);
 		lightShader.setFloatMat4("projectionXform", projectionTransform);
 
-		for (unsigned int i = 0; i < 4; i++)
+		for (size_t i = 0; i < pointLights.size(); i++)
 		{
-			// --- Light model transformation matrix ---
-
-			glm::mat4 lightModelTransform = glm::mat4(1.0f);
-			lightModelTransform = glm::translate(lightModelTransform, pointLights[i].position);
-			lightModelTransform = glm::scale(lightModelTransform, glm::vec3(0.2f));
-
-			lightShader.setFloatMat4("modelXform", lightModelTransform);
-
-			glBindVertexArray(lightVAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glBindVertexArray(0);
+			pointLights[i].Draw(lightShader);
 		}
 
 		// --- Post-frame stuff ---

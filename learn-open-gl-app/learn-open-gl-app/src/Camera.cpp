@@ -1,24 +1,8 @@
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), fov(FOV)
+Camera::Camera(const glm::vec3& position, int viewWidth, int viewHeight)
+    : position(position), viewWidth(viewWidth), viewHeight(viewHeight)
 {
-    this->position = position;
-    this->worldUp = up;
-    this->yaw = yaw;
-    this->pitch = pitch;
-
-    Update();
-}
-
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
-    : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), fov(FOV)
-{
-    this->position = glm::vec3(posX, posY, posZ);
-    this->worldUp = glm::vec3(upX, upY, upZ);
-    this->yaw = yaw;
-    this->pitch = pitch;
-
     Update();
 }
 
@@ -31,6 +15,13 @@ glm::mat4 Camera::GetViewMatrix()
     See https://learnopengl.com/Getting-started/Camera for more details. */
     /* glm::lookAt does all the above for us. */
     return glm::lookAt(position, position + front, up);
+}
+
+glm::mat4 Camera::GetProjectionMatrix()
+{
+    /* Here, we crate our (perspective) projection transformation matrix. This will allow us to
+    project our 3D space coordinates to a 2D space coordinates (i.e., from view space to clip space). */
+    return glm::perspective(glm::radians(fov), (float)viewWidth / (float)viewHeight, 0.1f, 100.0f);
 }
 
 void Camera::ProcessKeyboard(CameraMovement direction, float deltaTime)
@@ -46,9 +37,9 @@ void Camera::ProcessKeyboard(CameraMovement direction, float deltaTime)
     if (direction == RIGHT)
         position += right * velocity;
     if (direction == UP)
-        position += worldUp * velocity;
+        position += WORLD_UP * velocity;
     if (direction == DOWN)
-        position -= worldUp * velocity;
+        position -= WORLD_UP * velocity;
 }
 
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
@@ -94,6 +85,6 @@ void Camera::Update()
 
     /* Normalize the vectors, because their length gets closer to 0 the
     more you look up or down which results in slower movement. */
-    right = glm::normalize(glm::cross(front, worldUp)); 
+    right = glm::normalize(glm::cross(front, WORLD_UP)); 
     up = glm::normalize(glm::cross(right, front));
 }
