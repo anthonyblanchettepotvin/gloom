@@ -331,7 +331,7 @@ int main()
 
 	// --- Backpack model ---
 
-	Model model("D:\\git\\learn-open-gl-app\\learn-open-gl-app\\learn-open-gl-app\\models\\backpack\\backpack.obj");
+	Model model("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
 
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
