@@ -8,7 +8,12 @@
 #include "Model.h"
 #include "Actor.h"
 
-#include "stb_image.h" // Image loading library by Sean Barrett.
+/* UI library. */
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+/* Image loading library. */
+#include "stb_image.h"
 
 /* OpenGL functions location aren't known at compile-time.
 Normally, we need to fetch each function's location at run-time
@@ -85,6 +90,12 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
+void initImGui(GLFWwindow* window);
+void newImGuiFrame();
+void setupImGuiFrame();
+void renderImGuiFrame();
+void shutdownImGui();
+
 void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -147,6 +158,8 @@ int main()
 	glfwSetCursorPosCallback(window, cursorPosCallback);
 	glfwSetScrollCallback(window, scrollCallback);
 
+	initImGui(window);
+
 	// --- Models ---
 
 	Model lightModel("C:\\Users\\Anthony\\Downloads\\backpack\\backpack.obj");
@@ -206,7 +219,14 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
+		/* Checks if any events are triggered (e.g., keyboard input, mouse mouvement),
+		updates the window state and calls the corresponding functions. */
+		glfwPollEvents();
+
 		processInput(window);
+
+		newImGuiFrame();
+		setupImGuiFrame();
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -238,19 +258,51 @@ int main()
 
 		// --- Post-frame stuff ---
 
+		renderImGuiFrame();
+
 		/* Rendering applications often have two buffers: the back and the front buffers.
 		The front buffer is what is currently displayed in the viewport and the back buffer
 		is used to render the current frame. When the render is done, we display the result
 		by swapping the front buffer content with the back buffer content. This prevents
 		artifacts like flickering, screen tearing and so on. */
 		glfwSwapBuffers(window);
-
-		/* Checks if any events are triggered (e.g., keyboard input, mouse mouvement),
-		updates the window state and calls the corresponding functions. */
-		glfwPollEvents();
 	}
+
+	shutdownImGui();
 
 	glfwTerminate();
 
 	return 0;
+}
+
+void initImGui(GLFWwindow* window)
+{
+	ImGui::CreateContext();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+}
+
+void newImGuiFrame()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+}
+
+void setupImGuiFrame()
+{
+	ImGui::ShowDemoWindow();
+}
+
+void renderImGuiFrame()
+{
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void shutdownImGui()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
