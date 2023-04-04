@@ -7,7 +7,8 @@
 #include <sstream>
 #include <iostream>
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+	: vertexShaderPath(vertexShaderPath), fragmentShaderPath(fragmentShaderPath)
 {
 	std::string vertexCode;
 	std::string fragmentCode;
@@ -18,8 +19,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 
 	try
 	{
-		vertexShaderFile.open(vertexPath);
-		fragmentShaderFile.open(fragmentPath);
+		vertexShaderFile.open(vertexShaderPath);
+		fragmentShaderFile.open(fragmentShaderPath);
 
 		std::stringstream vertexShaderStream, fragmentShaderStream;
 

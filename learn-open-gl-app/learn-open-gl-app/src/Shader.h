@@ -9,7 +9,10 @@ class Shader
 public:
 	unsigned int id;
 
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+
+	std::string GetVertexShaderPath() { return vertexShaderPath; };
+	std::string GetFragmentShaderPath() { return fragmentShaderPath; };
 
 	void use();
 
@@ -19,4 +22,8 @@ public:
 	void setFloatVec3(const std::string& name, glm::vec3 value);
 	void setFloatMat3(const std::string& name, glm::mat3 value);
 	void setFloatMat4(const std::string& name, glm::mat4 value);
+
+private:
+	std::string vertexShaderPath;
+	std::string fragmentShaderPath;
 };

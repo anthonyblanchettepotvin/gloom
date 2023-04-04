@@ -7,11 +7,12 @@
 #include <assimp/postprocess.h>
 
 Model::Model(const std::string& path)
+	: path(path)
 {
 	LoadModel(path);
 }
 
-void Model::Draw(Shader& shader)
+void Model::Draw(Shader* shader)
 {
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
@@ -149,7 +150,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 		bool textureAlreadyLoaded = false;
 		for (size_t j = 0; j < loadedTextures.size(); j++)
 		{
-			if (textureAbsolutePath == loadedTextures[j].path)
+			if (textureAbsolutePath == loadedTextures[j].GetPath())
 			{
 				textureAlreadyLoaded = true;
 				textures.push_back(loadedTextures[j]);

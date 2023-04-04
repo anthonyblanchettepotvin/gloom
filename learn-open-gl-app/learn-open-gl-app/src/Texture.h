@@ -8,8 +8,13 @@ class Texture
 {
 public:
 	unsigned int id;
-	std::string type;
-	std::string path;
 
 	Texture(const std::string& path, const std::string& type, bool flipVerticallyOnLoad = true);
+
+	std::string GetType() { return type; };
+	std::string GetPath() { return path; };
+
+private:
+	std::string type;
+	std::string path;
 };

@@ -41,12 +41,12 @@ in vec3 passedFragmentWorldPos;
 in vec3 passedNormal;
 in vec2 passedTexCoords;
 
-out vec4 color;
-
 uniform Material material;
 uniform DirectionalLight directionalLights[DIRECTIONAL_LIGHT_COUNT];
 uniform PointLight pointLights[POINT_LIGHT_COUNT];
 uniform Camera camera;
+
+out vec4 color;
 
 vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragmentWorldPos, vec3 viewDirection);

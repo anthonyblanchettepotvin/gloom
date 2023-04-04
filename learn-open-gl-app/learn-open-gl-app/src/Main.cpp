@@ -3,10 +3,15 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "PointLight.h"
-#include "DirectionalLight.h"
 #include "Model.h"
 #include "Actor.h"
+#include "World.h"
+#include "components/TransformComponent.h"
+#include "components/ModelRendererComponent.h"
+#include "components/SpriteRendererComponent.h"
+#include "components/PointLightComponent.h"
+#include "components/DirectionalLightComponent.h"
+#include "ui/imgui/ImGuiActorAdapter.h"
 
 /* UI library. */
 #include "imgui/imgui.h"
@@ -34,17 +39,17 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-const char* PHONG_VERTEX_SHADER_PATH = "./shaders/phong.vs";
-const char* PHONG_FRAGMENT_SHADER_PATH = "./shaders/phong.fs";
-const char* POINT_LIGHT_VERTEX_SHADER_PATH = "./shaders/pointLight.vs";
-const char* POINT_LIGHT_FRAGMENT_SHADER_PATH = "./shaders/pointLight.fs";
+const std::string PHONG_VERTEX_SHADER_PATH = "./shaders/phong.vs";
+const std::string PHONG_FRAGMENT_SHADER_PATH = "./shaders/phong.fs";
+const std::string SPRITE_VERTEX_SHADER_PATH = "./shaders/sprite.vs";
+const std::string SPRITE_FRAGMENT_SHADER_PATH = "./shaders/sprite.fs";
 
 // Settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1600;
+const unsigned int SCR_HEIGHT = 900;
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), SCR_WIDTH, SCR_HEIGHT);
+Camera camera(glm::vec3(0.0f, 0.0f, 15.0f), SCR_WIDTH, SCR_HEIGHT);
 
 // Mouse
 float lastX = SCR_WIDTH / 2.0f;
@@ -54,6 +59,10 @@ bool firstMouse = true;
 // Timing
 float deltaTime = 0.0f;	// Time between current frame and last frame.
 float lastFrame = 0.0f;
+
+// World
+
+World world;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -152,10 +161,10 @@ int main()
 	/* Tell GLFW that it should hide the cursor and capture it. Capturing a cursor
 	means that, once the application has focus, the mouse cursor stays within the
 	center of the window (unless the application loses focus or quits). */
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-	glfwSetCursorPosCallback(window, cursorPosCallback);
+	//glfwSetCursorPosCallback(window, cursorPosCallback);
 	glfwSetScrollCallback(window, scrollCallback);
 
 	initImGui(window);
@@ -165,42 +174,61 @@ int main()
 	Model lightModel("C:\\Users\\Anthony\\Downloads\\backpack\\backpack.obj");
 	Model backpackModel("C:\\Users\\Anthony\\Downloads\\backpack\\backpack.obj");
 
+	// --- Textures ---
+
+	Texture pointLightTexture(".\\images\\awesomeface.png", "diffuse");
+
 	// --- Shaders ---
 
-	Shader defaultShader(PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH);
+	Shader phongShader(PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH);
 
-	defaultShader.use();
-	defaultShader.setFloat("material.shininess", 4.0f);
+	phongShader.use();
+	phongShader.setFloat("material.shininess", 4.0f);
 
-	Shader lightShader(POINT_LIGHT_VERTEX_SHADER_PATH, POINT_LIGHT_FRAGMENT_SHADER_PATH);
+	Shader spriteShader(SPRITE_VERTEX_SHADER_PATH, SPRITE_FRAGMENT_SHADER_PATH);
+
+	// --- Sprite ---
+
+	Sprite pointLightSprite(&pointLightTexture);
 
 	// --- Actors ---
 
-	Actor backpackActor(glm::vec3(0.0f), &backpackModel);
+	Actor backpackActor("Backpack");
+
+	TransformComponent backpackTransformComponent;
+	backpackActor.AddComponent(&backpackTransformComponent);
+	ModelRendererComponent backpackRendererComponent(&backpackModel, &phongShader);
+	backpackActor.AddComponent(&backpackRendererComponent);
 
 	// --- Lights ---
 
-	std::vector<PointLight> pointLights = {
-		PointLight(glm::vec3(1.0f), &lightModel)
+	Actor pointLightActor("Point light");
+
+	TransformComponent pointLightTransformComponent(glm::vec3(2.0f));
+	pointLightActor.AddComponent(&pointLightTransformComponent);
+	PointLightComponent pointLightComponent;
+	pointLightActor.AddComponent(&pointLightComponent);
+	SpriteRendererComponent pointLightRendererComponent(&pointLightSprite, &spriteShader);
+	pointLightActor.AddComponent(&pointLightRendererComponent);
+
+	Actor directionalLightActor("Directional light");
+
+	DirectionalLightComponent directionalLightComponent;
+	directionalLightActor.AddComponent(&directionalLightComponent);
+
+	std::vector<PointLightComponent*> pointLightComponents = {
+		&pointLightComponent
 	};
 
-	for (size_t i = 0; i < pointLights.size(); i++)
-	{
-		std::string identifier = "pointLights[" + std::to_string(i) + "]";
-		
-		pointLights[i].Register(defaultShader, identifier);
-	}
-
-	std::vector<DirectionalLight> directionalLights = {
-		DirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f))
+	std::vector<DirectionalLightComponent*> directionalLightComponents = {
+		&directionalLightComponent
 	};
 
-	for (size_t i = 0; i < directionalLights.size(); i++)
-	{
-		std::string identifier = "directionalLights[" + std::to_string(i) + "]";
+	// --- World ---
 
-		directionalLights[i].Register(defaultShader, identifier);
-	}
+	world.SpawnActor(&backpackActor);
+	world.SpawnActor(&pointLightActor);
+	world.SpawnActor(&directionalLightActor);
 
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
@@ -208,6 +236,9 @@ int main()
 	on top of each other even though one should clearly be in front of the other.*/
 	/* Note that if we enable depth testing, we need to clear the depth buffer in each frame. */
 	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -238,23 +269,34 @@ int main()
 
 		// --- Draw actors ---
 
-		defaultShader.use();
-		defaultShader.setFloatMat4("viewXform", viewTransform);
-		defaultShader.setFloatMat4("projectionXform", projectionTransform);
-		defaultShader.setFloatVec3("camera.position", camera.GetPosition());
+		phongShader.use();
+		phongShader.setFloatMat4("viewXform", viewTransform);
+		phongShader.setFloatMat4("projectionXform", projectionTransform);
+		phongShader.setFloatVec3("camera.position", camera.GetPosition());
 
-		backpackActor.Draw(defaultShader);
+		for (size_t i = 0; i < pointLightComponents.size(); i++)
+		{
+			std::string identifier = "pointLights[" + std::to_string(i) + "]";
+
+			pointLightComponents[i]->Register(&phongShader, identifier);
+		}
+
+		for (size_t i = 0; i < directionalLightComponents.size(); i++)
+		{
+			std::string identifier = "directionalLights[" + std::to_string(i) + "]";
+
+			directionalLightComponents[i]->Register(&phongShader, identifier);
+		}
+
+		backpackActor.Render();
 
 		// --- Draw lights ---
 
-		lightShader.use();
-		lightShader.setFloatMat4("viewXform", viewTransform);
-		lightShader.setFloatMat4("projectionXform", projectionTransform);
+		spriteShader.use();
+		spriteShader.setFloatMat4("viewXform", viewTransform);
+		spriteShader.setFloatMat4("projectionXform", projectionTransform);
 
-		for (size_t i = 0; i < pointLights.size(); i++)
-		{
-			pointLights[i].Draw(lightShader);
-		}
+		pointLightActor.Render();
 
 		// --- Post-frame stuff ---
 
@@ -291,9 +333,26 @@ void newImGuiFrame()
 
 void setupImGuiFrame()
 {
-	ImGui::ShowDemoWindow();
-}
+	ImGui::Begin("Controls");
 
+	static int currentItem = -1;
+	std::vector<std::string> actorsName = world.GetActorsName();
+	std::vector<const char*> actorsCName;
+	for (const auto& actorName : actorsName)
+		actorsCName.push_back(actorName.c_str());
+	ImGui::ListBox("Actors", &currentItem, actorsCName.data(), world.GetActors().size());
+	ImGui::End();
+
+	ImGui::Begin("Properties");
+	if (currentItem != -1 && currentItem <= world.GetActors().size())
+	{
+		Actor* selectedActor = world.GetActors()[currentItem];
+
+		ImGuiActorAdapter actorAdapter(selectedActor);
+		actorAdapter.RenderUi();
+	}
+	ImGui::End();
+}
 void renderImGuiFrame()
 {
 	ImGui::Render();

@@ -14,11 +14,14 @@ class Model
 public:
 	Model(const std::string& path);
 
-	void Draw(Shader& shader);
+	std::string GetPath() { return path; }
+
+	void Draw(Shader* shader);
 
 private:
 	std::vector<Mesh> meshes;
 	std::vector<Texture> loadedTextures; // Used to avoid loading textures twice.
+	std::string path;
 	std::string directory;
 
 	void LoadModel(const std::string& path);
