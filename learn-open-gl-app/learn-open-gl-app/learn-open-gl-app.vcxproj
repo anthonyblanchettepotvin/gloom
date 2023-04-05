@@ -145,6 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\ImGuiModelRendererComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\ImGuiTransformComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\ImGuiAdapterFactory.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\components\SpriteRendererComponent.cpp" />
     <ClCompile Include="src\components\DirectionalLightComponent.cpp" />
@@ -174,8 +180,16 @@
     <ClCompile Include="src\Vertex.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\components\TransformComponent.cpp" />
+    <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\ImGuiModelRendererComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\ImGuiTransformComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\ImGuiAdapterFactory.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\components\SpriteRendererComponent.h" />
     <ClInclude Include="src\components\DirectionalLightComponent.h" />
@@ -206,6 +220,8 @@
     <ClInclude Include="src\World.h" />
     <ClInclude Include="src\ui\UiAdapter.h" />
     <ClInclude Include="src\components\TransformComponent.h" />
+    <ClInclude Include="src\ui\UiComponentAdapter.h" />
+    <ClInclude Include="src\ui\UiAdapterFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll">

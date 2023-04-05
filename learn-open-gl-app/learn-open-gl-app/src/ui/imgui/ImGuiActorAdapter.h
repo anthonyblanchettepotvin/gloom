@@ -9,5 +9,5 @@ class ImGuiActorAdapter : public UiActorAdapter
 public:
 	ImGuiActorAdapter(Actor* actor);
 
-	void RenderUi();
+	void RenderUi() const;
 };

@@ -11,7 +11,7 @@
 #include "components/SpriteRendererComponent.h"
 #include "components/PointLightComponent.h"
 #include "components/DirectionalLightComponent.h"
-#include "ui/imgui/ImGuiActorAdapter.h"
+#include "ui/imgui/ImGuiAdapterFactory.h"
 
 /* UI library. */
 #include "imgui/imgui.h"
@@ -171,8 +171,7 @@ int main()
 
 	// --- Models ---
 
-	Model lightModel("C:\\Users\\Anthony\\Downloads\\backpack\\backpack.obj");
-	Model backpackModel("C:\\Users\\Anthony\\Downloads\\backpack\\backpack.obj");
+	Model backpackModel("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
 
 	// --- Textures ---
 
@@ -331,10 +330,11 @@ void newImGuiFrame()
 	ImGui::NewFrame();
 }
 
+ImGuiAdapterFactory adapterFactory;
+
 void setupImGuiFrame()
 {
 	ImGui::Begin("Controls");
-
 	static int currentItem = -1;
 	std::vector<std::string> actorsName = world.GetActorsName();
 	std::vector<const char*> actorsCName;
@@ -346,10 +346,16 @@ void setupImGuiFrame()
 	ImGui::Begin("Properties");
 	if (currentItem != -1 && currentItem <= world.GetActors().size())
 	{
-		Actor* selectedActor = world.GetActors()[currentItem];
+		UiAdapter* actorAdapter = adapterFactory.CreateActorAdapter(world.GetActors()[currentItem]);
+		actorAdapter->RenderUi();
 
-		ImGuiActorAdapter actorAdapter(selectedActor);
-		actorAdapter.RenderUi();
+		for (const auto& component : world.GetActors()[currentItem]->GetComponents())
+		{
+			ImGui::Separator();
+
+			UiAdapter* componentAdapter = adapterFactory.CreateComponentAdapter(component);
+			componentAdapter->RenderUi();
+		}
 	}
 	ImGui::End();
 }

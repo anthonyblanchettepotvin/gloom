@@ -3,5 +3,5 @@
 class UiAdapter
 {
 public:
-	virtual void RenderUi() = 0;
+	virtual void RenderUi() const = 0;
 };
