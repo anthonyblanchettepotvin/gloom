@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.cpp" />
+    <ClCompile Include="src\components\OpenGLSettingsComponent.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.cpp" />
@@ -184,6 +186,8 @@
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.h" />
+    <ClInclude Include="src\components\OpenGLSettingsComponent.h" />
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.h" />

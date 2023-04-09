@@ -38,6 +38,7 @@ graphics programming with OpenGL. */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "components/OpenGLSettingsComponent.h"
 
 const std::string PHONG_VERTEX_SHADER_PATH = "./shaders/phong.vs";
 const std::string PHONG_FRAGMENT_SHADER_PATH = "./shaders/phong.fs";
@@ -199,6 +200,11 @@ int main()
 	ModelRendererComponent backpackRendererComponent(&backpackModel, &phongShader);
 	backpackActor.AddComponent(&backpackRendererComponent);
 
+	Actor settingsActor("Settings");
+
+	OpenGLSettingsComponent settingsComponent;
+	settingsActor.AddComponent(&settingsComponent);
+
 	// --- Lights ---
 
 	Actor pointLightActor("Point light");
@@ -225,6 +231,7 @@ int main()
 
 	// --- World ---
 
+	world.SpawnActor(&settingsActor);
 	world.SpawnActor(&backpackActor);
 	world.SpawnActor(&pointLightActor);
 	world.SpawnActor(&directionalLightActor);
@@ -235,6 +242,23 @@ int main()
 	on top of each other even though one should clearly be in front of the other.*/
 	/* Note that if we enable depth testing, we need to clear the depth buffer in each frame. */
 	glEnable(GL_DEPTH_TEST);
+	/* The following calls enable or disable writing to the depth buffer respectively.
+	During the depth testing phase, an & (AND) operation is performed between the bit to write at
+	position x in the depth buffer and the bit at position x in the depth mask. */
+	glDepthMask(GL_TRUE); // enable writing the the depth buffer (1 & 1 = 1, 1 & 0 = 0)
+	//glDepthMask(GL_FALSE); // disable writing to the depth buffer (0 & 1 = 0, 0 & 0 = 0)
+
+	/* Enable stencil testing between the fragment shader execution and the depth testing phase.
+	Stencil testing is similar to depth testing in the way that it discards fragments based on
+	the content of a buffer, the stencil buffer. From my understanding, the stencil buffer is
+	mostly programmer-defined and the depth buffer is based on the objects' position in the world. */
+	glEnable(GL_STENCIL_TEST);
+	/* The following calls performs the same logic as glDepthMask, but for the stencil mask. */
+	glStencilMask(GL_TRUE); // enable writing the the stencil buffer (1 & 1 = 1, 1 & 0 = 0)
+	//glStencilMask(GL_FALSE); // disable writing to the stencil buffer (0 & 1 = 0, 0 & 0 = 0)
+	/* This tells OpenGL that whenever the stencil value of a fragment is equal (GL_EQUAL) to
+	the reference value 1, the fragment passes the test and is drawn, otherwise discarded. */
+	glStencilFunc(GL_EQUAL, 1, 0xff);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -243,6 +267,45 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// --- Pre-frame stuff ---
+
+		/* Tells OpenGL if it should do depth testing during which it compares each fragment's z-value with the z-buffer
+		and determines, based on the depth function, if the fragment passes the depth test or not. If a fragment passes
+		the depth test, it will be rendered. Otherwise, it is discarded. */
+		if (settingsComponent.GetDepthTestingEnabledReference())
+			glEnable(GL_DEPTH_TEST);
+		else
+			glDisable(GL_DEPTH_TEST);
+
+		/* Tells OpenGL which depth function to use during the depth testing. */
+		switch (settingsComponent.GetDepthFunctionReference())
+		{
+		case OpenGLDepthFunction::ALWAYS:
+			glDepthFunc(GL_ALWAYS);
+			break;
+		case OpenGLDepthFunction::NEVER:
+			glDepthFunc(GL_NEVER);
+			break;
+		case OpenGLDepthFunction::LESS:
+			glDepthFunc(GL_LESS);
+			break;
+		case OpenGLDepthFunction::EQUAL:
+			glDepthFunc(GL_EQUAL);
+			break;
+		case OpenGLDepthFunction::LEQUAL:
+			glDepthFunc(GL_LEQUAL);
+			break;
+		case OpenGLDepthFunction::GREATER:
+			glDepthFunc(GL_GREATER);
+			break;
+		case OpenGLDepthFunction::NOTEQUAL:
+			glDepthFunc(GL_NOTEQUAL);
+			break;
+		case OpenGLDepthFunction::GEQUAL:
+			glDepthFunc(GL_GEQUAL);
+			break;
+		default:
+			break;
+		}
 
 		// Update deltaTime and lastFrame.
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -259,7 +322,7 @@ int main()
 		setupImGuiFrame();
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		// --- View and projection transformation matrices ---
 

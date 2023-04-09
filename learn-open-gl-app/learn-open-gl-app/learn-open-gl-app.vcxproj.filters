@@ -126,6 +126,12 @@
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\components\OpenGLSettingsComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -240,6 +246,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\components\OpenGLSettingsComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
