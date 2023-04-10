@@ -11,6 +11,7 @@
 #include "components/SpriteRendererComponent.h"
 #include "components/PointLightComponent.h"
 #include "components/DirectionalLightComponent.h"
+#include "components/OpenGLSettingsComponent.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
 
 /* UI library. */
@@ -38,7 +39,6 @@ graphics programming with OpenGL. */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "components/OpenGLSettingsComponent.h"
 
 const std::string PHONG_VERTEX_SHADER_PATH = "./shaders/phong.vs";
 const std::string PHONG_FRAGMENT_SHADER_PATH = "./shaders/phong.fs";
@@ -254,14 +254,24 @@ int main()
 	mostly programmer-defined and the depth buffer is based on the objects' position in the world. */
 	glEnable(GL_STENCIL_TEST);
 	/* The following calls performs the same logic as glDepthMask, but for the stencil mask. */
-	glStencilMask(GL_TRUE); // enable writing the the stencil buffer (1 & 1 = 1, 1 & 0 = 0)
-	//glStencilMask(GL_FALSE); // disable writing to the stencil buffer (0 & 1 = 0, 0 & 0 = 0)
+	//glStencilMask(GL_TRUE); // enable writing the the stencil buffer (1 & 1 = 1, 1 & 0 = 0)
+	glStencilMask(GL_FALSE); // disable writing to the stencil buffer (0 & 1 = 0, 0 & 0 = 0)
 	/* This tells OpenGL that whenever the stencil value of a fragment is equal (GL_EQUAL) to
 	the reference value 1, the fragment passes the test and is drawn, otherwise discarded. */
-	glStencilFunc(GL_EQUAL, 1, 0xff);
+	//glStencilFunc(GL_EQUAL, 1, 0xff);
 
+	/* Enable blending. In other words, tells OpenGL to blend transparent fragments together. 
+	Blending happens after the stencil testing and depth testing, right when the fragment's output
+	color is applied to the color buffer. The blending equation is: 
+	C_result = C_src_color * F_src OPERATOR C_dest_color * F_dest.*/
 	glEnable(GL_BLEND);
+	/* Tells OpenGL which factor to use in the blending equation. The following call tells OpenGL
+	to use the source's alpha (GL_SRC_ALPHA) for the F_src variable and 1 - the source's alpha
+	(GL_ONE_MINUS_SRC_ALPHA) for the F_dest variable. */
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/* Tells OpenGL which operation to use in the blending equation. The following call tells OpenGL
+	to use the addition operator, which is the default setting. */
+	glBlendEquation(GL_FUNC_ADD);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
