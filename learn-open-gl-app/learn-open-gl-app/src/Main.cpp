@@ -273,6 +273,15 @@ int main()
 	to use the addition operator, which is the default setting. */
 	glBlendEquation(GL_FUNC_ADD);
 
+	/* Tells OpenGL to cull (discard) the triangles that are back-faced from the viewer's point of
+	view. A back-faced triangle is, by default, a triangle that has a clockwise winding order. We can disable
+	momentarily face culling to render two-sided faces like grass or windows. */
+	glEnable(GL_CULL_FACE);
+	/* Tells OpenGL which faces we want to cull during the culling process. GL_BACK is the default setting. */
+	glCullFace(GL_BACK);
+	/* Tells OpenGL which winding order identifies front-faced triangles. GL_CCW is the default setting. */
+	glFrontFace(GL_CCW);
+
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
