@@ -4,6 +4,19 @@
 
 #include <iostream>
 
+Texture::Texture(size_t width, size_t height)
+{
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 Texture::Texture(const std::string& path, const std::string& type, bool flipVerticallyOnLoad)
 	: path(path), type(type)
 {
@@ -30,7 +43,6 @@ Texture::Texture(const std::string& path, const std::string& type, bool flipVert
 		else if (channelCount == 4)
 			format = GL_RGBA;
 
-		glBindTexture(GL_TEXTURE_2D, id);
 		/* We assign the loaded image's data to the currently bound texture. */
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);

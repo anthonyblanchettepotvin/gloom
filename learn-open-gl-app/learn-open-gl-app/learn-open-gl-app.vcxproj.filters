@@ -263,5 +263,7 @@
     <None Include="shaders\sprite.vs" />
     <None Include="shaders\phong.fs" />
     <None Include="shaders\phong.vs" />
+    <None Include="shaders\render.fs" />
+    <None Include="shaders\render.vs" />
   </ItemGroup>
 </Project>

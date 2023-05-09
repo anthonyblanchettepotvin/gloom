@@ -44,6 +44,8 @@ const std::string PHONG_VERTEX_SHADER_PATH = "./shaders/phong.vs";
 const std::string PHONG_FRAGMENT_SHADER_PATH = "./shaders/phong.fs";
 const std::string SPRITE_VERTEX_SHADER_PATH = "./shaders/sprite.vs";
 const std::string SPRITE_FRAGMENT_SHADER_PATH = "./shaders/sprite.fs";
+const std::string RENDER_VERTEX_SHADER_PATH = "./shaders/render.vs";
+const std::string RENDER_FRAGMENT_SHADER_PATH = "./shaders/render.fs";
 
 // Settings
 const unsigned int SCR_WIDTH = 1600;
@@ -172,7 +174,7 @@ int main()
 
 	// --- Models ---
 
-	Model backpackModel("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
+	Model backpackModel("C:\\Users\\Anthony\\Downloads\\backpack\\backpack.obj");
 
 	// --- Textures ---
 
@@ -186,6 +188,8 @@ int main()
 	phongShader.setFloat("material.shininess", 4.0f);
 
 	Shader spriteShader(SPRITE_VERTEX_SHADER_PATH, SPRITE_FRAGMENT_SHADER_PATH);
+	
+	Shader renderShader(RENDER_VERTEX_SHADER_PATH, RENDER_FRAGMENT_SHADER_PATH);
 
 	// --- Sprite ---
 
@@ -236,6 +240,50 @@ int main()
 	world.SpawnActor(&pointLightActor);
 	world.SpawnActor(&directionalLightActor);
 
+	// --- Framebuffer ---
+
+	/* Framebuffers are useful for post-rendering effects or fancy effects like mirrors or portals.
+	As usual, we generate a framebuffer object and bind it so all subsequent calls on the GL_FRAMEBUFFER
+	target (or whatever target has been specified) applies to the currently bound framebuffer object. 
+	When the framebuffer object is complete, all subsequent rendering calls will render into the
+	currently bound framebuffer object. */
+	unsigned int fbo;
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	/* There's two different kind of attachments: texture and renderbuffer. */
+	// 1. Texture attachment
+	/* We create a texture the size of our viewport and we attach the texture to the framebuffer
+	as a color attachment. Note that we can attach a texture as a depth and/or stencil attachment too.
+	In that case, we would need to change the texture's format accordingly. */
+	Texture fboColorAttachment(SCR_WIDTH, SCR_HEIGHT);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboColorAttachment.id, 0);
+
+	// 2. Renderbuffer attachment
+	/* We create a renderbuffer the size of our viewport and we attach the renderbuffer to the framebuffer
+	as a depth and stencil attachment. Note that we can attach a renderbuffer as a color attachment too. */
+	/* Note that you can sample renderbuffers, but it's slow since they are optimized and designed for writing operations.
+	That said, if you plan to sample the framebuffer, it's best to use texture attachments, otherwise you may want
+	to use renderbuffer attachments to improve writing latency. That said, we use a renderbuffer for our depth and stencil
+	attachment since we only want to sample the color attachment. */
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	/* Check if all the conditions to a complete framebuffer are met.
+	The list of conditions can be found at https://learnopengl.com/Advanced-OpenGL/Framebuffers. */
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cout << "ERROR::FRAMEBUFFER::Framebuffer is not complete" << std::endl;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
 	on the order of triangles rendered (within the same draw call), some triangles are drawn
@@ -281,6 +329,34 @@ int main()
 	glCullFace(GL_BACK);
 	/* Tells OpenGL which winding order identifies front-faced triangles. GL_CCW is the default setting. */
 	glFrontFace(GL_CCW);
+
+	float vertices[] = {
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+	};
+
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -340,8 +416,18 @@ int main()
 		newImGuiFrame();
 		setupImGuiFrame();
 
+		// --- RENDERING PROCESS, STEP 1 ---
+		/* During this step, we render the actual scene into our custom framebuffer. The result
+		will be stored into the color attachment, which in our case is a texture. We will then
+		use this texture during step 2 and render it on a quad that fits the screen perfectly. */
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		/* We need to enable depth testing on each frame since the second render pass disable it
+		to make sure the quad is rendered in front of everything else. */
+		glEnable(GL_DEPTH_TEST);
 
 		// --- View and projection transformation matrices ---
 
@@ -379,6 +465,23 @@ int main()
 
 		pointLightActor.Render();
 
+		// --- RENDERING PROCESS, STEP 2 ---
+		/* During this step, we render a quad that fits the screen perfectly using the texture that was
+		generated during step 1. */
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		/* We need to disable depth testing to make sure the quad is rendered in front of everything else. */
+		glDisable(GL_DEPTH_TEST);
+
+		renderShader.use();
+
+		glBindVertexArray(VAO);
+		glBindTexture(GL_TEXTURE_2D, fboColorAttachment.id);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
 		// --- Post-frame stuff ---
 
 		renderImGuiFrame();
@@ -390,6 +493,8 @@ int main()
 		artifacts like flickering, screen tearing and so on. */
 		glfwSwapBuffers(window);
 	}
+
+	glDeleteFramebuffers(1, &fbo);
 
 	shutdownImGui();
 
