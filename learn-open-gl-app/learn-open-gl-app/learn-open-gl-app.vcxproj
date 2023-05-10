@@ -233,6 +233,8 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\chromatic_aberration.fs" />
+    <None Include="shaders\chromatic_aberration.vs" />
     <None Include="shaders\phong.fs" />
     <None Include="shaders\phong.vs" />
     <None Include="shaders\render.fs" />

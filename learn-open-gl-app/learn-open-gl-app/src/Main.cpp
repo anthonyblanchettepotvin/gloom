@@ -174,7 +174,7 @@ int main()
 
 	// --- Models ---
 
-	Model backpackModel("C:\\Users\\Anthony\\Downloads\\backpack\\backpack.obj");
+	Model backpackModel("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
 
 	// --- Textures ---
 

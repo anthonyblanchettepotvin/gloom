@@ -265,5 +265,7 @@
     <None Include="shaders\phong.vs" />
     <None Include="shaders\render.fs" />
     <None Include="shaders\render.vs" />
+    <None Include="shaders\chromatic_aberration.fs" />
+    <None Include="shaders\chromatic_aberration.vs" />
   </ItemGroup>
 </Project>
