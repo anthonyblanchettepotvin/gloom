@@ -132,6 +132,9 @@
     <ClCompile Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cubemap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -254,6 +257,9 @@
     <ClInclude Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cubemap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll" />
@@ -267,5 +273,7 @@
     <None Include="shaders\render.vs" />
     <None Include="shaders\chromatic_aberration.fs" />
     <None Include="shaders\chromatic_aberration.vs" />
+    <None Include="shaders\skybox.fs" />
+    <None Include="shaders\skybox.vs" />
   </ItemGroup>
 </Project>

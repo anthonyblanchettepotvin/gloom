@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Cubemap.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.cpp" />
     <ClCompile Include="src\components\OpenGLSettingsComponent.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Cubemap.h" />
     <ClInclude Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.h" />
     <ClInclude Include="src\components\OpenGLSettingsComponent.h" />
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h" />
@@ -239,6 +241,8 @@
     <None Include="shaders\phong.vs" />
     <None Include="shaders\render.fs" />
     <None Include="shaders\render.vs" />
+    <None Include="shaders\skybox.fs" />
+    <None Include="shaders\skybox.vs" />
     <None Include="shaders\sprite.fs" />
     <None Include="shaders\sprite.vs" />
   </ItemGroup>

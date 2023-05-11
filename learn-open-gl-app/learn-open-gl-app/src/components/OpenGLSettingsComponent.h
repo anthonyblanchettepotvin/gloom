@@ -24,5 +24,5 @@ public:
 private:
 	bool depthTestingEnabled = true;
 
-	OpenGLDepthFunction depthFunction = OpenGLDepthFunction::LESS;
+	OpenGLDepthFunction depthFunction = OpenGLDepthFunction::LEQUAL;
 };

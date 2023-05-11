@@ -2,6 +2,7 @@
 
 #include "Shader.h"
 #include "Camera.h"
+#include "Cubemap.h"
 #include "Texture.h"
 #include "Model.h"
 #include "Actor.h"
@@ -46,12 +47,15 @@ const std::string SPRITE_VERTEX_SHADER_PATH = "./shaders/sprite.vs";
 const std::string SPRITE_FRAGMENT_SHADER_PATH = "./shaders/sprite.fs";
 const std::string RENDER_VERTEX_SHADER_PATH = "./shaders/render.vs";
 const std::string RENDER_FRAGMENT_SHADER_PATH = "./shaders/render.fs";
+const std::string SKYBOX_VERTEX_SHADER_PATH = "./shaders/skybox.vs";
+const std::string SKYBOX_FRAGMENT_SHADER_PATH = "./shaders/skybox.fs";
 
 // Settings
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 900;
 
 // Camera
+bool cameraMode = false;
 Camera camera(glm::vec3(0.0f, 0.0f, 15.0f), SCR_WIDTH, SCR_HEIGHT);
 
 // Mouse
@@ -78,6 +82,9 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 {
+	if (!cameraMode)
+		return;
+
 	float fxpos = static_cast<float>(xpos);
 	float fypos = static_cast<float>(ypos);
 
@@ -99,6 +106,9 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
+	if (!cameraMode)
+		return;
+
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
@@ -114,6 +124,11 @@ void processInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	cameraMode = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
+
+	if (!cameraMode)
+		return;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -161,13 +176,8 @@ int main()
 		return -1;
 	}
 
-	/* Tell GLFW that it should hide the cursor and capture it. Capturing a cursor
-	means that, once the application has focus, the mouse cursor stays within the
-	center of the window (unless the application loses focus or quits). */
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-	//glfwSetCursorPosCallback(window, cursorPosCallback);
+	glfwSetCursorPosCallback(window, cursorPosCallback);
 	glfwSetScrollCallback(window, scrollCallback);
 
 	initImGui(window);
@@ -180,6 +190,19 @@ int main()
 
 	Texture pointLightTexture(".\\images\\awesomeface.png", "diffuse");
 
+	// --- Cubemaps ---
+
+	std::vector<std::string> oceanCubemapFacesPath = {
+		".\\images\\oceanCubemap\\right.jpg",
+		".\\images\\oceanCubemap\\left.jpg",
+		".\\images\\oceanCubemap\\top.jpg",
+		".\\images\\oceanCubemap\\bottom.jpg",
+		".\\images\\oceanCubemap\\front.jpg",
+		".\\images\\oceanCubemap\\back.jpg"
+	};
+
+	Cubemap oceanCubemap(oceanCubemapFacesPath, false);
+
 	// --- Shaders ---
 
 	Shader phongShader(PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH);
@@ -190,6 +213,8 @@ int main()
 	Shader spriteShader(SPRITE_VERTEX_SHADER_PATH, SPRITE_FRAGMENT_SHADER_PATH);
 	
 	Shader renderShader(RENDER_VERTEX_SHADER_PATH, RENDER_FRAGMENT_SHADER_PATH);
+
+	Shader skyboxShader(SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH);
 
 	// --- Sprite ---
 
@@ -358,6 +383,65 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	float skyboxVertices[] = {    
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
+	unsigned int skyboxVAO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glBindVertexArray(skyboxVAO);
+
+	unsigned int skyboxVBO;
+	glGenBuffers(1, &skyboxVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
@@ -413,6 +497,14 @@ int main()
 
 		processInput(window);
 
+		if (cameraMode)
+			/* Tell GLFW that it should hide the cursor and capture it. Capturing a cursor
+			means that, once the application has focus, the mouse cursor stays within the
+			center of the window (unless the application loses focus or quits). */
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		else
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
 		newImGuiFrame();
 		setupImGuiFrame();
 
@@ -457,6 +549,29 @@ int main()
 
 		backpackActor.Render();
 
+		// --- Draw skybox ---
+
+		/* We could've render the skybox first, but we would render fragments that might be overridden
+		by the rest of the scene. Knowing that, we render it last and by exploiting depth testing - see
+		comments in the skybox vertex shader -, still make it look like it's behind everything. Plus,
+		using this neat little trick, we don't have to call glDepthMask with GL_FALSE before rendering the
+		skybox and then call it again with GL_TRUE. */
+		skyboxShader.use();
+		/* To make it look like it's really far, we don't want the skybox to be affected by the
+		translation of the camera. So, we remove the translation by extracting the top-left 3x3 matrix
+		of the view transformation matrix. */
+		skyboxShader.setFloatMat4("viewXform", glm::mat4(glm::mat3(viewTransform)));
+		skyboxShader.setFloatMat4("projectionXform", projectionTransform);
+
+		glBindVertexArray(skyboxVAO);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, oceanCubemap.id);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 		// --- Draw lights ---
 
 		spriteShader.use();
@@ -479,7 +594,10 @@ int main()
 		renderShader.use();
 
 		glBindVertexArray(VAO);
+
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, fboColorAttachment.id);
+
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		// --- Post-frame stuff ---

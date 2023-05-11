@@ -161,7 +161,6 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 
 		if (!textureAlreadyLoaded)
 		{
-
 			Texture texture(textureAbsolutePath, typeName);
 
 			textures.push_back(texture);
