@@ -17,8 +17,8 @@ Texture::Texture(size_t width, size_t height)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture::Texture(const std::string& path, const std::string& type, bool flipVerticallyOnLoad)
-	: path(path), type(type)
+Texture::Texture(const std::string& path, TextureType type, bool flipVerticallyOnLoad)
+	: type(type)
 {
 	/* OpenGL expects the 0.0 coordinate on the y-axis to be on the bottom side of the image,
 	but images usually have 0.0 at the top of the y-axis. */

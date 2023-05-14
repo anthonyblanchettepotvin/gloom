@@ -1,39 +1,23 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures)
-	: vertices(vertices), indices(indices), textures(textures)
+#include <glad/glad.h>
+
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material)
+	: vertices(vertices), indices(indices), material(material)
 {
 	SetupMesh();
 }
 
 void Mesh::Draw(Shader* shader)
 {
-	size_t diffuseTextureCount = 0;
-	size_t specularTextureCount = 0;
-	
-	for (size_t i = 0; i < textures.size(); i++)
+	if (material)
 	{
-		/* It's a good practice to always activate the texture unit before binding the
-		texture. Some drivers will use 0 as the default texture unit, but other drivers
-		may not. */
-		glActiveTexture(GL_TEXTURE0 + i);
+		material->Bind(shader);
 
-		std::string number;
-		std::string name = textures[i].GetType();
-
-		if (textures[i].GetType() == "texture_diffuse")
-			number = std::to_string(++diffuseTextureCount);
-		else if (textures[i].GetType() == "texture_specular")
-			number = std::to_string(++specularTextureCount);
-
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-
-		shader->setInt(("material." + name + number).c_str(), i);
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
-
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }
 
 void Mesh::SetupMesh()

@@ -4,18 +4,22 @@
 
 #include <string>
 
+enum class TextureType {
+	DIFFUSE,
+	SPECULAR,
+	UNKNOWN
+};
+
 class Texture
 {
 public:
 	unsigned int id;
 
 	Texture(size_t width, size_t height);
-	Texture(const std::string& path, const std::string& type, bool flipVerticallyOnLoad = true);
+	Texture(const std::string& path, TextureType type, bool flipVerticallyOnLoad = true);
 
-	std::string GetType() { return type; };
-	std::string GetPath() { return path; };
+	TextureType GetType() { return type; };
 
 private:
-	std::string type;
-	std::string path;
+	TextureType type = TextureType::UNKNOWN;
 };

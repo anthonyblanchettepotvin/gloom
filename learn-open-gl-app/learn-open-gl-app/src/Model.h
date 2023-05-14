@@ -12,20 +12,10 @@
 class Model
 {
 public:
-	Model(const std::string& path);
-
-	std::string GetPath() { return path; }
+	Model(const std::vector<Mesh*>& meshes);
 
 	void Draw(Shader* shader);
 
 private:
-	std::vector<Mesh> meshes;
-	std::vector<Texture> loadedTextures; // Used to avoid loading textures twice.
-	std::string path;
-	std::string directory;
-
-	void LoadModel(const std::string& path);
-	void ProcessNode(aiNode* node, const aiScene* scene);
-	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
-	std::vector<Texture> LoadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& typeName);
+	std::vector<Mesh*> meshes;
 };

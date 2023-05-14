@@ -13,7 +13,6 @@ void ImGuiSpriteRendererComponentAdapter::RenderUi() const
 {
 	if (SpriteRendererComponent* castedComponent = dynamic_cast<SpriteRendererComponent*>(component))
 	{
-		ImGui::Text(castedComponent->GetSprite()->GetTexture()->GetPath().c_str());
 		ImGui::Text(castedComponent->GetShader()->GetVertexShaderPath().c_str());
 		ImGui::Text(castedComponent->GetShader()->GetFragmentShaderPath().c_str());
 	}

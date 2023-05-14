@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "AssimpModelLoader.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "Cubemap.h"
@@ -41,14 +42,27 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-const std::string PHONG_VERTEX_SHADER_PATH = "./shaders/phong.vs";
-const std::string PHONG_FRAGMENT_SHADER_PATH = "./shaders/phong.fs";
-const std::string SPRITE_VERTEX_SHADER_PATH = "./shaders/sprite.vs";
-const std::string SPRITE_FRAGMENT_SHADER_PATH = "./shaders/sprite.fs";
-const std::string RENDER_VERTEX_SHADER_PATH = "./shaders/render.vs";
-const std::string RENDER_FRAGMENT_SHADER_PATH = "./shaders/render.fs";
-const std::string SKYBOX_VERTEX_SHADER_PATH = "./shaders/skybox.vs";
-const std::string SKYBOX_FRAGMENT_SHADER_PATH = "./shaders/skybox.fs";
+const std::string PHONG_VERTEX_SHADER_PATH = ".\\shaders\\phong.vs";
+const std::string PHONG_FRAGMENT_SHADER_PATH = ".\\shaders\\phong.fs";
+const std::string SPRITE_VERTEX_SHADER_PATH = ".\\shaders\\sprite.vs";
+const std::string SPRITE_FRAGMENT_SHADER_PATH = ".\\shaders\\sprite.fs";
+const std::string RENDER_VERTEX_SHADER_PATH = ".\\shaders\\render.vs";
+const std::string RENDER_FRAGMENT_SHADER_PATH = ".\\shaders\\render.fs";
+const std::string SKYBOX_VERTEX_SHADER_PATH = ".\\shaders\\skybox.vs";
+const std::string SKYBOX_FRAGMENT_SHADER_PATH = ".\\shaders\\skybox.fs";
+
+const std::string BACKPACK_MODEL_PATH = "C:\\Users\\antho\\Downloads\\backpack\\backpack.obj";
+
+const std::string AWESOME_EMOJI_TEXTURE_PATH = ".\\images\\awesomeface.png";
+
+const std::vector<std::string> OCEAN_CUBEMAP_FACES_PATH = {
+		".\\images\\oceanCubemap\\right.jpg",
+		".\\images\\oceanCubemap\\left.jpg",
+		".\\images\\oceanCubemap\\top.jpg",
+		".\\images\\oceanCubemap\\bottom.jpg",
+		".\\images\\oceanCubemap\\front.jpg",
+		".\\images\\oceanCubemap\\back.jpg"
+};
 
 // Settings
 const unsigned int SCR_WIDTH = 1600;
@@ -184,31 +198,22 @@ int main()
 
 	// --- Models ---
 
-	Model backpackModel("C:\\Users\\antho\\Downloads\\backpack\\backpack.obj");
+	AssimpModelLoader modelLoader;
+
+	Model* backpackModel = modelLoader.Load(BACKPACK_MODEL_PATH);
+	Shader backpackShader(PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH);
+	backpackShader.use();
+	backpackShader.setFloat("material.shininess", 4.0f);
 
 	// --- Textures ---
 
-	Texture pointLightTexture(".\\images\\awesomeface.png", "diffuse");
+	Texture pointLightTexture(AWESOME_EMOJI_TEXTURE_PATH, TextureType::UNKNOWN);
 
 	// --- Cubemaps ---
 
-	std::vector<std::string> oceanCubemapFacesPath = {
-		".\\images\\oceanCubemap\\right.jpg",
-		".\\images\\oceanCubemap\\left.jpg",
-		".\\images\\oceanCubemap\\top.jpg",
-		".\\images\\oceanCubemap\\bottom.jpg",
-		".\\images\\oceanCubemap\\front.jpg",
-		".\\images\\oceanCubemap\\back.jpg"
-	};
-
-	Cubemap oceanCubemap(oceanCubemapFacesPath, false);
+	Cubemap oceanCubemap(OCEAN_CUBEMAP_FACES_PATH, false);
 
 	// --- Shaders ---
-
-	Shader phongShader(PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH);
-
-	phongShader.use();
-	phongShader.setFloat("material.shininess", 4.0f);
 
 	Shader spriteShader(SPRITE_VERTEX_SHADER_PATH, SPRITE_FRAGMENT_SHADER_PATH);
 	
@@ -226,7 +231,7 @@ int main()
 
 	TransformComponent backpackTransformComponent;
 	backpackActor.AddComponent(&backpackTransformComponent);
-	ModelRendererComponent backpackRendererComponent(&backpackModel, &phongShader);
+	ModelRendererComponent backpackRendererComponent(backpackModel, &backpackShader);
 	backpackActor.AddComponent(&backpackRendererComponent);
 
 	Actor settingsActor("Settings");
@@ -519,7 +524,8 @@ int main()
 
 		/* We need to enable depth testing on each frame since the second render pass disable it
 		to make sure the quad is rendered in front of everything else. */
-		glEnable(GL_DEPTH_TEST);
+		if (settingsComponent.GetDepthTestingEnabledReference())
+			glEnable(GL_DEPTH_TEST);
 
 		// --- View and projection transformation matrices ---
 
@@ -528,23 +534,23 @@ int main()
 
 		// --- Draw actors ---
 
-		phongShader.use();
-		phongShader.setFloatMat4("viewXform", viewTransform);
-		phongShader.setFloatMat4("projectionXform", projectionTransform);
-		phongShader.setFloatVec3("camera.position", camera.GetPosition());
+		backpackShader.use();
+		backpackShader.setFloatMat4("viewXform", viewTransform);
+		backpackShader.setFloatMat4("projectionXform", projectionTransform);
+		backpackShader.setFloatVec3("camera.position", camera.GetPosition());
 
 		for (size_t i = 0; i < pointLightComponents.size(); i++)
 		{
 			std::string identifier = "pointLights[" + std::to_string(i) + "]";
 
-			pointLightComponents[i]->Register(&phongShader, identifier);
+			pointLightComponents[i]->Register(&backpackShader, identifier);
 		}
 
 		for (size_t i = 0; i < directionalLightComponents.size(); i++)
 		{
 			std::string identifier = "directionalLights[" + std::to_string(i) + "]";
 
-			directionalLightComponents[i]->Register(&phongShader, identifier);
+			directionalLightComponents[i]->Register(&backpackShader, identifier);
 		}
 
 		backpackActor.Render();
@@ -589,7 +595,8 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		/* We need to disable depth testing to make sure the quad is rendered in front of everything else. */
-		glDisable(GL_DEPTH_TEST);
+		if (settingsComponent.GetDepthTestingEnabledReference())
+			glDisable(GL_DEPTH_TEST);
 
 		renderShader.use();
 
@@ -617,6 +624,8 @@ int main()
 	shutdownImGui();
 
 	glfwTerminate();
+
+	// TODO: Delete models, textures, etc.
 
 	return 0;
 }
@@ -664,6 +673,7 @@ void setupImGuiFrame()
 	}
 	ImGui::End();
 }
+
 void renderImGuiFrame()
 {
 	ImGui::Render();

@@ -145,6 +145,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\PhongMaterial.cpp" />
+    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\AssimpModelLoader.cpp" />
+    <ClCompile Include="src\ModelLoader.cpp" />
     <ClCompile Include="src\Cubemap.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.cpp" />
     <ClCompile Include="src\components\OpenGLSettingsComponent.cpp" />
@@ -187,6 +191,10 @@
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PhongMaterial.h" />
+    <ClInclude Include="src\Material.h" />
+    <ClInclude Include="src\AssimpModelLoader.h" />
+    <ClInclude Include="src\ModelLoader.h" />
     <ClInclude Include="src\Cubemap.h" />
     <ClInclude Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.h" />
     <ClInclude Include="src\components\OpenGLSettingsComponent.h" />
