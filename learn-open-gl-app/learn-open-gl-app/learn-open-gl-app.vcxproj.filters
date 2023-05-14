@@ -299,5 +299,7 @@
     <None Include="shaders\chromatic_aberration.vs" />
     <None Include="shaders\skybox.fs" />
     <None Include="shaders\skybox.vs" />
+    <None Include="shaders\reflection.vs" />
+    <None Include="shaders\reflection.fs" />
   </ItemGroup>
 </Project>

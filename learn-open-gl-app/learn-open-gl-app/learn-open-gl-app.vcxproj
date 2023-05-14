@@ -247,6 +247,8 @@
     <None Include="shaders\chromatic_aberration.vs" />
     <None Include="shaders\phong.fs" />
     <None Include="shaders\phong.vs" />
+    <None Include="shaders\reflection.fs" />
+    <None Include="shaders\reflection.vs" />
     <None Include="shaders\render.fs" />
     <None Include="shaders\render.vs" />
     <None Include="shaders\skybox.fs" />

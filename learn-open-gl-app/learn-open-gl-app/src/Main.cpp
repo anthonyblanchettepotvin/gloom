@@ -50,8 +50,11 @@ const std::string RENDER_VERTEX_SHADER_PATH = ".\\shaders\\render.vs";
 const std::string RENDER_FRAGMENT_SHADER_PATH = ".\\shaders\\render.fs";
 const std::string SKYBOX_VERTEX_SHADER_PATH = ".\\shaders\\skybox.vs";
 const std::string SKYBOX_FRAGMENT_SHADER_PATH = ".\\shaders\\skybox.fs";
+const std::string REFLECTION_VERTEX_SHADER_PATH = ".\\shaders\\reflection.vs";
+const std::string REFLECTION_FRAGMENT_SHADER_PATH = ".\\shaders\\reflection.fs";
 
 const std::string BACKPACK_MODEL_PATH = "C:\\Users\\antho\\Downloads\\backpack\\backpack.obj";
+const std::string CUBE_MODEL_PATH = "C:\\Users\\antho\\Downloads\\cube\\cube.obj";
 
 const std::string AWESOME_EMOJI_TEXTURE_PATH = ".\\images\\awesomeface.png";
 
@@ -205,6 +208,9 @@ int main()
 	backpackShader.use();
 	backpackShader.setFloat("material.shininess", 4.0f);
 
+	Model* cubeModel = modelLoader.Load(CUBE_MODEL_PATH);
+	Shader cubeShader(REFLECTION_VERTEX_SHADER_PATH, REFLECTION_FRAGMENT_SHADER_PATH);
+
 	// --- Textures ---
 
 	Texture pointLightTexture(AWESOME_EMOJI_TEXTURE_PATH, TextureType::UNKNOWN);
@@ -233,6 +239,13 @@ int main()
 	backpackActor.AddComponent(&backpackTransformComponent);
 	ModelRendererComponent backpackRendererComponent(backpackModel, &backpackShader);
 	backpackActor.AddComponent(&backpackRendererComponent);
+
+	Actor cubeActor("Cube");
+
+	TransformComponent cubeTransformComponent(glm::vec3(-4.0f, 0.0f, 0.0f));
+	cubeActor.AddComponent(&cubeTransformComponent);
+	ModelRendererComponent cubeRendererComponent(cubeModel, &cubeShader);
+	cubeActor.AddComponent(&cubeRendererComponent);
 
 	Actor settingsActor("Settings");
 
@@ -267,6 +280,7 @@ int main()
 
 	world.SpawnActor(&settingsActor);
 	world.SpawnActor(&backpackActor);
+	world.SpawnActor(&cubeActor);
 	world.SpawnActor(&pointLightActor);
 	world.SpawnActor(&directionalLightActor);
 
@@ -554,6 +568,16 @@ int main()
 		}
 
 		backpackActor.Render();
+
+		cubeShader.use();
+		cubeShader.setFloatMat4("viewXform", viewTransform);
+		cubeShader.setFloatMat4("projectionXform", projectionTransform);
+		cubeShader.setFloatVec3("camera.position", camera.GetPosition());
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, oceanCubemap.id);
+
+		cubeActor.Render();
 
 		// --- Draw skybox ---
 
