@@ -301,5 +301,7 @@
     <None Include="shaders\skybox.vs" />
     <None Include="shaders\reflection.vs" />
     <None Include="shaders\reflection.fs" />
+    <None Include="shaders\refraction.vs" />
+    <None Include="shaders\refraction.fs" />
   </ItemGroup>
 </Project>

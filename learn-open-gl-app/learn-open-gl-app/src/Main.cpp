@@ -52,19 +52,22 @@ const std::string SKYBOX_VERTEX_SHADER_PATH = ".\\shaders\\skybox.vs";
 const std::string SKYBOX_FRAGMENT_SHADER_PATH = ".\\shaders\\skybox.fs";
 const std::string REFLECTION_VERTEX_SHADER_PATH = ".\\shaders\\reflection.vs";
 const std::string REFLECTION_FRAGMENT_SHADER_PATH = ".\\shaders\\reflection.fs";
+const std::string REFRACTION_VERTEX_SHADER_PATH = ".\\shaders\\refraction.vs";
+const std::string REFRACTION_FRAGMENT_SHADER_PATH = ".\\shaders\\refraction.fs";
 
 const std::string BACKPACK_MODEL_PATH = "C:\\Users\\antho\\Downloads\\backpack\\backpack.obj";
 const std::string CUBE_MODEL_PATH = "C:\\Users\\antho\\Downloads\\cube\\cube.obj";
+const std::string SUZANNE_MODEL_PATH = "C:\\Users\\antho\\Downloads\\suzanne\\suzanne.obj";
 
 const std::string AWESOME_EMOJI_TEXTURE_PATH = ".\\images\\awesomeface.png";
 
-const std::vector<std::string> OCEAN_CUBEMAP_FACES_PATH = {
-		".\\images\\oceanCubemap\\right.jpg",
-		".\\images\\oceanCubemap\\left.jpg",
-		".\\images\\oceanCubemap\\top.jpg",
-		".\\images\\oceanCubemap\\bottom.jpg",
-		".\\images\\oceanCubemap\\front.jpg",
-		".\\images\\oceanCubemap\\back.jpg"
+const std::vector<std::string> CUBEMAP_FACES_PATH = {
+		".\\images\\nightCubemap\\posx.jpg",
+		".\\images\\nightCubemap\\negx.jpg",
+		".\\images\\nightCubemap\\posy.jpg",
+		".\\images\\nightCubemap\\negy.jpg",
+		".\\images\\nightCubemap\\posz.jpg",
+		".\\images\\nightCubemap\\negz.jpg"
 };
 
 // Settings
@@ -211,13 +214,16 @@ int main()
 	Model* cubeModel = modelLoader.Load(CUBE_MODEL_PATH);
 	Shader cubeShader(REFLECTION_VERTEX_SHADER_PATH, REFLECTION_FRAGMENT_SHADER_PATH);
 
+	Model* suzanneModel = modelLoader.Load(SUZANNE_MODEL_PATH);
+	Shader suzanneShader(REFRACTION_VERTEX_SHADER_PATH, REFRACTION_FRAGMENT_SHADER_PATH);
+
 	// --- Textures ---
 
 	Texture pointLightTexture(AWESOME_EMOJI_TEXTURE_PATH, TextureType::UNKNOWN);
 
 	// --- Cubemaps ---
 
-	Cubemap oceanCubemap(OCEAN_CUBEMAP_FACES_PATH, false);
+	Cubemap cubemap(CUBEMAP_FACES_PATH, false);
 
 	// --- Shaders ---
 
@@ -246,6 +252,13 @@ int main()
 	cubeActor.AddComponent(&cubeTransformComponent);
 	ModelRendererComponent cubeRendererComponent(cubeModel, &cubeShader);
 	cubeActor.AddComponent(&cubeRendererComponent);
+
+	Actor suzanneActor("Suzanne");
+
+	TransformComponent suzanneTransformComponent(glm::vec3(0.0f, 0.0f, 2.0f));
+	suzanneActor.AddComponent(&suzanneTransformComponent);
+	ModelRendererComponent suzanneRendererComponent(suzanneModel, &suzanneShader);
+	suzanneActor.AddComponent(&suzanneRendererComponent);
 
 	Actor settingsActor("Settings");
 
@@ -281,6 +294,7 @@ int main()
 	world.SpawnActor(&settingsActor);
 	world.SpawnActor(&backpackActor);
 	world.SpawnActor(&cubeActor);
+	world.SpawnActor(&suzanneActor);
 	world.SpawnActor(&pointLightActor);
 	world.SpawnActor(&directionalLightActor);
 
@@ -575,9 +589,19 @@ int main()
 		cubeShader.setFloatVec3("camera.position", camera.GetPosition());
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, oceanCubemap.id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
 
 		cubeActor.Render();
+
+		suzanneShader.use();
+		suzanneShader.setFloatMat4("viewXform", viewTransform);
+		suzanneShader.setFloatMat4("projectionXform", projectionTransform);
+		suzanneShader.setFloatVec3("camera.position", camera.GetPosition());
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
+
+		suzanneActor.Render();
 
 		// --- Draw skybox ---
 
@@ -596,7 +620,7 @@ int main()
 		glBindVertexArray(skyboxVAO);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, oceanCubemap.id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
