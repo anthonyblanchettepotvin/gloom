@@ -2,14 +2,19 @@
 
 layout (location = 0) in vec3 position;
 
-uniform mat4 viewXform;
-uniform mat4 projectionXform;
+layout (std140) uniform ubo_matrices {
+	mat4 view;
+	mat4 skybox;
+	mat4 projection;
+};
 
-out vec3 passedTexCoords;
+out VS_OUT {
+    vec3 texCoords;
+} vs_out;
 
 void main()
 {
-    vec4 tempPosition = projectionXform * viewXform * vec4(position, 1.0);
+    vec4 tempPosition = projection * skybox * vec4(position, 1.0);
 
     /* We set the gl_Position z value to the w value. When the perspective division is applied
     right after the vertex shader has run, the resulting z component will always be equal to 1.0,
@@ -17,5 +22,5 @@ void main()
     behind everything in the scene. */
     gl_Position = tempPosition.xyww;
 
-    passedTexCoords = position;
+    vs_out.texCoords = position;
 }

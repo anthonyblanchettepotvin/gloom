@@ -37,14 +37,22 @@ struct Camera {
 	vec3 position;
 };
 
-in vec3 passedFragmentWorldPos;
-in vec3 passedNormal;
-in vec2 passedTexCoords;
+in VS_OUT {
+	vec3 fragmentWorldPos;
+	vec3 normal;
+	vec2 texCoords;
+} fs_in;
 
 uniform Material material;
-uniform DirectionalLight directionalLights[DIRECTIONAL_LIGHT_COUNT];
-uniform PointLight pointLights[POINT_LIGHT_COUNT];
-uniform Camera camera;
+
+layout (std140) uniform ubo_lights {
+	PointLight pointLights[POINT_LIGHT_COUNT];
+	DirectionalLight directionalLights[DIRECTIONAL_LIGHT_COUNT];
+};
+
+layout (std140) uniform ubo_camera {
+	Camera camera;
+};
 
 out vec4 color;
 
@@ -53,8 +61,8 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragmentWorldPos, vec3 v
 
 void main()
 {
-	vec3 normNormal = normalize(passedNormal);
-	vec3 viewDirection = normalize(camera.position - passedFragmentWorldPos);
+	vec3 normNormal = normalize(fs_in.normal);
+	vec3 viewDirection = normalize(camera.position - fs_in.fragmentWorldPos);
 
 	vec3 result;
 
@@ -64,14 +72,14 @@ void main()
 
 	// Calculate point lights contribution
 	for (int i = 0; i < POINT_LIGHT_COUNT; i++)
-		result += max(CalcPointLight(pointLights[i], normNormal, passedFragmentWorldPos, viewDirection), 0.0);
+		result += max(CalcPointLight(pointLights[i], normNormal, fs_in.fragmentWorldPos, viewDirection), 0.0);
 	
 	color = vec4(result, 1.0);
 }
 
 vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection) {
-	vec3 diffuseMapSample = vec3(texture(material.texture_diffuse1, passedTexCoords));
-	vec3 specularMapSample = vec3(texture(material.texture_specular1, passedTexCoords));
+	vec3 diffuseMapSample = vec3(texture(material.texture_diffuse1, fs_in.texCoords));
+	vec3 specularMapSample = vec3(texture(material.texture_specular1, fs_in.texCoords));
 
 	// Ambient
 	vec3 ambient = light.ambientColor * diffuseMapSample;
@@ -93,8 +101,8 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirectio
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragmentWorldPos, vec3 viewDirection) {
-	vec3 diffuseMapSample = vec3(texture(material.texture_diffuse1, passedTexCoords));
-	vec3 specularMapSample = vec3(texture(material.texture_specular1, passedTexCoords));
+	vec3 diffuseMapSample = vec3(texture(material.texture_diffuse1, fs_in.texCoords));
+	vec3 specularMapSample = vec3(texture(material.texture_specular1, fs_in.texCoords));
 
 	// Ambient
 	vec3 ambient = light.ambientColor * diffuseMapSample;

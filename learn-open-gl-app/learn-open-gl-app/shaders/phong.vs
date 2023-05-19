@@ -4,20 +4,26 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texCoords;
 
-out vec3 passedFragmentWorldPos;
-out vec3 passedNormal;
-out vec2 passedTexCoords;
+layout (std140) uniform ubo_matrices {
+	mat4 view;
+	mat4 skybox;
+	mat4 projection;
+};
 
 uniform mat4 modelXform;
-uniform mat4 viewXform;
-uniform mat4 projectionXform;
 uniform mat3 normalXform;
+
+out VS_OUT {
+	vec3 fragmentWorldPos;
+	vec3 normal;
+	vec2 texCoords;
+} vs_out;
 
 void main()
 {
-	gl_Position = projectionXform * viewXform * modelXform * vec4(position, 1.0);
+	gl_Position = projection * view * modelXform * vec4(position, 1.0);
 
-	passedFragmentWorldPos = vec3(modelXform * vec4(position, 1.0));
-	passedNormal = normalXform * normal;
-	passedTexCoords = texCoords;
+	vs_out.fragmentWorldPos = vec3(modelXform * vec4(position, 1.0));
+	vs_out.normal = normalXform * normal;
+	vs_out.texCoords = texCoords;
 }

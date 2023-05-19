@@ -18,6 +18,7 @@ public:
 	void SetSpecularColor(const glm::vec3 specularColor) { this->specularColor = specularColor; };
 
 	void Register(Shader* shader, const std::string& identifier) override;
+	void Register(unsigned int& offset) override;
 
 private:
 	glm::vec3 direction = glm::vec3(-1.0f);

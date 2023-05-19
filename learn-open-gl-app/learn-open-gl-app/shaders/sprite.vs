@@ -3,15 +3,21 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
 
-uniform mat4 modelXform;
-uniform mat4 viewXform;
-uniform mat4 projectionXform;
+layout (std140) uniform ubo_matrices {
+	mat4 view;
+	mat4 skybox;
+	mat4 projection;
+};
 
-out vec2 passedTexCoords;
+uniform mat4 modelXform;
+
+out VS_OUT {
+	vec2 texCoords;
+} vs_out;
 
 void main()
 {
-	gl_Position = projectionXform * viewXform * modelXform * vec4(position, 1.0);
+	gl_Position = projection * view * modelXform * vec4(position, 1.0);
 
-	passedTexCoords = texCoords;
+	vs_out.texCoords = texCoords;
 }

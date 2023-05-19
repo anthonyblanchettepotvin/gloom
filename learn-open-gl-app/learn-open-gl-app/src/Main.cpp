@@ -54,6 +54,8 @@ const std::string REFLECTION_VERTEX_SHADER_PATH = ".\\shaders\\reflection.vs";
 const std::string REFLECTION_FRAGMENT_SHADER_PATH = ".\\shaders\\reflection.fs";
 const std::string REFRACTION_VERTEX_SHADER_PATH = ".\\shaders\\refraction.vs";
 const std::string REFRACTION_FRAGMENT_SHADER_PATH = ".\\shaders\\refraction.fs";
+const std::string CHROM_AB_VERTEX_SHADER_PATH = ".\\shaders\\chromatic_aberration.vs";
+const std::string CHROM_AB_FRAGMENT_SHADER_PATH = ".\\shaders\\chromatic_aberration.fs";
 
 const std::string BACKPACK_MODEL_PATH = "C:\\Users\\antho\\Downloads\\backpack\\backpack.obj";
 const std::string CUBE_MODEL_PATH = "C:\\Users\\antho\\Downloads\\cube\\cube.obj";
@@ -88,7 +90,6 @@ float deltaTime = 0.0f;	// Time between current frame and last frame.
 float lastFrame = 0.0f;
 
 // World
-
 World world;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -232,6 +233,8 @@ int main()
 	Shader renderShader(RENDER_VERTEX_SHADER_PATH, RENDER_FRAGMENT_SHADER_PATH);
 
 	Shader skyboxShader(SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH);
+
+	Shader chromaticAberrationShader(CHROM_AB_VERTEX_SHADER_PATH, CHROM_AB_FRAGMENT_SHADER_PATH);
 
 	// --- Sprite ---
 
@@ -475,6 +478,109 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
+	block that matches a UBO and is bound to it will share its data. This is handy,
+	since we no longer have to update the uniforms of each shader individually.
+	We can only change the data in the UBO and all the shaders' uniform blocks bound
+	to it will contain the updated data. */
+
+	// Matrices UBO (128 bytes)
+	/*
+	MATRIX		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
+	View		mat4	16				0				64
+	Skybox		mat4	16				64				64
+	Projection	mat4	16				128				64
+	*/
+	unsigned int matricesUbo;
+	glGenBuffers(1, &matricesUbo);
+	glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
+	glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW); // We reserve the space by setting the data to NULL.
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	/* Here, we bind the UBO to the index 0. So, if we want to bind the corresponding
+	uniform block of a shader to this UBO, we'll need to bind it to the index 0. */
+	glBindBufferBase(GL_UNIFORM_BUFFER, 0, matricesUbo);
+
+	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO, which have
+	the index 0. */
+	unsigned int backpackMatricesIndex = glGetUniformBlockIndex(backpackShader.id, "ubo_matrices");
+	glUniformBlockBinding(backpackShader.id, backpackMatricesIndex, 0);
+	unsigned int cubeMatricesIndex = glGetUniformBlockIndex(cubeShader.id, "ubo_matrices");
+	glUniformBlockBinding(cubeShader.id, cubeMatricesIndex, 0);
+	unsigned int suzanneMatricesIndex = glGetUniformBlockIndex(suzanneShader.id, "ubo_matrices");
+	glUniformBlockBinding(suzanneShader.id, suzanneMatricesIndex, 0);
+	unsigned int skyboxMatricesIndex = glGetUniformBlockIndex(skyboxShader.id, "ubo_matrices");
+	glUniformBlockBinding(skyboxShader.id, skyboxMatricesIndex, 0);
+	unsigned int spriteMatricesIndex = glGetUniformBlockIndex(spriteShader.id, "ubo_matrices");
+	glUniformBlockBinding(spriteShader.id, spriteMatricesIndex, 0);
+
+	// Lights UBO (384 bytes)
+	/*
+	ELEMENT			TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
+	Point1			struct	16				0				72
+	Point2			struct	16				80				72
+	Point3			struct	16				160				72
+	Point4			struct	16				240				72
+	Directional		struct	16				320				60
+	*/
+
+	// PointLight struct (72 bytes)
+	/*
+	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
+	position	vec3	16				0				12
+	ambient		vec3	16				16				12
+	diffuse		vec3	16				32				12
+	specular	vec3	16				48				12
+	constant	float	4				60				4
+	linear		float	4				64				4
+	quadratic	float	4				68				4
+	*/
+
+	// DirectionalLight struct (60 bytes)
+	/*
+	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
+	direction	vec3	16				0				12
+	ambient		vec3	16				16				12
+	diffuse		vec3	16				32				12
+	specular	vec3	16				48				12
+	*/
+	unsigned int lightsUbo;
+	glGenBuffers(1, &lightsUbo);
+	glBindBuffer(GL_UNIFORM_BUFFER, lightsUbo);
+	glBufferData(GL_UNIFORM_BUFFER, 384, NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBufferBase(GL_UNIFORM_BUFFER, 2, lightsUbo);
+
+	unsigned int backpackLightsIndex = glGetUniformBlockIndex(backpackShader.id, "ubo_lights");
+	glUniformBlockBinding(backpackShader.id, backpackLightsIndex, 2);
+
+	// Camera UBO (12 bytes)
+	/*
+	ELEMENT		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
+	camera		struct	16				0				12
+	*/
+
+	// Camera struct (12 bytes)
+	/*
+	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
+	position	vec3	16				0				12
+	*/
+	unsigned int cameraUbo;
+	glGenBuffers(1, &cameraUbo);
+	glBindBuffer(GL_UNIFORM_BUFFER, cameraUbo);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec3), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBufferBase(GL_UNIFORM_BUFFER, 1, cameraUbo);
+
+	unsigned int backpackCameraIndex = glGetUniformBlockIndex(backpackShader.id, "ubo_camera");
+	glUniformBlockBinding(backpackShader.id, backpackCameraIndex, 1);
+	unsigned int cubeCameraIndex = glGetUniformBlockIndex(cubeShader.id, "ubo_camera");
+	glUniformBlockBinding(cubeShader.id, cubeCameraIndex, 1);
+	unsigned int suzanneCameraIndex = glGetUniformBlockIndex(suzanneShader.id, "ubo_camera");
+	glUniformBlockBinding(suzanneShader.id, suzanneCameraIndex, 1);
+
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
@@ -558,35 +664,42 @@ int main()
 		// --- View and projection transformation matrices ---
 
 		glm::mat4 viewTransform = camera.GetViewMatrix();
+		glm::mat4 skyboxTransform = camera.GetSkyboxMatrix();
 		glm::mat4 projectionTransform = camera.GetProjectionMatrix();
+
+		/* Here, we update our matrices UBO data with the new matrices' data. */
+		glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(viewTransform));
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(skyboxTransform));
+		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projectionTransform));
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		/* Here, we update our camera UBO data with the new camera's data. */
+		glBindBuffer(GL_UNIFORM_BUFFER, cameraUbo);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec3), glm::value_ptr(camera.GetPosition()));
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		/* Here, we update our lights UBO data with the new lights' data. */
+		glBindBuffer(GL_UNIFORM_BUFFER, lightsUbo);
+		unsigned int pointLightsOffset = 0;
+		for (size_t i = 0; i < pointLightComponents.size(); i++)
+		{
+			pointLightComponents[i]->Register(pointLightsOffset);
+		}
+		unsigned int directionalLightsOffset = 320;
+		for (size_t i = 0; i < directionalLightComponents.size(); i++)
+		{
+			directionalLightComponents[i]->Register(directionalLightsOffset);
+		}
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		// --- Draw actors ---
 
 		backpackShader.use();
-		backpackShader.setFloatMat4("viewXform", viewTransform);
-		backpackShader.setFloatMat4("projectionXform", projectionTransform);
-		backpackShader.setFloatVec3("camera.position", camera.GetPosition());
-
-		for (size_t i = 0; i < pointLightComponents.size(); i++)
-		{
-			std::string identifier = "pointLights[" + std::to_string(i) + "]";
-
-			pointLightComponents[i]->Register(&backpackShader, identifier);
-		}
-
-		for (size_t i = 0; i < directionalLightComponents.size(); i++)
-		{
-			std::string identifier = "directionalLights[" + std::to_string(i) + "]";
-
-			directionalLightComponents[i]->Register(&backpackShader, identifier);
-		}
 
 		backpackActor.Render();
 
 		cubeShader.use();
-		cubeShader.setFloatMat4("viewXform", viewTransform);
-		cubeShader.setFloatMat4("projectionXform", projectionTransform);
-		cubeShader.setFloatVec3("camera.position", camera.GetPosition());
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
@@ -594,9 +707,6 @@ int main()
 		cubeActor.Render();
 
 		suzanneShader.use();
-		suzanneShader.setFloatMat4("viewXform", viewTransform);
-		suzanneShader.setFloatMat4("projectionXform", projectionTransform);
-		suzanneShader.setFloatVec3("camera.position", camera.GetPosition());
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
@@ -611,11 +721,6 @@ int main()
 		using this neat little trick, we don't have to call glDepthMask with GL_FALSE before rendering the
 		skybox and then call it again with GL_TRUE. */
 		skyboxShader.use();
-		/* To make it look like it's really far, we don't want the skybox to be affected by the
-		translation of the camera. So, we remove the translation by extracting the top-left 3x3 matrix
-		of the view transformation matrix. */
-		skyboxShader.setFloatMat4("viewXform", glm::mat4(glm::mat3(viewTransform)));
-		skyboxShader.setFloatMat4("projectionXform", projectionTransform);
 
 		glBindVertexArray(skyboxVAO);
 
@@ -629,8 +734,6 @@ int main()
 		// --- Draw lights ---
 
 		spriteShader.use();
-		spriteShader.setFloatMat4("viewXform", viewTransform);
-		spriteShader.setFloatMat4("projectionXform", projectionTransform);
 
 		pointLightActor.Render();
 
@@ -654,6 +757,10 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, fboColorAttachment.id);
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		/*chromaticAberrationShader.use();
+		
+		glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
 		// --- Post-frame stuff ---
 

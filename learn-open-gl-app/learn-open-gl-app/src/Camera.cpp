@@ -17,6 +17,14 @@ glm::mat4 Camera::GetViewMatrix()
     return glm::lookAt(position, position + front, up);
 }
 
+glm::mat4 Camera::GetSkyboxMatrix()
+{
+    /* To make it look like it's really far, we don't want the skybox to be affected by the
+    translation of the camera. So, we remove the translation by extracting the top-left 3x3 matrix
+    of the view transformation matrix. */
+    return glm::mat4(glm::mat3(GetViewMatrix()));
+}
+
 glm::mat4 Camera::GetProjectionMatrix()
 {
     /* Here, we crate our (perspective) projection transformation matrix. This will allow us to

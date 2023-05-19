@@ -26,6 +26,7 @@ public:
 	void SetAttenuation(LightAttenuation attenuation) { this->attenuation = attenuation; };
 
 	void Register(Shader* shader, const std::string& identifier) override;
+	void Register(unsigned int& offset) override;
 
 private:
 	glm::vec3 ambientColor = glm::vec3(0.2f);

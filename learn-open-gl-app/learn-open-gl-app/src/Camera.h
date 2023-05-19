@@ -37,6 +37,7 @@ public:
 	void ProcessMouseScroll(float yoffset);
 
 	glm::mat4 GetViewMatrix();
+	glm::mat4 GetSkyboxMatrix();
 	glm::mat4 GetProjectionMatrix();
 
 	glm::vec3 GetPosition() { return position; };
