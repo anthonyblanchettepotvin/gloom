@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "../../../engine/graphics/model/ModelLoader.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
 class AssimpModelLoader : public ModelLoader
 {

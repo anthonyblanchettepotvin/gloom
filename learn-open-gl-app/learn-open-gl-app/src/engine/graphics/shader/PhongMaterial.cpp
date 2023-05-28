@@ -7,7 +7,7 @@ void PhongMaterial::Bind(Shader* shader)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseTexture->id);
 
-		shader->setInt("material.texture_diffuse1", 0);
+		shader->SetInt("material.texture_diffuse1", 0);
 	}
 
 	if (specularTexture)
@@ -15,6 +15,6 @@ void PhongMaterial::Bind(Shader* shader)
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specularTexture->id);
 
-		shader->setInt("material.texture_specular1", 1);
+		shader->SetInt("material.texture_specular1", 1);
 	}
 }

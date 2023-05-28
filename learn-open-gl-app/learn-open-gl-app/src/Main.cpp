@@ -42,20 +42,16 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-const std::string PHONG_VERTEX_SHADER_PATH = ".\\shaders\\phong.vs";
-const std::string PHONG_FRAGMENT_SHADER_PATH = ".\\shaders\\phong.fs";
-const std::string SPRITE_VERTEX_SHADER_PATH = ".\\shaders\\sprite.vs";
-const std::string SPRITE_FRAGMENT_SHADER_PATH = ".\\shaders\\sprite.fs";
-const std::string RENDER_VERTEX_SHADER_PATH = ".\\shaders\\render.vs";
-const std::string RENDER_FRAGMENT_SHADER_PATH = ".\\shaders\\render.fs";
-const std::string SKYBOX_VERTEX_SHADER_PATH = ".\\shaders\\skybox.vs";
-const std::string SKYBOX_FRAGMENT_SHADER_PATH = ".\\shaders\\skybox.fs";
-const std::string REFLECTION_VERTEX_SHADER_PATH = ".\\shaders\\reflection.vs";
-const std::string REFLECTION_FRAGMENT_SHADER_PATH = ".\\shaders\\reflection.fs";
-const std::string REFRACTION_VERTEX_SHADER_PATH = ".\\shaders\\refraction.vs";
-const std::string REFRACTION_FRAGMENT_SHADER_PATH = ".\\shaders\\refraction.fs";
-const std::string CHROM_AB_VERTEX_SHADER_PATH = ".\\shaders\\chromatic_aberration.vs";
-const std::string CHROM_AB_FRAGMENT_SHADER_PATH = ".\\shaders\\chromatic_aberration.fs";
+#include "engine/graphics/shader/ShaderLoader.h"
+#include "infrastructure/graphics/shader/GlShaderLoader.h"
+
+const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
+const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
+const std::string REFRACTION_SHADER_PATH = ".\\shaders\\refraction.shader";
+const std::string SPRITE_SHADER_PATH = ".\\shaders\\sprite.shader";
+const std::string RENDER_SHADER_PATH = ".\\shaders\\render.shader";
+const std::string SKYBOX_SHADER_PATH = ".\\shaders\\skybox.shader";
+const std::string CHROMATIC_ABERRATION_SHADER_PATH = ".\\shaders\\chromatic_aberration.shader";
 
 const std::string BACKPACK_MODEL_PATH = ".\\models\\backpack\\backpack.obj";
 const std::string CUBE_MODEL_PATH = ".\\models\\cube\\cube.obj";
@@ -203,20 +199,22 @@ int main()
 
 	initImGui(window);
 
+	ShaderLoader* shaderLoader = new GlShaderLoader();
+
 	// --- Models ---
 
 	AssimpModelLoader modelLoader;
 
 	Model* backpackModel = modelLoader.Load(BACKPACK_MODEL_PATH);
-	Shader backpackShader(PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH);
-	backpackShader.use();
-	backpackShader.setFloat("material.shininess", 4.0f);
+	Shader* backpackShader = shaderLoader->Load(PHONG_SHADER_PATH);
+	backpackShader->Use();
+	backpackShader->SetFloat("material.shininess", 4.0f);
 
 	Model* cubeModel = modelLoader.Load(CUBE_MODEL_PATH);
-	Shader cubeShader(REFLECTION_VERTEX_SHADER_PATH, REFLECTION_FRAGMENT_SHADER_PATH);
+	Shader* cubeShader = shaderLoader->Load(REFLECTION_SHADER_PATH);
 
 	Model* suzanneModel = modelLoader.Load(SUZANNE_MODEL_PATH);
-	Shader suzanneShader(REFRACTION_VERTEX_SHADER_PATH, REFRACTION_FRAGMENT_SHADER_PATH);
+	Shader* suzanneShader = shaderLoader->Load(REFRACTION_SHADER_PATH);
 
 	// --- Textures ---
 
@@ -228,13 +226,13 @@ int main()
 
 	// --- Shaders ---
 
-	Shader spriteShader(SPRITE_VERTEX_SHADER_PATH, SPRITE_FRAGMENT_SHADER_PATH);
+	Shader* spriteShader = shaderLoader->Load(SPRITE_SHADER_PATH);
 	
-	Shader renderShader(RENDER_VERTEX_SHADER_PATH, RENDER_FRAGMENT_SHADER_PATH);
+	Shader* renderShader = shaderLoader->Load(RENDER_SHADER_PATH);
 
-	Shader skyboxShader(SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH);
+	Shader* skyboxShader = shaderLoader->Load(SKYBOX_SHADER_PATH);
 
-	Shader chromaticAberrationShader(CHROM_AB_VERTEX_SHADER_PATH, CHROM_AB_FRAGMENT_SHADER_PATH);
+	Shader* chromaticAberrationShader = shaderLoader->Load(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	// --- Sprite ---
 
@@ -246,21 +244,21 @@ int main()
 
 	TransformComponent backpackTransformComponent;
 	backpackActor.AddComponent(&backpackTransformComponent);
-	ModelRendererComponent backpackRendererComponent(backpackModel, &backpackShader);
+	ModelRendererComponent backpackRendererComponent(backpackModel, backpackShader);
 	backpackActor.AddComponent(&backpackRendererComponent);
 
 	Actor cubeActor("Cube");
 
 	TransformComponent cubeTransformComponent(glm::vec3(-4.0f, 0.0f, 0.0f));
 	cubeActor.AddComponent(&cubeTransformComponent);
-	ModelRendererComponent cubeRendererComponent(cubeModel, &cubeShader);
+	ModelRendererComponent cubeRendererComponent(cubeModel, cubeShader);
 	cubeActor.AddComponent(&cubeRendererComponent);
 
 	Actor suzanneActor("Suzanne");
 
 	TransformComponent suzanneTransformComponent(glm::vec3(0.0f, 0.0f, 2.0f));
 	suzanneActor.AddComponent(&suzanneTransformComponent);
-	ModelRendererComponent suzanneRendererComponent(suzanneModel, &suzanneShader);
+	ModelRendererComponent suzanneRendererComponent(suzanneModel, suzanneShader);
 	suzanneActor.AddComponent(&suzanneRendererComponent);
 
 	Actor settingsActor("Settings");
@@ -276,7 +274,7 @@ int main()
 	pointLightActor.AddComponent(&pointLightTransformComponent);
 	PointLightComponent pointLightComponent;
 	pointLightActor.AddComponent(&pointLightComponent);
-	SpriteRendererComponent pointLightRendererComponent(&pointLightSprite, &spriteShader);
+	SpriteRendererComponent pointLightRendererComponent(&pointLightSprite, spriteShader);
 	pointLightActor.AddComponent(&pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");
@@ -503,16 +501,11 @@ int main()
 
 	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO, which have
 	the index 0. */
-	unsigned int backpackMatricesIndex = glGetUniformBlockIndex(backpackShader.id, "ubo_matrices");
-	glUniformBlockBinding(backpackShader.id, backpackMatricesIndex, 0);
-	unsigned int cubeMatricesIndex = glGetUniformBlockIndex(cubeShader.id, "ubo_matrices");
-	glUniformBlockBinding(cubeShader.id, cubeMatricesIndex, 0);
-	unsigned int suzanneMatricesIndex = glGetUniformBlockIndex(suzanneShader.id, "ubo_matrices");
-	glUniformBlockBinding(suzanneShader.id, suzanneMatricesIndex, 0);
-	unsigned int skyboxMatricesIndex = glGetUniformBlockIndex(skyboxShader.id, "ubo_matrices");
-	glUniformBlockBinding(skyboxShader.id, skyboxMatricesIndex, 0);
-	unsigned int spriteMatricesIndex = glGetUniformBlockIndex(spriteShader.id, "ubo_matrices");
-	glUniformBlockBinding(spriteShader.id, spriteMatricesIndex, 0);
+	backpackShader->SetGlobalDataReference("ubo_matrices");
+	cubeShader->SetGlobalDataReference("ubo_matrices");
+	suzanneShader->SetGlobalDataReference("ubo_matrices");
+	skyboxShader->SetGlobalDataReference("ubo_matrices");
+	spriteShader->SetGlobalDataReference("ubo_matrices");
 
 	// Lights UBO (384 bytes)
 	/*
@@ -552,8 +545,7 @@ int main()
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 2, lightsUbo);
 
-	unsigned int backpackLightsIndex = glGetUniformBlockIndex(backpackShader.id, "ubo_lights");
-	glUniformBlockBinding(backpackShader.id, backpackLightsIndex, 2);
+	backpackShader->SetGlobalDataReference("ubo_lights");
 
 	// Camera UBO (12 bytes)
 	/*
@@ -574,12 +566,9 @@ int main()
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 1, cameraUbo);
 
-	unsigned int backpackCameraIndex = glGetUniformBlockIndex(backpackShader.id, "ubo_camera");
-	glUniformBlockBinding(backpackShader.id, backpackCameraIndex, 1);
-	unsigned int cubeCameraIndex = glGetUniformBlockIndex(cubeShader.id, "ubo_camera");
-	glUniformBlockBinding(cubeShader.id, cubeCameraIndex, 1);
-	unsigned int suzanneCameraIndex = glGetUniformBlockIndex(suzanneShader.id, "ubo_camera");
-	glUniformBlockBinding(suzanneShader.id, suzanneCameraIndex, 1);
+	backpackShader->SetGlobalDataReference("ubo_camera");
+	cubeShader->SetGlobalDataReference("ubo_camera");
+	suzanneShader->SetGlobalDataReference("ubo_camera");
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -695,18 +684,18 @@ int main()
 
 		// --- Draw actors ---
 
-		backpackShader.use();
+		backpackShader->Use();
 
 		backpackActor.Render();
 
-		cubeShader.use();
+		cubeShader->Use();
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
 
 		cubeActor.Render();
 
-		suzanneShader.use();
+		suzanneShader->Use();
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
@@ -720,7 +709,7 @@ int main()
 		comments in the skybox vertex shader -, still make it look like it's behind everything. Plus,
 		using this neat little trick, we don't have to call glDepthMask with GL_FALSE before rendering the
 		skybox and then call it again with GL_TRUE. */
-		skyboxShader.use();
+		skyboxShader->Use();
 
 		glBindVertexArray(skyboxVAO);
 
@@ -733,7 +722,7 @@ int main()
 
 		// --- Draw lights ---
 
-		spriteShader.use();
+		spriteShader->Use();
 
 		pointLightActor.Render();
 
@@ -749,7 +738,7 @@ int main()
 		if (settingsComponent.GetDepthTestingEnabledReference())
 			glDisable(GL_DEPTH_TEST);
 
-		renderShader.use();
+		renderShader->Use();
 
 		glBindVertexArray(VAO);
 

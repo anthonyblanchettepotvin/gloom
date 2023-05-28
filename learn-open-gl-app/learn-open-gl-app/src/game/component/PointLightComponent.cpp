@@ -18,15 +18,15 @@ void PointLightComponent::Register(Shader* shader, const std::string& identifier
             position = transformComponent->GetPositionReference();
         }
 
-        shader->setFloatVec3(identifier + ".position", position);
+        shader->SetFloatVec3(identifier + ".position", position);
 
-        shader->setFloatVec3(identifier + ".ambientColor", ambientColor);
-        shader->setFloatVec3(identifier + ".diffuseColor", diffuseColor);
-        shader->setFloatVec3(identifier + ".specularColor", specularColor);
+        shader->SetFloatVec3(identifier + ".ambientColor", ambientColor);
+        shader->SetFloatVec3(identifier + ".diffuseColor", diffuseColor);
+        shader->SetFloatVec3(identifier + ".specularColor", specularColor);
 
-        shader->setFloat(identifier + ".constant", attenuation.constant);
-        shader->setFloat(identifier + ".linear", attenuation.linear);
-        shader->setFloat(identifier + ".quadratic", attenuation.quadratic);
+        shader->SetFloat(identifier + ".constant", attenuation.constant);
+        shader->SetFloat(identifier + ".linear", attenuation.linear);
+        shader->SetFloat(identifier + ".quadratic", attenuation.quadratic);
     }
 }
 

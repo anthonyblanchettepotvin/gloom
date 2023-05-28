@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp" />
+    <ClCompile Include="src\engine\graphics\shader\ShaderLoader.cpp" />
     <ClCompile Include="src\engine\graphics\shader\PhongMaterial.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Material.cpp" />
     <ClCompile Include="src\infrastructure\graphics\model\AssimpModelLoader.cpp" />
@@ -192,6 +195,9 @@
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h" />
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h" />
+    <ClInclude Include="src\engine\graphics\shader\ShaderLoader.h" />
     <ClInclude Include="src\engine\graphics\shader\PhongMaterial.h" />
     <ClInclude Include="src\engine\graphics\shader\Material.h" />
     <ClInclude Include="src\infrastructure\graphics\model\AssimpModelLoader.h" />
@@ -245,20 +251,13 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\chromatic_aberration.fs" />
-    <None Include="shaders\chromatic_aberration.vs" />
-    <None Include="shaders\phong.fs" />
-    <None Include="shaders\phong.vs" />
-    <None Include="shaders\reflection.fs" />
-    <None Include="shaders\reflection.vs" />
-    <None Include="shaders\refraction.fs" />
-    <None Include="shaders\refraction.vs" />
-    <None Include="shaders\render.fs" />
-    <None Include="shaders\render.vs" />
-    <None Include="shaders\skybox.fs" />
-    <None Include="shaders\skybox.vs" />
-    <None Include="shaders\sprite.fs" />
-    <None Include="shaders\sprite.vs" />
+    <None Include="shaders\chromatic_aberration.shader" />
+    <None Include="shaders\phong.shader" />
+    <None Include="shaders\reflection.shader" />
+    <None Include="shaders\refraction.shader" />
+    <None Include="shaders\render.shader" />
+    <None Include="shaders\skybox.shader" />
+    <None Include="shaders\sprite.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

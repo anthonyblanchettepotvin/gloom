@@ -16,8 +16,8 @@ void ModelRendererComponent::Render()
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			shader->setFloatMat4("modelXform", transformComponent->GetModelTransformationMatrix());
-			shader->setFloatMat3("normalXform", transformComponent->GetNormalTransformationMatrix());
+			shader->SetFloatMat4("modelXform", transformComponent->GetModelTransformationMatrix());
+			shader->SetFloatMat3("normalXform", transformComponent->GetNormalTransformationMatrix());
 
 			model->Draw(shader);
 		}

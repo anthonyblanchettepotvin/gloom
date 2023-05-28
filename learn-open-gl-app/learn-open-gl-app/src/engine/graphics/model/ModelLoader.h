@@ -1,11 +1,8 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include "Model.h"
-
-#include "../texture/Texture.h"
 
 class ModelLoader
 {

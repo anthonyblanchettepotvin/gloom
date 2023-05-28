@@ -150,6 +150,15 @@
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\graphics\shader\ShaderLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\graphics\shader\Shader.h">
@@ -290,24 +299,26 @@
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\graphics\shader\ShaderLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\sprite.fs" />
-    <None Include="shaders\sprite.vs" />
-    <None Include="shaders\phong.fs" />
-    <None Include="shaders\phong.vs" />
-    <None Include="shaders\render.fs" />
-    <None Include="shaders\render.vs" />
-    <None Include="shaders\chromatic_aberration.fs" />
-    <None Include="shaders\chromatic_aberration.vs" />
-    <None Include="shaders\skybox.fs" />
-    <None Include="shaders\skybox.vs" />
-    <None Include="shaders\reflection.vs" />
-    <None Include="shaders\reflection.fs" />
-    <None Include="shaders\refraction.vs" />
-    <None Include="shaders\refraction.fs" />
+    <None Include="shaders\phong.shader" />
+    <None Include="shaders\refraction.shader" />
+    <None Include="shaders\reflection.shader" />
+    <None Include="shaders\render.shader" />
+    <None Include="shaders\skybox.shader" />
+    <None Include="shaders\sprite.shader" />
+    <None Include="shaders\chromatic_aberration.shader" />
   </ItemGroup>
 </Project>

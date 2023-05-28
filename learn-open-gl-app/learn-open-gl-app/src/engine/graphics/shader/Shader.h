@@ -1,29 +1,20 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 #include <string>
+
+#include <glm/glm.hpp>
 
 class Shader
 {
 public:
-	unsigned int id;
+	virtual void Use() = 0;
 
-	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+	virtual void SetBool(const std::string& name, bool value) = 0;
+	virtual void SetInt(const std::string& name, int value) = 0;
+	virtual void SetFloat(const std::string& name, float value) = 0;
+	virtual void SetFloatVec3(const std::string& name, glm::vec3 value) = 0;
+	virtual void SetFloatMat3(const std::string& name, glm::mat3 value) = 0;
+	virtual void SetFloatMat4(const std::string& name, glm::mat4 value) = 0;
 
-	std::string GetVertexShaderPath() { return vertexShaderPath; };
-	std::string GetFragmentShaderPath() { return fragmentShaderPath; };
-
-	void use();
-
-	void setBool(const std::string& name, bool value);
-	void setInt(const std::string& name, int value);
-	void setFloat(const std::string& name, float value);
-	void setFloatVec3(const std::string& name, glm::vec3 value);
-	void setFloatMat3(const std::string& name, glm::mat3 value);
-	void setFloatMat4(const std::string& name, glm::mat4 value);
-
-private:
-	std::string vertexShaderPath;
-	std::string fragmentShaderPath;
+	virtual void SetGlobalDataReference(const std::string& name) = 0;
 };

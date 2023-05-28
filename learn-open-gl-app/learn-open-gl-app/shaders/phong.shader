@@ -1,5 +1,39 @@
 #version 330 core
 
+START_VERTEX_SHADER
+
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec2 texCoords;
+
+layout(std140) uniform ubo_matrices{
+	mat4 view;
+	mat4 skybox;
+	mat4 projection;
+};
+
+uniform mat4 modelXform;
+uniform mat3 normalXform;
+
+out VS_OUT{
+	vec3 fragmentWorldPos;
+	vec3 normal;
+	vec2 texCoords;
+} vs_out;
+
+void main()
+{
+	gl_Position = projection * view * modelXform * vec4(position, 1.0);
+
+	vs_out.fragmentWorldPos = vec3(modelXform * vec4(position, 1.0));
+	vs_out.normal = normalXform * normal;
+	vs_out.texCoords = texCoords;
+}
+
+END_VERTEX_SHADER
+
+START_FRAGMENT_SHADER
+
 #define POINT_LIGHT_COUNT 4
 #define DIRECTIONAL_LIGHT_COUNT 1
 
@@ -37,7 +71,7 @@ struct Camera {
 	vec3 position;
 };
 
-in VS_OUT {
+in VS_OUT{
 	vec3 fragmentWorldPos;
 	vec3 normal;
 	vec2 texCoords;
@@ -45,12 +79,12 @@ in VS_OUT {
 
 uniform Material material;
 
-layout (std140) uniform ubo_lights {
+layout(std140) uniform ubo_lights{
 	PointLight pointLights[POINT_LIGHT_COUNT];
 	DirectionalLight directionalLights[DIRECTIONAL_LIGHT_COUNT];
 };
 
-layout (std140) uniform ubo_camera {
+layout(std140) uniform ubo_camera{
 	Camera camera;
 };
 
@@ -73,7 +107,7 @@ void main()
 	// Calculate point lights contribution
 	for (int i = 0; i < POINT_LIGHT_COUNT; i++)
 		result += max(CalcPointLight(pointLights[i], normNormal, fs_in.fragmentWorldPos, viewDirection), 0.0);
-	
+
 	color = vec4(result, 1.0);
 }
 
@@ -86,7 +120,7 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirectio
 
 	// Diffuse
 	vec3 normLightDirection = normalize(light.direction);
-	
+
 	float diffuseStrength = max(dot(normal, -normLightDirection), 0.0);
 	vec3 diffuse = light.diffuseColor * diffuseMapSample * diffuseStrength;
 
@@ -109,7 +143,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragmentWorldPos, vec3 v
 
 	// Diffuse
 	vec3 normLightDirection = normalize(fragmentWorldPos - light.position);
-	
+
 	float diffuseStrength = max(dot(normal, -normLightDirection), 0.0);
 	vec3 diffuse = light.diffuseColor * diffuseMapSample * diffuseStrength;
 
@@ -130,3 +164,5 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragmentWorldPos, vec3 v
 	// Output
 	return (ambient + diffuse + specular);
 }
+
+END_FRAGMENT_SHADER

@@ -11,7 +11,7 @@ void Sprite::Render(Shader* shader)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id);
 
-    shader->setInt("texture_sprite", 0);
+    shader->SetInt("texture_sprite", 0);
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
