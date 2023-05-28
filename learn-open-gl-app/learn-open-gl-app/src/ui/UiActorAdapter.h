@@ -2,7 +2,7 @@
 
 #include "UiAdapter.h"
 
-#include "../Actor.h"
+#include "../game/actor/Actor.h"
 
 class UiActorAdapter : public UiAdapter
 {

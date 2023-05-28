@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Material.h"
-#include "Texture.h"
+
+#include "../texture/Texture.h"
 
 class PhongMaterial : public Material
 {

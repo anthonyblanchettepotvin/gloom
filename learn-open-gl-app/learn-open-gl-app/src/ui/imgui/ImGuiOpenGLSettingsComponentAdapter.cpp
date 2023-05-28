@@ -1,6 +1,6 @@
 #include "ImGuiOpenGLSettingsComponentAdapter.h"
 
-#include "../../imgui/imgui.h"
+#include "../../vendor/imgui/imgui.h"
 
 ImGuiOpenGLSettingsComponentAdapter::ImGuiOpenGLSettingsComponentAdapter(OpenGLSettingsComponent* component)
 	: UiComponentAdapter(component)

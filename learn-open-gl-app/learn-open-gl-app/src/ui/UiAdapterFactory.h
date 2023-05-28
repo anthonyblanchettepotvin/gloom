@@ -3,8 +3,8 @@
 #include "UiActorAdapter.h"
 #include "UiComponentAdapter.h"
 
-#include "../Actor.h"
-#include "../components/ActorComponent.h"
+#include "../game/actor/Actor.h"
+#include "../game/component/ActorComponent.h"
 
 class UiAdapterFactory
 {

@@ -1,6 +1,6 @@
 #include "ImGuiTransformComponentAdapter.h"
 
-#include "../../imgui/imgui.h"
+#include "../../vendor/imgui/imgui.h"
 
 #include <glm/gtc/type_ptr.hpp>
 

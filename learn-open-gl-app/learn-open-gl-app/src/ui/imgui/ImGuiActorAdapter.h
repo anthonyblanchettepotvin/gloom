@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Actor.h"
+#include "../../game/actor/Actor.h"
 
 #include "../UiActorAdapter.h"
 

@@ -1,6 +1,6 @@
 #include "ImGuiActorAdapter.h"
 
-#include "../../imgui/imgui.h"
+#include "../../vendor/imgui/imgui.h"
 
 ImGuiActorAdapter::ImGuiActorAdapter(Actor* actor)
 	: UiActorAdapter(actor)

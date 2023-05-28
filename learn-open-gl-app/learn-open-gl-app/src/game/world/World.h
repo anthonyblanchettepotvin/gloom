@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Actor.h"
+#include "../actor/Actor.h"
 
 class World
 {

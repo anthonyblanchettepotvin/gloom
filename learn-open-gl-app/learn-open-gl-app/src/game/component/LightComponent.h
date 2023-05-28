@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../Shader.h"
+#include "../../engine/graphics/shader/Shader.h"
 
 #include "ActorComponent.h"
 

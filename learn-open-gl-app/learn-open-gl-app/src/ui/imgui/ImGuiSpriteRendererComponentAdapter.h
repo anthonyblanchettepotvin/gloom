@@ -2,7 +2,7 @@
 
 #include "../UiComponentAdapter.h"
 
-#include "../../components/SpriteRendererComponent.h"
+#include "../../game/component/SpriteRendererComponent.h"
 
 class ImGuiSpriteRendererComponentAdapter : public UiComponentAdapter
 {

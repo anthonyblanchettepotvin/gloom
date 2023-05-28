@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Model.h"
-#include "../Shader.h"
+#include "../../engine/graphics/model/Model.h"
+#include "../../engine/graphics/shader/Shader.h"
 
 #include "RendererComponent.h"
 

@@ -2,7 +2,7 @@
 
 #include "../UiComponentAdapter.h"
 
-#include "../../components/DirectionalLightComponent.h"
+#include "../../game/component/DirectionalLightComponent.h"
 
 class ImGuiDirectionalLightComponentAdapter : public UiComponentAdapter
 {

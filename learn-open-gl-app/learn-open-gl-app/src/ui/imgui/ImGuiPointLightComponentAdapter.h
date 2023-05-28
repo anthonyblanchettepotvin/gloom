@@ -2,7 +2,7 @@
 
 #include "../UiComponentAdapter.h"
 
-#include "../../components/PointLightComponent.h"
+#include "../../game/component/PointLightComponent.h"
 
 class ImGuiPointLightComponentAdapter : public UiComponentAdapter
 {

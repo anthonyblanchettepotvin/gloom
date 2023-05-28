@@ -1,9 +1,10 @@
 #pragma once
 
+#include <vector>
+
 #include <glm/glm.hpp>
 
-#include "Model.h"
-#include "Shader.h"
+#include "../../engine/graphics/shader/Shader.h"
 
 class ActorComponent;
 

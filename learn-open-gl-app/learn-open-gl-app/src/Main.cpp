@@ -1,27 +1,27 @@
 #include <iostream>
 
-#include "AssimpModelLoader.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "Cubemap.h"
-#include "Texture.h"
-#include "Model.h"
-#include "Actor.h"
-#include "World.h"
-#include "components/TransformComponent.h"
-#include "components/ModelRendererComponent.h"
-#include "components/SpriteRendererComponent.h"
-#include "components/PointLightComponent.h"
-#include "components/DirectionalLightComponent.h"
-#include "components/OpenGLSettingsComponent.h"
+#include "infrastructure/graphics/model/AssimpModelLoader.h"
+#include "engine/graphics/model/Model.h"
+#include "engine/graphics/shader/Shader.h"
+#include "engine/graphics/texture/Cubemap.h"
+#include "engine/graphics/texture/Sprite.h"
+#include "game/actor/Actor.h"
+#include "game/camera/Camera.h"
+#include "game/component/TransformComponent.h"
+#include "game/component/ModelRendererComponent.h"
+#include "game/component/SpriteRendererComponent.h"
+#include "game/component/PointLightComponent.h"
+#include "game/component/DirectionalLightComponent.h"
+#include "game/component/OpenGLSettingsComponent.h"
+#include "game/world/World.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
 
 /* UI library. */
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "vendor/imgui/imgui.h"
+#include "vendor/imgui/imgui_impl_glfw.h"
+#include "vendor/imgui/imgui_impl_opengl3.h"
 /* Image loading library. */
-#include "stb_image.h"
+#include "vendor/stbi/stb_image.h"
 
 /* OpenGL functions location aren't known at compile-time.
 Normally, we need to fetch each function's location at run-time

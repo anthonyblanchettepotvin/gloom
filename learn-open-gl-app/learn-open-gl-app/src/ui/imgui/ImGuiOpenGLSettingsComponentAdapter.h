@@ -2,7 +2,7 @@
 
 #include "../UiComponentAdapter.h"
 
-#include "../../components/OpenGLSettingsComponent.h"
+#include "../../game/component/OpenGLSettingsComponent.h"
 
 class ImGuiOpenGLSettingsComponentAdapter : public UiComponentAdapter
 {

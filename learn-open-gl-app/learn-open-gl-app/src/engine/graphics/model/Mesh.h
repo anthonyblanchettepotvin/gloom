@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Vertex.h"
-#include "Shader.h"
-#include "Material.h"
-
 #include <vector>
+
+#include "Vertex.h"
+
+#include "../shader/Shader.h"
+#include "../shader/Material.h"
 
 class Mesh
 {

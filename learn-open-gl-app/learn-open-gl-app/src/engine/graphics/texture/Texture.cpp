@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-#include "stb_image.h" // Image loading library by Sean Barrett.
+#include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
 
 #include <iostream>
 

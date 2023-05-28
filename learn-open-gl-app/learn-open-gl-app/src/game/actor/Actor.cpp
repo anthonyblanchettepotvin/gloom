@@ -4,8 +4,8 @@
 
 #include <glm/ext/matrix_transform.hpp>
 
-#include "components/TransformComponent.h"
-#include "components/RendererComponent.h"
+#include "../component/TransformComponent.h"
+#include "../component/RendererComponent.h"
 
 Actor::Actor(const std::string& name)
 	: name(name)

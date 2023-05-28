@@ -4,7 +4,8 @@
 #include <vector>
 
 #include "Model.h"
-#include "Texture.h"
+
+#include "../texture/Texture.h"
 
 class ModelLoader
 {

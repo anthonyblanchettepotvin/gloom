@@ -2,7 +2,7 @@
 
 #include "../UiComponentAdapter.h"
 
-#include "../../components/TransformComponent.h"
+#include "../../game/component/TransformComponent.h"
 
 class ImGuiTransformComponentAdapter : public UiComponentAdapter
 {

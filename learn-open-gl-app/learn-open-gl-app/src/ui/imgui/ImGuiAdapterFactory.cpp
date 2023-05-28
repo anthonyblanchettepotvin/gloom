@@ -1,13 +1,13 @@
 #include "ImGuiAdapterFactory.h"
 
-#include "../../Actor.h"
+#include "../../game/actor/Actor.h"
 
-#include "../../components/TransformComponent.h"
-#include "../../components/ModelRendererComponent.h"
-#include "../../components/SpriteRendererComponent.h"
-#include "../../components/PointLightComponent.h"
-#include "../../components/DirectionalLightComponent.h"
-#include "../../components/OpenGLSettingsComponent.h"
+#include "../../game/component/TransformComponent.h"
+#include "../../game/component/ModelRendererComponent.h"
+#include "../../game/component/SpriteRendererComponent.h"
+#include "../../game/component/PointLightComponent.h"
+#include "../../game/component/DirectionalLightComponent.h"
+#include "../../game/component/OpenGLSettingsComponent.h"
 
 #include "ImGuiActorAdapter.h"
 

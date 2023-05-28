@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-#include "ModelLoader.h"
+#include "../../../engine/graphics/model/ModelLoader.h"
 
 class AssimpModelLoader : public ModelLoader
 {

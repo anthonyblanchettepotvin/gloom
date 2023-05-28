@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../Actor.h"
+#include "../actor/Actor.h"
 
 #include "TransformComponent.h"
 

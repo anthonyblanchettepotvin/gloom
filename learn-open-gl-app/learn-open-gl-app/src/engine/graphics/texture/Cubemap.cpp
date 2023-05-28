@@ -3,7 +3,8 @@
 #include <iostream>
 
 #include <glad/glad.h>
-#include "stb_image.h"
+
+#include "../../../vendor/stbi/stb_image.h"
 
 Cubemap::Cubemap(const std::vector<std::string>& facesPath, bool flipVerticallyOnLoad)
 {

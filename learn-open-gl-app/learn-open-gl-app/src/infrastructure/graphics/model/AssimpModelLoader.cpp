@@ -6,7 +6,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "PhongMaterial.h"
+#include "../../../engine/graphics/shader/PhongMaterial.h"
 
 Model* AssimpModelLoader::Load(const std::string& path)
 {

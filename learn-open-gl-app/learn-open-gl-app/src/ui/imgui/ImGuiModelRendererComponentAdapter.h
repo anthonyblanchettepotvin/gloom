@@ -2,7 +2,7 @@
 
 #include "../UiComponentAdapter.h"
 
-#include "../../components/ModelRendererComponent.h"
+#include "../../game/component/ModelRendererComponent.h"
 
 class ImGuiModelRendererComponentAdapter : public UiComponentAdapter
 {
