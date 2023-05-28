@@ -57,9 +57,9 @@ const std::string REFRACTION_FRAGMENT_SHADER_PATH = ".\\shaders\\refraction.fs";
 const std::string CHROM_AB_VERTEX_SHADER_PATH = ".\\shaders\\chromatic_aberration.vs";
 const std::string CHROM_AB_FRAGMENT_SHADER_PATH = ".\\shaders\\chromatic_aberration.fs";
 
-const std::string BACKPACK_MODEL_PATH = "C:\\Users\\antho\\Downloads\\backpack\\backpack.obj";
-const std::string CUBE_MODEL_PATH = "C:\\Users\\antho\\Downloads\\cube\\cube.obj";
-const std::string SUZANNE_MODEL_PATH = "C:\\Users\\antho\\Downloads\\suzanne\\suzanne.obj";
+const std::string BACKPACK_MODEL_PATH = ".\\models\\backpack\\backpack.obj";
+const std::string CUBE_MODEL_PATH = ".\\models\\cube\\cube.obj";
+const std::string SUZANNE_MODEL_PATH = ".\\models\\suzanne\\suzanne.obj";
 
 const std::string AWESOME_EMOJI_TEXTURE_PATH = ".\\images\\awesomeface.png";
 
