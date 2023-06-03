@@ -42,7 +42,9 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/shader/ShaderLoader.h"
+#include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/shader/GlShaderLoader.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
@@ -476,6 +478,8 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
+
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
 	block that matches a UBO and is bound to it will share its data. This is handy,
 	since we no longer have to update the uniforms of each shader individually.
@@ -489,15 +493,22 @@ int main()
 	Skybox		mat4	16				64				64
 	Projection	mat4	16				128				64
 	*/
-	unsigned int matricesUbo;
-	glGenBuffers(1, &matricesUbo);
-	glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
-	glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW); // We reserve the space by setting the data to NULL.
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glm::mat4 viewTransform;
+	glm::mat4 skyboxTransform;
+	glm::mat4 projectionTransform;
+	GlobalData* matricesGlobalData = graphicsEngine->CreateGlobalData();
+	graphicsEngine->AddDataReferenceToGlobalData("view", viewTransform, matricesGlobalData);
+	graphicsEngine->AddDataReferenceToGlobalData("skybox", skyboxTransform, matricesGlobalData);
+	graphicsEngine->AddDataReferenceToGlobalData("projection", projectionTransform, matricesGlobalData);
+	//unsigned int matricesUbo;
+	//glGenBuffers(1, &matricesUbo);
+	//glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
+	//glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW); // We reserve the space by setting the data to NULL.
+	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	/* Here, we bind the UBO to the index 0. So, if we want to bind the corresponding
 	uniform block of a shader to this UBO, we'll need to bind it to the index 0. */
-	glBindBufferBase(GL_UNIFORM_BUFFER, 0, matricesUbo);
+	//glBindBufferBase(GL_UNIFORM_BUFFER, 0, matricesUbo);
 
 	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO, which have
 	the index 0. */
@@ -652,16 +663,17 @@ int main()
 
 		// --- View and projection transformation matrices ---
 
-		glm::mat4 viewTransform = camera.GetViewMatrix();
-		glm::mat4 skyboxTransform = camera.GetSkyboxMatrix();
-		glm::mat4 projectionTransform = camera.GetProjectionMatrix();
+		viewTransform = camera.GetViewMatrix();
+		skyboxTransform = camera.GetSkyboxMatrix();
+		projectionTransform = camera.GetProjectionMatrix();
 
 		/* Here, we update our matrices UBO data with the new matrices' data. */
-		glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
+		matricesGlobalData->SendToDevice();
+		/*glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(viewTransform));
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(skyboxTransform));
 		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projectionTransform));
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
 
 		/* Here, we update our camera UBO data with the new camera's data. */
 		glBindBuffer(GL_UNIFORM_BUFFER, cameraUbo);

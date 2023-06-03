@@ -145,6 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalDataTypes.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalDataType.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalData.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsEngine.cpp" />
+    <ClCompile Include="src\engine\graphics\globaldata\GlobalData.cpp" />
+    <ClCompile Include="src\engine\graphics\engine\GraphicsEngine.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp" />
     <ClCompile Include="src\engine\graphics\shader\ShaderLoader.cpp" />
@@ -195,6 +201,12 @@
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalDataTypes.h" />
+    <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalDataType.h" />
+    <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalData.h" />
+    <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsEngine.h" />
+    <ClInclude Include="src\engine\graphics\globaldata\GlobalData.h" />
+    <ClInclude Include="src\engine\graphics\engine\GraphicsEngine.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h" />
     <ClInclude Include="src\engine\graphics\shader\ShaderLoader.h" />
