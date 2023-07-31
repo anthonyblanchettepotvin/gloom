@@ -16,10 +16,12 @@ void ModelRendererComponent::Render()
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
+			shader->Use();
+
 			shader->SetFloatMat4("modelXform", transformComponent->GetModelTransformationMatrix());
 			shader->SetFloatMat3("normalXform", transformComponent->GetNormalTransformationMatrix());
 
-			model->Draw(shader);
+			model->Render(shader);
 		}
 	}
 }

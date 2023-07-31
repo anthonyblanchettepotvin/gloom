@@ -1,20 +1,10 @@
 #include "PhongMaterial.h"
 
-void PhongMaterial::Bind(Shader* shader)
+void PhongMaterial::Use(Shader* shader)
 {
-	if (diffuseTexture)
+	if (shader)
 	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuseTexture->id);
-
-		shader->SetInt("material.texture_diffuse1", 0);
-	}
-
-	if (specularTexture)
-	{
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specularTexture->id);
-
-		shader->SetInt("material.texture_specular1", 1);
+		shader->SetTexture("material.texture_diffuse1", diffuseTexture);
+		shader->SetTexture("material.texture_specular1", specularTexture);
 	}
 }

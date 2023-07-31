@@ -4,6 +4,10 @@
 
 #include <glm/glm.hpp>
 
+#include "../globaldata/GlobalData.h"
+#include "../texture/Cubemap.h"
+#include "../texture/Texture.h"
+
 class Shader
 {
 public:
@@ -16,5 +20,8 @@ public:
 	virtual void SetFloatMat3(const std::string& name, glm::mat3 value) = 0;
 	virtual void SetFloatMat4(const std::string& name, glm::mat4 value) = 0;
 
-	virtual void SetGlobalDataReference(const std::string& name) = 0;
+	virtual void SetTexture(const std::string& name, Texture* texture) = 0;
+	virtual void SetCubemap(const std::string& name, Cubemap* cubemap) = 0;
+
+	virtual void BindToGlobalData(GlobalData* globalData) = 0;
 };

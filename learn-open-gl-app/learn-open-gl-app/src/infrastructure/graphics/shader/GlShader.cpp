@@ -1,66 +1,80 @@
 #include "GlShader.h"
 
 #include <glad/glad.h>
-
 #include <glm/gtc/type_ptr.hpp>
 
+#include "../globaldata/GlGlobalData.h"
+
 GlShader::GlShader(unsigned int id)
-	: id(id)
+	: m_Id(id), m_SamplerIndex(0)
 {
 }
 
 void GlShader::Use()
 {
-	glUseProgram(id);
+	glUseProgram(m_Id);
+
+	m_SamplerIndex = 0;
 }
 
 void GlShader::SetBool(const std::string& name, bool value)
 {
-	glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);
+	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), (int)value);
 }
 
 void GlShader::SetInt(const std::string& name, int value)
 {
-	glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), value);
 }
 
 void GlShader::SetFloat(const std::string& name, float value)
 {
-	glUniform1f(glGetUniformLocation(id, name.c_str()), value);
+	glUniform1f(glGetUniformLocation(m_Id, name.c_str()), value);
 }
 
 void GlShader::SetFloatVec3(const std::string& name, glm::vec3 value)
 {
-	glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, glm::value_ptr(value));
+	glUniform3fv(glGetUniformLocation(m_Id, name.c_str()), 1, glm::value_ptr(value));
 }
 
 void GlShader::SetFloatMat3(const std::string& name, glm::mat3 value)
 {
-	glUniformMatrix3fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix3fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void GlShader::SetFloatMat4(const std::string& name, glm::mat4 value)
 {
-	glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void GlShader::SetGlobalDataReference(const std::string& name)
+void GlShader::SetTexture(const std::string& name, Texture* texture)
 {
-	// TODO: This information should be retrieved from a context or something
-	unsigned int index = 0;
+	if (GlTexture* glTexture = dynamic_cast<GlTexture*>(texture))
+	{
+		glTexture->Use(m_SamplerIndex);
 
-	if (name == "ubo_matrices")
-	{
-		index = 0;
-	}
-	else if (name == "ubo_camera")
-	{
-		index = 1;
-	}
-	else if (name == "ubo_lights")
-	{
-		index = 2;
-	}
+		SetInt(name, m_SamplerIndex);
 
-	glUniformBlockBinding(id, glGetUniformBlockIndex(id, name.c_str()), index);
+		m_SamplerIndex++;
+	}
+}
+
+void GlShader::SetCubemap(const std::string& name, Cubemap* cubemap)
+{
+	if (GlCubemap* glCubemap = dynamic_cast<GlCubemap*>(cubemap))
+	{
+		glCubemap->Use(m_SamplerIndex);
+
+		SetInt(name, m_SamplerIndex);
+
+		m_SamplerIndex++;
+	}
+}
+
+void GlShader::BindToGlobalData(GlobalData* globalData)
+{
+	if (GlGlobalData* glGlobalData = dynamic_cast<GlGlobalData*>(globalData))
+	{
+		glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, glGlobalData->GetName().c_str()), glGlobalData->GetIndex());
+	}
 }

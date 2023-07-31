@@ -4,24 +4,19 @@
 
 #include "Vertex.h"
 
-#include "../shader/Shader.h"
 #include "../shader/Material.h"
+#include "../shader/Shader.h"
 
 class Mesh
 {
 public:
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	Material* material;
-	
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material);
 
-	void Draw(Shader* shader);
+	virtual void Render(Shader* shader) = 0;
 
-private:
-	unsigned int VAO;
-	unsigned int VBO;
-	unsigned int EBO;
+protected:
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
 
-	void SetupMesh();
+	Material* material;
 };

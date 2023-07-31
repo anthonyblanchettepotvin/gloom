@@ -5,5 +5,5 @@
 class Material
 {
 public:
-	virtual void Bind(Shader* shader) = 0;
+	virtual void Use(Shader* shader) = 0;
 };

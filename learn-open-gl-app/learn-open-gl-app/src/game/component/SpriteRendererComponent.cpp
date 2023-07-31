@@ -16,6 +16,8 @@ void SpriteRendererComponent::Render()
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
+			shader->Use();
+
 			shader->SetFloatMat4("modelXform", transformComponent->GetModelTransformationMatrix());
 
 			sprite->Render(shader);

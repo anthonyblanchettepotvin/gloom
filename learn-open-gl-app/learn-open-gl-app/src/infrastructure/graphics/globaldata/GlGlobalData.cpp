@@ -1,25 +1,27 @@
 #include "GlGlobalData.h"
 
-#include <glad/glad.h>
 #include <iostream>
 
-GlGlobalData::GlGlobalData()
-{
-    glGenBuffers(1, &id);
+#include <glad/glad.h>
 
-    index = GetNextUniformBufferIndex();
-    glBindBufferBase(GL_UNIFORM_BUFFER, index, id);
+GlGlobalData::GlGlobalData(const std::string& name)
+    : m_Name(name)
+{
+    glGenBuffers(1, &m_Id);
+
+    m_Index = GetNextUniformBufferIndex();
+    glBindBufferBase(GL_UNIFORM_BUFFER, m_Index, m_Id);
 }
 
 void GlGlobalData::AddDataReference(const std::string& name, GlGlobalDataType& reference)
 {
-    references[name] = &reference;
-    referencesNameOrdered.push_back(name);
+    m_References[name] = &reference;
+    m_ReferencesNameOrdered.push_back(name);
 }
 
 void GlGlobalData::SendToDevice()
 {
-    if (!isAllocated)
+    if (!m_IsAllocated)
     {
         Allocate();
     }
@@ -29,27 +31,22 @@ void GlGlobalData::SendToDevice()
 
 void GlGlobalData::Allocate()
 {
-    glBindBuffer(GL_UNIFORM_BUFFER, id);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_Id);
     glBufferData(GL_UNIFORM_BUFFER, GetUniformBufferSize(), NULL, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    isAllocated = true;
+    m_IsAllocated = true;
 }
 
 void GlGlobalData::Send()
 {
-    glBindBuffer(GL_UNIFORM_BUFFER, id);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_Id);
     unsigned int offset = 0;
-    for (const auto& referenceName : referencesNameOrdered)
+    for (const auto& referenceName : m_ReferencesNameOrdered)
     {
-        GlGlobalDataType* currentReference = references.at(referenceName);
+        GlGlobalDataType* currentReference = m_References.at(referenceName);
 
-        // TODO: Put this function in a math library
-        offset = currentReference->GetBaseAlignment() == 0 ? currentReference->GetBaseAlignment() : ceil(offset / currentReference->GetBaseAlignment()) * currentReference->GetBaseAlignment();
-
-        glBufferSubData(GL_UNIFORM_BUFFER, offset, currentReference->GetSize(), currentReference->GetValuePointer());
-
-        offset += currentReference->GetSize();
+        currentReference->SendToDevice(offset);
     }
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -57,9 +54,9 @@ void GlGlobalData::Send()
 unsigned int GlGlobalData::GetUniformBufferSize() const
 {
     unsigned int size = 0;
-    for (const auto& referenceName : referencesNameOrdered)
+    for (const auto& referenceName : m_ReferencesNameOrdered)
     {
-        GlGlobalDataType* currentReference = references.at(referenceName);
+        GlGlobalDataType* currentReference = m_References.at(referenceName);
 
         // TODO: Put this function in a math library
         unsigned int offset = currentReference->GetBaseAlignment() == 0 ? currentReference->GetBaseAlignment() : ceil(size / currentReference->GetBaseAlignment()) * currentReference->GetBaseAlignment();
@@ -71,6 +68,8 @@ unsigned int GlGlobalData::GetUniformBufferSize() const
 
 unsigned int GlGlobalData::GetNextUniformBufferIndex()
 {
+    /* Here, choose an index for the UBO. So, if we want to bind the corresponding
+    uniform block of a shader to this UBO, we'll need to bind it to the chosen index. */
     static unsigned int nextUniformBufferIndex = 0;
 
     return nextUniformBufferIndex++;

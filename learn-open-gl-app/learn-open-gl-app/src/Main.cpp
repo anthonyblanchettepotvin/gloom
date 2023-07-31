@@ -1,19 +1,32 @@
 #include <iostream>
 
-#include "infrastructure/graphics/model/AssimpModelLoader.h"
 #include "engine/graphics/model/Model.h"
+#include "engine/graphics/engine/GraphicsEngine.h"
+#include "engine/graphics/lighting/Skybox.h"
 #include "engine/graphics/shader/Shader.h"
+#include "engine/graphics/shader/ShaderLoader.h"
 #include "engine/graphics/texture/Cubemap.h"
+#include "engine/graphics/texture/CubemapLoader.h"
 #include "engine/graphics/texture/Sprite.h"
+#include "engine/graphics/texture/TextureLoader.h"
 #include "game/actor/Actor.h"
 #include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
 #include "game/component/ModelRendererComponent.h"
+#include "game/component/SkyboxRendererComponent.h"
 #include "game/component/SpriteRendererComponent.h"
 #include "game/component/PointLightComponent.h"
 #include "game/component/DirectionalLightComponent.h"
 #include "game/component/OpenGLSettingsComponent.h"
 #include "game/world/World.h"
+#include "infrastructure/graphics/engine/GlGraphicsEngine.h"
+#include "infrastructure/graphics/lighting/GlSkybox.h"
+#include "infrastructure/graphics/model/GlModelLoader.h"
+#include "infrastructure/graphics/shader/GlShaderLoader.h"
+#include "infrastructure/graphics/texture/GlCubemapLoader.h"
+#include "infrastructure/graphics/texture/GlSprite.h"
+#include "infrastructure/graphics/texture/GlTexture.h"
+#include "infrastructure/graphics/texture/GlTextureLoader.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
 
 /* UI library. */
@@ -41,11 +54,6 @@ graphics programming with OpenGL. */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include "engine/graphics/engine/GraphicsEngine.h"
-#include "engine/graphics/shader/ShaderLoader.h"
-#include "infrastructure/graphics/engine/GlGraphicsEngine.h"
-#include "infrastructure/graphics/shader/GlShaderLoader.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
@@ -201,46 +209,55 @@ int main()
 
 	initImGui(window);
 
+	// --- Infrastructure ---
+
 	ShaderLoader* shaderLoader = new GlShaderLoader();
+	TextureLoader* textureLoader = new GlTextureLoader();
+	CubemapLoader* cubemapLoader = new GlCubemapLoader();
+	ModelLoader* modelLoader = new GlModelLoader(*textureLoader);
 
 	// --- Models ---
 
-	AssimpModelLoader modelLoader;
-
-	Model* backpackModel = modelLoader.Load(BACKPACK_MODEL_PATH);
+	Model* backpackModel = modelLoader->Load(BACKPACK_MODEL_PATH);
 	Shader* backpackShader = shaderLoader->Load(PHONG_SHADER_PATH);
 	backpackShader->Use();
 	backpackShader->SetFloat("material.shininess", 4.0f);
 
-	Model* cubeModel = modelLoader.Load(CUBE_MODEL_PATH);
+	Model* cubeModel = modelLoader->Load(CUBE_MODEL_PATH);
 	Shader* cubeShader = shaderLoader->Load(REFLECTION_SHADER_PATH);
 
-	Model* suzanneModel = modelLoader.Load(SUZANNE_MODEL_PATH);
+	Model* suzanneModel = modelLoader->Load(SUZANNE_MODEL_PATH);
 	Shader* suzanneShader = shaderLoader->Load(REFRACTION_SHADER_PATH);
 
 	// --- Textures ---
 
-	Texture pointLightTexture(AWESOME_EMOJI_TEXTURE_PATH, TextureType::UNKNOWN);
+	Texture* pointLightTexture = textureLoader->Load(AWESOME_EMOJI_TEXTURE_PATH);
 
 	// --- Cubemaps ---
 
-	Cubemap cubemap(CUBEMAP_FACES_PATH, false);
+	Cubemap* cubemap = cubemapLoader->Load(CUBEMAP_FACES_PATH);
+
+	// --- Skyboxes ---
+
+	Skybox* skybox = new GlSkybox(cubemap);
 
 	// --- Shaders ---
 
 	Shader* spriteShader = shaderLoader->Load(SPRITE_SHADER_PATH);
-	
 	Shader* renderShader = shaderLoader->Load(RENDER_SHADER_PATH);
-
 	Shader* skyboxShader = shaderLoader->Load(SKYBOX_SHADER_PATH);
-
 	Shader* chromaticAberrationShader = shaderLoader->Load(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	// --- Sprite ---
 
-	Sprite pointLightSprite(&pointLightTexture);
+	Sprite* pointLightSprite = new GlSprite(pointLightTexture);
 
 	// --- Actors ---
+
+	Actor skyboxActor("Skybox");
+
+	SkyboxRendererComponent skyboxRendererComponent(skybox, skyboxShader);
+	skyboxActor.AddComponent(&skyboxRendererComponent);
 
 	Actor backpackActor("Backpack");
 
@@ -272,16 +289,20 @@ int main()
 
 	Actor pointLightActor("Point light");
 
+	PointLight pointLight(glm::vec3(0.2f), glm::vec3(0.5f), glm::vec3(1.0f), {1.0f, 0.14f, 0.07f});
+
 	TransformComponent pointLightTransformComponent(glm::vec3(2.0f));
 	pointLightActor.AddComponent(&pointLightTransformComponent);
-	PointLightComponent pointLightComponent;
+	PointLightComponent pointLightComponent(&pointLight);
 	pointLightActor.AddComponent(&pointLightComponent);
-	SpriteRendererComponent pointLightRendererComponent(&pointLightSprite, spriteShader);
+	SpriteRendererComponent pointLightRendererComponent(pointLightSprite, spriteShader);
 	pointLightActor.AddComponent(&pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");
 
-	DirectionalLightComponent directionalLightComponent;
+	DirectionalLight directionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f));
+
+	DirectionalLightComponent directionalLightComponent(&directionalLight);
 	directionalLightActor.AddComponent(&directionalLightComponent);
 
 	std::vector<PointLightComponent*> pointLightComponents = {
@@ -295,6 +316,7 @@ int main()
 	// --- World ---
 
 	world.SpawnActor(&settingsActor);
+	world.SpawnActor(&skyboxActor);
 	world.SpawnActor(&backpackActor);
 	world.SpawnActor(&cubeActor);
 	world.SpawnActor(&suzanneActor);
@@ -317,9 +339,9 @@ int main()
 	/* We create a texture the size of our viewport and we attach the texture to the framebuffer
 	as a color attachment. Note that we can attach a texture as a depth and/or stencil attachment too.
 	In that case, we would need to change the texture's format accordingly. */
-	Texture fboColorAttachment(SCR_WIDTH, SCR_HEIGHT);
+	GlTexture fboColorAttachment(SCR_WIDTH, SCR_HEIGHT, 3, nullptr);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboColorAttachment.id, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboColorAttachment.GetId(), 0);
 
 	// 2. Renderbuffer attachment
 	/* We create a renderbuffer the size of our viewport and we attach the renderbuffer to the framebuffer
@@ -419,65 +441,6 @@ int main()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	float skyboxVertices[] = {    
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		-1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f
-	};
-
-	unsigned int skyboxVAO;
-	glGenVertexArrays(1, &skyboxVAO);
-	glBindVertexArray(skyboxVAO);
-
-	unsigned int skyboxVBO;
-	glGenBuffers(1, &skyboxVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
 
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
@@ -496,27 +459,17 @@ int main()
 	glm::mat4 viewTransform;
 	glm::mat4 skyboxTransform;
 	glm::mat4 projectionTransform;
-	GlobalData* matricesGlobalData = graphicsEngine->CreateGlobalData();
+	GlobalData* matricesGlobalData = graphicsEngine->CreateGlobalData("ubo_matrices");
 	graphicsEngine->AddDataReferenceToGlobalData("view", viewTransform, matricesGlobalData);
 	graphicsEngine->AddDataReferenceToGlobalData("skybox", skyboxTransform, matricesGlobalData);
 	graphicsEngine->AddDataReferenceToGlobalData("projection", projectionTransform, matricesGlobalData);
-	//unsigned int matricesUbo;
-	//glGenBuffers(1, &matricesUbo);
-	//glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
-	//glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW); // We reserve the space by setting the data to NULL.
-	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	/* Here, we bind the UBO to the index 0. So, if we want to bind the corresponding
-	uniform block of a shader to this UBO, we'll need to bind it to the index 0. */
-	//glBindBufferBase(GL_UNIFORM_BUFFER, 0, matricesUbo);
-
-	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO, which have
-	the index 0. */
-	backpackShader->SetGlobalDataReference("ubo_matrices");
-	cubeShader->SetGlobalDataReference("ubo_matrices");
-	suzanneShader->SetGlobalDataReference("ubo_matrices");
-	skyboxShader->SetGlobalDataReference("ubo_matrices");
-	spriteShader->SetGlobalDataReference("ubo_matrices");
+	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO. */
+	backpackShader->BindToGlobalData(matricesGlobalData);
+	cubeShader->BindToGlobalData(matricesGlobalData);
+	suzanneShader->BindToGlobalData(matricesGlobalData);
+	skyboxShader->BindToGlobalData(matricesGlobalData);
+	spriteShader->BindToGlobalData(matricesGlobalData);
 
 	// Lights UBO (384 bytes)
 	/*
@@ -548,15 +501,13 @@ int main()
 	diffuse		vec3	16				32				12
 	specular	vec3	16				48				12
 	*/
-	unsigned int lightsUbo;
-	glGenBuffers(1, &lightsUbo);
-	glBindBuffer(GL_UNIFORM_BUFFER, lightsUbo);
-	glBufferData(GL_UNIFORM_BUFFER, 384, NULL, GL_STATIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	GlobalData* directionalLightsGlobalData = graphicsEngine->CreateGlobalData("ubo_directionalLights");
+	graphicsEngine->AddDataReferenceToGlobalData("directionalLight1", directionalLight, directionalLightsGlobalData);
+	GlobalData* pointLightsGlobalData = graphicsEngine->CreateGlobalData("ubo_pointLights");
+	graphicsEngine->AddDataReferenceToGlobalData("pointLight1", pointLight, pointLightsGlobalData);
 
-	glBindBufferBase(GL_UNIFORM_BUFFER, 2, lightsUbo);
-
-	backpackShader->SetGlobalDataReference("ubo_lights");
+	backpackShader->BindToGlobalData(directionalLightsGlobalData);
+	backpackShader->BindToGlobalData(pointLightsGlobalData);
 
 	// Camera UBO (12 bytes)
 	/*
@@ -569,17 +520,13 @@ int main()
 	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
 	position	vec3	16				0				12
 	*/
-	unsigned int cameraUbo;
-	glGenBuffers(1, &cameraUbo);
-	glBindBuffer(GL_UNIFORM_BUFFER, cameraUbo);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec3), NULL, GL_STATIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glm::vec3 cameraPosition;
+	GlobalData* cameraGlobalData = graphicsEngine->CreateGlobalData("ubo_camera");
+	graphicsEngine->AddDataReferenceToGlobalData("camera", cameraPosition, cameraGlobalData);
 
-	glBindBufferBase(GL_UNIFORM_BUFFER, 1, cameraUbo);
-
-	backpackShader->SetGlobalDataReference("ubo_camera");
-	cubeShader->SetGlobalDataReference("ubo_camera");
-	suzanneShader->SetGlobalDataReference("ubo_camera");
+	backpackShader->BindToGlobalData(cameraGlobalData);
+	cubeShader->BindToGlobalData(cameraGlobalData);
+	suzanneShader->BindToGlobalData(cameraGlobalData);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -663,79 +610,32 @@ int main()
 
 		// --- View and projection transformation matrices ---
 
+		/* Here, we update our matrices UBO data with the new matrices' data. */
 		viewTransform = camera.GetViewMatrix();
 		skyboxTransform = camera.GetSkyboxMatrix();
 		projectionTransform = camera.GetProjectionMatrix();
-
-		/* Here, we update our matrices UBO data with the new matrices' data. */
 		matricesGlobalData->SendToDevice();
-		/*glBindBuffer(GL_UNIFORM_BUFFER, matricesUbo);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(viewTransform));
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(skyboxTransform));
-		glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projectionTransform));
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
 
 		/* Here, we update our camera UBO data with the new camera's data. */
-		glBindBuffer(GL_UNIFORM_BUFFER, cameraUbo);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec3), glm::value_ptr(camera.GetPosition()));
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		cameraPosition = camera.GetPosition();
+		cameraGlobalData->SendToDevice();
 
 		/* Here, we update our lights UBO data with the new lights' data. */
-		glBindBuffer(GL_UNIFORM_BUFFER, lightsUbo);
-		unsigned int pointLightsOffset = 0;
-		for (size_t i = 0; i < pointLightComponents.size(); i++)
-		{
-			pointLightComponents[i]->Register(pointLightsOffset);
-		}
-		unsigned int directionalLightsOffset = 320;
-		for (size_t i = 0; i < directionalLightComponents.size(); i++)
-		{
-			directionalLightComponents[i]->Register(directionalLightsOffset);
-		}
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		directionalLightsGlobalData->SendToDevice();
+		pointLightsGlobalData->SendToDevice();
 
 		// --- Draw actors ---
 
-		backpackShader->Use();
-
 		backpackActor.Render();
-
-		cubeShader->Use();
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
-
 		cubeActor.Render();
-
-		suzanneShader->Use();
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
-
 		suzanneActor.Render();
-
-		// --- Draw skybox ---
-
 		/* We could've render the skybox first, but we would render fragments that might be overridden
 		by the rest of the scene. Knowing that, we render it last and by exploiting depth testing - see
 		comments in the skybox vertex shader -, still make it look like it's behind everything. Plus,
 		using this neat little trick, we don't have to call glDepthMask with GL_FALSE before rendering the
 		skybox and then call it again with GL_TRUE. */
-		skyboxShader->Use();
-
-		glBindVertexArray(skyboxVAO);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.id);
-
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-		// --- Draw lights ---
-
-		spriteShader->Use();
-
+		skyboxActor.Render();
+		/* We need to render the actors with transparency last. */
 		pointLightActor.Render();
 
 		// --- RENDERING PROCESS, STEP 2 ---
@@ -755,11 +655,11 @@ int main()
 		glBindVertexArray(VAO);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, fboColorAttachment.id);
+		glBindTexture(GL_TEXTURE_2D, fboColorAttachment.GetId());
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		/*chromaticAberrationShader.use();
+		/*chromaticAberrationShader->Use();
 		
 		glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
@@ -817,14 +717,20 @@ void setupImGuiFrame()
 	if (currentItem != -1 && currentItem <= world.GetActors().size())
 	{
 		UiAdapter* actorAdapter = adapterFactory.CreateActorAdapter(world.GetActors()[currentItem]);
-		actorAdapter->RenderUi();
+		if (actorAdapter)
+		{
+			actorAdapter->RenderUi();
+		}
 
 		for (const auto& component : world.GetActors()[currentItem]->GetComponents())
 		{
 			ImGui::Separator();
 
 			UiAdapter* componentAdapter = adapterFactory.CreateComponentAdapter(component);
-			componentAdapter->RenderUi();
+			if (componentAdapter)
+			{
+				componentAdapter->RenderUi();
+			}
 		}
 	}
 	ImGui::End();

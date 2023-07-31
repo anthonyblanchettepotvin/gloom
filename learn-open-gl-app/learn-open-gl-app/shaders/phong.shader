@@ -34,8 +34,8 @@ END_VERTEX_SHADER
 
 START_FRAGMENT_SHADER
 
-#define POINT_LIGHT_COUNT 4
 #define DIRECTIONAL_LIGHT_COUNT 1
+#define POINT_LIGHT_COUNT 1
 
 struct Material {
 	sampler2D texture_diffuse1;
@@ -79,9 +79,12 @@ in VS_OUT{
 
 uniform Material material;
 
-layout(std140) uniform ubo_lights{
-	PointLight pointLights[POINT_LIGHT_COUNT];
+layout(std140) uniform ubo_directionalLights{
 	DirectionalLight directionalLights[DIRECTIONAL_LIGHT_COUNT];
+};
+
+layout(std140) uniform ubo_pointLights{
+	PointLight pointLights[POINT_LIGHT_COUNT];
 };
 
 layout(std140) uniform ubo_camera{

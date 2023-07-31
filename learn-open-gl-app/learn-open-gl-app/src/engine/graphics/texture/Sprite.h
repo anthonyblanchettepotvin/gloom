@@ -11,13 +11,8 @@ public:
 
 	Texture* GetTexture() { return texture; };
 
-	void Render(Shader* shader);
+	virtual void Render(Shader* shader) = 0;
 
-private:
+protected:
 	Texture* texture;
-
-	unsigned int VAO;
-	unsigned int VBO;
-
-	void SetupMesh();
 };

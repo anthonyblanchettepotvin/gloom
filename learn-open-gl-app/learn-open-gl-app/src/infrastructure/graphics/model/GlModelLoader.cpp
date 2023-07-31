@@ -1,14 +1,20 @@
-#include "AssimpModelLoader.h"
+#include "GlModelLoader.h"
 
 #include <iostream>
 
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
 #include "../../../engine/graphics/shader/PhongMaterial.h"
 
-Model* AssimpModelLoader::Load(const std::string& path)
+#include "GlMesh.h"
+
+GlModelLoader::GlModelLoader(TextureLoader& textureLoader)
+	: m_TextureLoader(textureLoader)
+{
+}
+
+Model* GlModelLoader::Load(const std::string& path)
 {
 	Assimp::Importer importer;
 
@@ -22,7 +28,7 @@ Model* AssimpModelLoader::Load(const std::string& path)
 		return nullptr;
 	}
 
-	directory = path.substr(0, path.find_last_of('\\'));
+	m_Directory = path.substr(0, path.find_last_of('\\'));
 
 	std::vector<Mesh*> meshes;
 
@@ -37,7 +43,7 @@ Model* AssimpModelLoader::Load(const std::string& path)
 	return new Model(meshes);
 }
 
-void AssimpModelLoader::ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes)
+void GlModelLoader::ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes)
 {
 	// Process all the node's meshes (if any)
 	for (size_t i = 0; i < node->mNumMeshes; i++)
@@ -58,7 +64,7 @@ void AssimpModelLoader::ProcessNode(aiNode* node, const aiScene* scene, std::vec
 	}
 }
 
-Mesh* AssimpModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+Mesh* GlModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -118,15 +124,15 @@ Mesh* AssimpModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 		material = LoadMaterial(assimpMaterial);
 	}
 
-	return new Mesh(vertices, indices, material);
+	return new GlMesh(vertices, indices, material);
 }
 
-Material* AssimpModelLoader::LoadMaterial(aiMaterial* material)
+Material* GlModelLoader::LoadMaterial(aiMaterial* material)
 {
 	std::string materialName = material->GetName().C_Str();
 
-	if (loadedMaterial.find(materialName) != loadedMaterial.end())
-		return loadedMaterial[materialName];
+	if (m_LoadedMaterial.find(materialName) != m_LoadedMaterial.end())
+		return m_LoadedMaterial[materialName];
 
 	int materialShadingModel;
 	material->Get(AI_MATKEY_SHADING_MODEL, materialShadingModel);
@@ -137,13 +143,17 @@ Material* AssimpModelLoader::LoadMaterial(aiMaterial* material)
 
 		std::vector<Texture*> diffuseTextures = LoadMaterialTextures(material, aiTextureType_DIFFUSE);
 		if (!diffuseTextures.empty())
+		{
 			phong->SetDiffuseTexture(diffuseTextures[0]);
+		}
 
 		std::vector<Texture*> specularTextures = LoadMaterialTextures(material, aiTextureType_SPECULAR);
 		if (!specularTextures.empty())
+		{
 			phong->SetSpecularTexture(specularTextures[0]);
+		}
 
-		loadedMaterial[materialName] = phong;
+		m_LoadedMaterial[materialName] = phong;
 
 		return phong;
 	}
@@ -155,7 +165,7 @@ Material* AssimpModelLoader::LoadMaterial(aiMaterial* material)
 	return nullptr;
 }
 
-std::vector<Texture*> AssimpModelLoader::LoadMaterialTextures(aiMaterial* material, aiTextureType type)
+std::vector<Texture*> GlModelLoader::LoadMaterialTextures(aiMaterial* material, aiTextureType type)
 {
 	std::vector<Texture*> textures;
 
@@ -169,34 +179,21 @@ std::vector<Texture*> AssimpModelLoader::LoadMaterialTextures(aiMaterial* materi
 		/* Some models found over the internet use absolute paths for their texture locations,
 		which won't work on each machine. In that case you probably want to manually edit the file
 		to use local paths for the textures (if possible). */
-		std::string textureAbsolutePath = directory + "\\" + textureRelativePath.C_Str();
+		std::string textureAbsolutePath = m_Directory + "\\" + textureRelativePath.C_Str();
 
-		if (loadedTextures.find(textureAbsolutePath) != loadedTextures.end())
-			textures.push_back(loadedTextures[textureAbsolutePath]);
+		if (m_LoadedTextures.find(textureAbsolutePath) != m_LoadedTextures.end())
+		{
+			textures.push_back(m_LoadedTextures[textureAbsolutePath]);
+		}
 		else
 		{
-			Texture* texture = new Texture(textureAbsolutePath, aiTextureTypeToTextureType(type));
+			Texture* texture = m_TextureLoader.Load(textureAbsolutePath);
 
 			textures.push_back(texture);
 
-			loadedTextures[textureAbsolutePath] = texture;
+			m_LoadedTextures[textureAbsolutePath] = texture;
 		}
 	}
 
 	return textures;
-}
-
-TextureType AssimpModelLoader::aiTextureTypeToTextureType(aiTextureType type) const {
-	switch (type)
-	{
-	case aiTextureType_DIFFUSE:
-		return TextureType::DIFFUSE;
-		break;
-	case aiTextureType_SPECULAR:
-		return TextureType::SPECULAR;
-		break;
-	default:
-		return TextureType::UNKNOWN;
-		break;
-	}
 }

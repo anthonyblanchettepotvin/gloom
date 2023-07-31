@@ -3,10 +3,14 @@
 #include <string>
 #include <vector>
 
+#include "CubemapTexture.h"
+
 class Cubemap
 {
 public:
-	unsigned int id;
+	Cubemap(const std::vector<CubemapTexture*>& textures);
+	virtual ~Cubemap() = default;
 
-	Cubemap(const std::vector<std::string>& facesPath, bool flipVerticallyOnLoad = true);
+protected:
+	std::vector<CubemapTexture*> textures;
 };

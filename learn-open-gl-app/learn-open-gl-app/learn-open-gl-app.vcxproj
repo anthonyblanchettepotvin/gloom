@@ -145,6 +145,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\graphics\lighting\GlSkybox.cpp" />
+    <ClCompile Include="src\game\component\SkyboxRendererComponent.cpp" />
+    <ClCompile Include="src\engine\graphics\lighting\Skybox.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\texture\GlCubemapTexture.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\texture\GlCubemapLoader.cpp" />
+    <ClCompile Include="src\engine\graphics\texture\CubemapTexture.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\texture\GlCubemap.cpp" />
+    <ClCompile Include="src\engine\graphics\texture\CubemapLoader.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\texture\GlTexture.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\texture\GlTextureLoader.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\texture\GlSprite.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\model\GlMesh.cpp" />
+    <ClCompile Include="src\engine\graphics\lighting\DirectionalLight.cpp" />
+    <ClCompile Include="src\engine\graphics\lighting\PointLight.cpp" />
     <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalDataTypes.cpp" />
     <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalDataType.cpp" />
     <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalData.cpp" />
@@ -156,7 +170,7 @@
     <ClCompile Include="src\engine\graphics\shader\ShaderLoader.cpp" />
     <ClCompile Include="src\engine\graphics\shader\PhongMaterial.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Material.cpp" />
-    <ClCompile Include="src\infrastructure\graphics\model\AssimpModelLoader.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\model\GlModelLoader.cpp" />
     <ClCompile Include="src\engine\graphics\model\ModelLoader.cpp" />
     <ClCompile Include="src\engine\graphics\texture\Cubemap.cpp" />
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c" />
@@ -199,8 +213,23 @@
     <ClCompile Include="src\game\component\TransformComponent.cpp" />
     <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
+    <ClCompile Include="src\engine\graphics\texture\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\graphics\lighting\GlSkybox.h" />
+    <ClInclude Include="src\game\component\SkyboxRendererComponent.h" />
+    <ClInclude Include="src\engine\graphics\lighting\Skybox.h" />
+    <ClInclude Include="src\infrastructure\graphics\texture\GlCubemapTexture.h" />
+    <ClInclude Include="src\infrastructure\graphics\texture\GlCubemapLoader.h" />
+    <ClInclude Include="src\engine\graphics\texture\CubemapTexture.h" />
+    <ClInclude Include="src\infrastructure\graphics\texture\GlCubemap.h" />
+    <ClInclude Include="src\engine\graphics\texture\CubemapLoader.h" />
+    <ClInclude Include="src\infrastructure\graphics\texture\GlTexture.h" />
+    <ClInclude Include="src\infrastructure\graphics\texture\GlTextureLoader.h" />
+    <ClInclude Include="src\infrastructure\graphics\texture\GlSprite.h" />
+    <ClInclude Include="src\infrastructure\graphics\model\GlMesh.h" />
+    <ClInclude Include="src\engine\graphics\lighting\DirectionalLight.h" />
+    <ClInclude Include="src\engine\graphics\lighting\PointLight.h" />
     <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalDataTypes.h" />
     <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalDataType.h" />
     <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalData.h" />
@@ -212,7 +241,7 @@
     <ClInclude Include="src\engine\graphics\shader\ShaderLoader.h" />
     <ClInclude Include="src\engine\graphics\shader\PhongMaterial.h" />
     <ClInclude Include="src\engine\graphics\shader\Material.h" />
-    <ClInclude Include="src\infrastructure\graphics\model\AssimpModelLoader.h" />
+    <ClInclude Include="src\infrastructure\graphics\model\GlModelLoader.h" />
     <ClInclude Include="src\engine\graphics\model\ModelLoader.h" />
     <ClInclude Include="src\engine\graphics\texture\Cubemap.h" />
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h" />
@@ -256,6 +285,7 @@
     <ClInclude Include="src\game\component\TransformComponent.h" />
     <ClInclude Include="src\ui\UiComponentAdapter.h" />
     <ClInclude Include="src\ui\UiAdapterFactory.h" />
+    <ClInclude Include="src\engine\graphics\texture\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll">
