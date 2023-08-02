@@ -177,8 +177,6 @@
     <ClCompile Include="src\engine\graphics\model\ModelLoader.cpp" />
     <ClCompile Include="src\engine\graphics\texture\Cubemap.cpp" />
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c" />
-    <ClCompile Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.cpp" />
-    <ClCompile Include="src\game\component\OpenGLSettingsComponent.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.cpp" />
@@ -251,8 +249,6 @@
     <ClInclude Include="src\engine\graphics\model\ModelLoader.h" />
     <ClInclude Include="src\engine\graphics\texture\Cubemap.h" />
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h" />
-    <ClInclude Include="src\ui\imgui\ImGuiOpenGLSettingsComponentAdapter.h" />
-    <ClInclude Include="src\game\component\OpenGLSettingsComponent.h" />
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.h" />

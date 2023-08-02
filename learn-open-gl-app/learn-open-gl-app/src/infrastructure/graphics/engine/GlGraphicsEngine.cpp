@@ -30,6 +30,9 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 
 	// --- Options ---
 
+	/* Tells OpenGL if it should do depth testing during which it compares each fragment's z-value with the z-buffer
+	and determines, based on the depth function, if the fragment passes the depth test or not. If a fragment passes
+	the depth test, it will be rendered. Otherwise, it is discarded. */
 	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
 	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
 	on the order of triangles rendered (within the same draw call), some triangles are drawn
@@ -41,6 +44,7 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 	position x in the depth buffer and the bit at position x in the depth mask. */
 	glDepthMask(GL_TRUE); // enable writing the the depth buffer (1 & 1 = 1, 1 & 0 = 0)
 	//glDepthMask(GL_FALSE); // disable writing to the depth buffer (0 & 1 = 0, 0 & 0 = 0)
+	glDepthFunc(GL_LEQUAL);
 
 	/* Enable stencil testing between the fragment shader execution and the depth testing phase.
 	Stencil testing is similar to depth testing in the way that it discards fragments based on

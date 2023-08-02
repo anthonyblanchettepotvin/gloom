@@ -17,7 +17,6 @@
 #include "game/component/SpriteRendererComponent.h"
 #include "game/component/PointLightComponent.h"
 #include "game/component/DirectionalLightComponent.h"
-#include "game/component/OpenGLSettingsComponent.h"
 #include "game/world/World.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/lighting/GlSkybox.h"
@@ -278,11 +277,6 @@ int main()
 	ModelRendererComponent suzanneRendererComponent(suzanneModel, suzanneShader);
 	suzanneActor.AddComponent(&suzanneRendererComponent);
 
-	Actor settingsActor("Settings");
-
-	OpenGLSettingsComponent settingsComponent;
-	settingsActor.AddComponent(&settingsComponent);
-
 	// --- Lights ---
 
 	Actor pointLightActor("Point light");
@@ -313,7 +307,6 @@ int main()
 
 	// --- World ---
 
-	world.SpawnActor(&settingsActor);
 	world.SpawnActor(&skyboxActor);
 	world.SpawnActor(&backpackActor);
 	world.SpawnActor(&cubeActor);
@@ -410,46 +403,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// --- Pre-frame stuff ---
-
-		/* Tells OpenGL if it should do depth testing during which it compares each fragment's z-value with the z-buffer
-		and determines, based on the depth function, if the fragment passes the depth test or not. If a fragment passes
-		the depth test, it will be rendered. Otherwise, it is discarded. */
-		if (settingsComponent.GetDepthTestingEnabledReference())
-			glEnable(GL_DEPTH_TEST);
-		else
-			glDisable(GL_DEPTH_TEST);
-
-		/* Tells OpenGL which depth function to use during the depth testing. */
-		switch (settingsComponent.GetDepthFunctionReference())
-		{
-		case OpenGLDepthFunction::ALWAYS:
-			glDepthFunc(GL_ALWAYS);
-			break;
-		case OpenGLDepthFunction::NEVER:
-			glDepthFunc(GL_NEVER);
-			break;
-		case OpenGLDepthFunction::LESS:
-			glDepthFunc(GL_LESS);
-			break;
-		case OpenGLDepthFunction::EQUAL:
-			glDepthFunc(GL_EQUAL);
-			break;
-		case OpenGLDepthFunction::LEQUAL:
-			glDepthFunc(GL_LEQUAL);
-			break;
-		case OpenGLDepthFunction::GREATER:
-			glDepthFunc(GL_GREATER);
-			break;
-		case OpenGLDepthFunction::NOTEQUAL:
-			glDepthFunc(GL_NOTEQUAL);
-			break;
-		case OpenGLDepthFunction::GEQUAL:
-			glDepthFunc(GL_GEQUAL);
-			break;
-		default:
-			break;
-		}
-
+		
 		// Update deltaTime and lastFrame.
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
