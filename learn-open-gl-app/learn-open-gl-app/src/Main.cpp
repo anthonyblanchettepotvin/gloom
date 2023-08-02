@@ -209,33 +209,31 @@ int main()
 
 	initImGui(window);
 
-	// --- Infrastructure ---
+	// --- Graphics ---
 
-	ShaderLoader* shaderLoader = new GlShaderLoader();
-	TextureLoader* textureLoader = new GlTextureLoader();
-	CubemapLoader* cubemapLoader = new GlCubemapLoader();
-	ModelLoader* modelLoader = new GlModelLoader(*textureLoader);
+	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
+	graphicsEngine->Initialize(SCR_WIDTH, SCR_HEIGHT);
 
 	// --- Models ---
 
-	Model* backpackModel = modelLoader->Load(BACKPACK_MODEL_PATH);
-	Shader* backpackShader = shaderLoader->Load(PHONG_SHADER_PATH);
+	Model* backpackModel = graphicsEngine->GetModelLoader().Load(BACKPACK_MODEL_PATH);
+	Shader* backpackShader = graphicsEngine->GetShaderLoader().Load(PHONG_SHADER_PATH);
 	backpackShader->Use();
 	backpackShader->SetFloat("material.shininess", 4.0f);
 
-	Model* cubeModel = modelLoader->Load(CUBE_MODEL_PATH);
-	Shader* cubeShader = shaderLoader->Load(REFLECTION_SHADER_PATH);
+	Model* cubeModel = graphicsEngine->GetModelLoader().Load(CUBE_MODEL_PATH);
+	Shader* cubeShader = graphicsEngine->GetShaderLoader().Load(REFLECTION_SHADER_PATH);
 
-	Model* suzanneModel = modelLoader->Load(SUZANNE_MODEL_PATH);
-	Shader* suzanneShader = shaderLoader->Load(REFRACTION_SHADER_PATH);
+	Model* suzanneModel = graphicsEngine->GetModelLoader().Load(SUZANNE_MODEL_PATH);
+	Shader* suzanneShader = graphicsEngine->GetShaderLoader().Load(REFRACTION_SHADER_PATH);
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = textureLoader->Load(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = graphicsEngine->GetTextureLoader().Load(AWESOME_EMOJI_TEXTURE_PATH);
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = cubemapLoader->Load(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = graphicsEngine->GetCubemapLoader().Load(CUBEMAP_FACES_PATH);
 
 	// --- Skyboxes ---
 
@@ -243,10 +241,10 @@ int main()
 
 	// --- Shaders ---
 
-	Shader* spriteShader = shaderLoader->Load(SPRITE_SHADER_PATH);
-	Shader* renderShader = shaderLoader->Load(RENDER_SHADER_PATH);
-	Shader* skyboxShader = shaderLoader->Load(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = shaderLoader->Load(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* spriteShader = graphicsEngine->GetShaderLoader().Load(SPRITE_SHADER_PATH);
+	Shader* renderShader = graphicsEngine->GetShaderLoader().Load(RENDER_SHADER_PATH);
+	Shader* skyboxShader = graphicsEngine->GetShaderLoader().Load(SKYBOX_SHADER_PATH);
+	Shader* chromaticAberrationShader = graphicsEngine->GetShaderLoader().Load(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	// --- Sprite ---
 
@@ -322,126 +320,6 @@ int main()
 	world.SpawnActor(&suzanneActor);
 	world.SpawnActor(&pointLightActor);
 	world.SpawnActor(&directionalLightActor);
-
-	// --- Framebuffer ---
-
-	/* Framebuffers are useful for post-rendering effects or fancy effects like mirrors or portals.
-	As usual, we generate a framebuffer object and bind it so all subsequent calls on the GL_FRAMEBUFFER
-	target (or whatever target has been specified) applies to the currently bound framebuffer object. 
-	When the framebuffer object is complete, all subsequent rendering calls will render into the
-	currently bound framebuffer object. */
-	unsigned int fbo;
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-	/* There's two different kind of attachments: texture and renderbuffer. */
-	// 1. Texture attachment
-	/* We create a texture the size of our viewport and we attach the texture to the framebuffer
-	as a color attachment. Note that we can attach a texture as a depth and/or stencil attachment too.
-	In that case, we would need to change the texture's format accordingly. */
-	GlTexture fboColorAttachment(SCR_WIDTH, SCR_HEIGHT, 3, nullptr);
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboColorAttachment.GetId(), 0);
-
-	// 2. Renderbuffer attachment
-	/* We create a renderbuffer the size of our viewport and we attach the renderbuffer to the framebuffer
-	as a depth and stencil attachment. Note that we can attach a renderbuffer as a color attachment too. */
-	/* Note that you can sample renderbuffers, but it's slow since they are optimized and designed for writing operations.
-	That said, if you plan to sample the framebuffer, it's best to use texture attachments, otherwise you may want
-	to use renderbuffer attachments to improve writing latency. That said, we use a renderbuffer for our depth and stencil
-	attachment since we only want to sample the color attachment. */
-	unsigned int rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-	/* Check if all the conditions to a complete framebuffer are met.
-	The list of conditions can be found at https://learnopengl.com/Advanced-OpenGL/Framebuffers. */
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		std::cout << "ERROR::FRAMEBUFFER::Framebuffer is not complete" << std::endl;
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	/* OpenGL draws your cube triangle-by-triangle, fragment by fragment, it will overwrite any
-	pixel color that may have already been drawn there before. Since OpenGL gives no guarantee
-	on the order of triangles rendered (within the same draw call), some triangles are drawn
-	on top of each other even though one should clearly be in front of the other.*/
-	/* Note that if we enable depth testing, we need to clear the depth buffer in each frame. */
-	glEnable(GL_DEPTH_TEST);
-	/* The following calls enable or disable writing to the depth buffer respectively.
-	During the depth testing phase, an & (AND) operation is performed between the bit to write at
-	position x in the depth buffer and the bit at position x in the depth mask. */
-	glDepthMask(GL_TRUE); // enable writing the the depth buffer (1 & 1 = 1, 1 & 0 = 0)
-	//glDepthMask(GL_FALSE); // disable writing to the depth buffer (0 & 1 = 0, 0 & 0 = 0)
-
-	/* Enable stencil testing between the fragment shader execution and the depth testing phase.
-	Stencil testing is similar to depth testing in the way that it discards fragments based on
-	the content of a buffer, the stencil buffer. From my understanding, the stencil buffer is
-	mostly programmer-defined and the depth buffer is based on the objects' position in the world. */
-	glEnable(GL_STENCIL_TEST);
-	/* The following calls performs the same logic as glDepthMask, but for the stencil mask. */
-	//glStencilMask(GL_TRUE); // enable writing the the stencil buffer (1 & 1 = 1, 1 & 0 = 0)
-	glStencilMask(GL_FALSE); // disable writing to the stencil buffer (0 & 1 = 0, 0 & 0 = 0)
-	/* This tells OpenGL that whenever the stencil value of a fragment is equal (GL_EQUAL) to
-	the reference value 1, the fragment passes the test and is drawn, otherwise discarded. */
-	//glStencilFunc(GL_EQUAL, 1, 0xff);
-
-	/* Enable blending. In other words, tells OpenGL to blend transparent fragments together. 
-	Blending happens after the stencil testing and depth testing, right when the fragment's output
-	color is applied to the color buffer. The blending equation is: 
-	C_result = C_src_color * F_src OPERATOR C_dest_color * F_dest.*/
-	glEnable(GL_BLEND);
-	/* Tells OpenGL which factor to use in the blending equation. The following call tells OpenGL
-	to use the source's alpha (GL_SRC_ALPHA) for the F_src variable and 1 - the source's alpha
-	(GL_ONE_MINUS_SRC_ALPHA) for the F_dest variable. */
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	/* Tells OpenGL which operation to use in the blending equation. The following call tells OpenGL
-	to use the addition operator, which is the default setting. */
-	glBlendEquation(GL_FUNC_ADD);
-
-	/* Tells OpenGL to cull (discard) the triangles that are back-faced from the viewer's point of
-	view. A back-faced triangle is, by default, a triangle that has a clockwise winding order. We can disable
-	momentarily face culling to render two-sided faces like grass or windows. */
-	glEnable(GL_CULL_FACE);
-	/* Tells OpenGL which faces we want to cull during the culling process. GL_BACK is the default setting. */
-	glCullFace(GL_BACK);
-	/* Tells OpenGL which winding order identifies front-faced triangles. GL_CCW is the default setting. */
-	glFrontFace(GL_CCW);
-
-	float vertices[] = {
-		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-
-		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-	};
-
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
 
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
 	block that matches a UBO and is bound to it will share its data. This is handy,
@@ -594,19 +472,7 @@ int main()
 		newImGuiFrame();
 		setupImGuiFrame();
 
-		// --- RENDERING PROCESS, STEP 1 ---
-		/* During this step, we render the actual scene into our custom framebuffer. The result
-		will be stored into the color attachment, which in our case is a texture. We will then
-		use this texture during step 2 and render it on a quad that fits the screen perfectly. */
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-		/* We need to enable depth testing on each frame since the second render pass disable it
-		to make sure the quad is rendered in front of everything else. */
-		if (settingsComponent.GetDepthTestingEnabledReference())
-			glEnable(GL_DEPTH_TEST);
+		graphicsEngine->StartFrame();
 
 		// --- View and projection transformation matrices ---
 
@@ -638,30 +504,7 @@ int main()
 		/* We need to render the actors with transparency last. */
 		pointLightActor.Render();
 
-		// --- RENDERING PROCESS, STEP 2 ---
-		/* During this step, we render a quad that fits the screen perfectly using the texture that was
-		generated during step 1. */
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		/* We need to disable depth testing to make sure the quad is rendered in front of everything else. */
-		if (settingsComponent.GetDepthTestingEnabledReference())
-			glDisable(GL_DEPTH_TEST);
-
-		renderShader->Use();
-
-		glBindVertexArray(VAO);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, fboColorAttachment.GetId());
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		/*chromaticAberrationShader->Use();
-		
-		glDrawArrays(GL_TRIANGLES, 0, 6);*/
+		graphicsEngine->EndFrame();
 
 		// --- Post-frame stuff ---
 
@@ -674,8 +517,6 @@ int main()
 		artifacts like flickering, screen tearing and so on. */
 		glfwSwapBuffers(window);
 	}
-
-	glDeleteFramebuffers(1, &fbo);
 
 	shutdownImGui();
 

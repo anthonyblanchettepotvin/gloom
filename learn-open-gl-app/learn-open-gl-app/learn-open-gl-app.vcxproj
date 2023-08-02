@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp" />
     <ClCompile Include="src\infrastructure\graphics\lighting\GlSkybox.cpp" />
     <ClCompile Include="src\game\component\SkyboxRendererComponent.cpp" />
     <ClCompile Include="src\engine\graphics\lighting\Skybox.cpp" />
@@ -216,6 +219,9 @@
     <ClCompile Include="src\engine\graphics\texture\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h" />
+    <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h" />
+    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h" />
     <ClInclude Include="src\infrastructure\graphics\lighting\GlSkybox.h" />
     <ClInclude Include="src\game\component\SkyboxRendererComponent.h" />
     <ClInclude Include="src\engine\graphics\lighting\Skybox.h" />

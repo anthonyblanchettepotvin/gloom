@@ -222,6 +222,15 @@
     <ClCompile Include="src\infrastructure\graphics\lighting\GlSkybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\graphics\shader\Shader.h">
@@ -432,6 +441,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\lighting\GlSkybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
