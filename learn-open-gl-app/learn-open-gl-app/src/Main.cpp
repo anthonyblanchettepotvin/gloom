@@ -54,6 +54,12 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "game/asset/AssetDescriptor.h"
+#include "game/asset/AssetDescriptorRegistry.h";
+#include "game/asset/TestAsset.h"
+#include "game/asset/TestAssetLoader.h"
+#include "game/asset/TestAssetRepository.h"
+
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
 const std::string REFRACTION_SHADER_PATH = ".\\shaders\\refraction.shader";
@@ -207,6 +213,20 @@ int main()
 	glfwSetScrollCallback(window, scrollCallback);
 
 	initImGui(window);
+
+	// --- Asset Descriptors ---
+
+	AssetDescriptorRegistry assetDescriptorRegistry;
+
+	// TestAsset
+	TestAssetLoader testAssetLoader;
+	TestAssetRepository testAssetRepository;
+	AssetDescriptor<TestAsset> testAssetDescriptor(testAssetLoader, testAssetRepository);
+	assetDescriptorRegistry.Register(&testAssetDescriptor);
+
+	auto retrievedTestAssetDescriptor = assetDescriptorRegistry.Find<TestAsset>();
+	auto retrievedTestAsset = retrievedTestAssetDescriptor->GetAssetLoader().Load("blabla");
+	retrievedTestAssetDescriptor->GetAssetRepository().Add(retrievedTestAsset);
 
 	// --- Graphics ---
 

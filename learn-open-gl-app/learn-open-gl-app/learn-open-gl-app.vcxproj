@@ -145,6 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\asset\AssetDescriptorBase.cpp" />
+    <ClCompile Include="src\game\asset\AssetDescriptorRegistry.cpp" />
+    <ClCompile Include="src\game\asset\AssetRepository.cpp" />
+    <ClCompile Include="src\game\asset\AssetLoader.cpp" />
+    <ClCompile Include="src\game\asset\AssetID.cpp" />
+    <ClCompile Include="src\game\asset\Asset.cpp" />
+    <ClCompile Include="src\game\asset\AssetDescriptor.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp" />
@@ -215,8 +222,18 @@
     <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
     <ClCompile Include="src\engine\graphics\texture\TextureLoader.cpp" />
+    <ClCompile Include="src\game\asset\TestAsset.cpp" />
+    <ClCompile Include="src\game\asset\TestAssetLoader.cpp" />
+    <ClCompile Include="src\game\asset\TestAssetRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\asset\AssetDescriptorBase.h" />
+    <ClInclude Include="src\game\asset\AssetDescriptorRegistry.h" />
+    <ClInclude Include="src\game\asset\AssetRepository.h" />
+    <ClInclude Include="src\game\asset\AssetLoader.h" />
+    <ClInclude Include="src\game\asset\AssetID.h" />
+    <ClInclude Include="src\game\asset\Asset.h" />
+    <ClInclude Include="src\game\asset\AssetDescriptor.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h" />
@@ -288,6 +305,9 @@
     <ClInclude Include="src\ui\UiComponentAdapter.h" />
     <ClInclude Include="src\ui\UiAdapterFactory.h" />
     <ClInclude Include="src\engine\graphics\texture\TextureLoader.h" />
+    <ClInclude Include="src\game\asset\TestAsset.h" />
+    <ClInclude Include="src\game\asset\TestAssetLoader.h" />
+    <ClInclude Include="src\game\asset\TestAssetRepository.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll">
