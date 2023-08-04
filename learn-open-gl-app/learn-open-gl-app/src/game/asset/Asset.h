@@ -17,6 +17,11 @@ public:
 
 	friend std::hash<Asset>;*/
 
+	const AssetID GetId() const { return m_Id; }
+
+	void SetName(const std::string& name) { m_Name = name; }
+	std::string GetName() const { return m_Name; }
+
 private:
 	const AssetID m_Id;
 

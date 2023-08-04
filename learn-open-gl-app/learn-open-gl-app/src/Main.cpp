@@ -8,7 +8,6 @@
 #include "engine/graphics/texture/Cubemap.h"
 #include "engine/graphics/texture/CubemapLoader.h"
 #include "engine/graphics/texture/Sprite.h"
-#include "engine/graphics/texture/TextureLoader.h"
 #include "game/actor/Actor.h"
 #include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
@@ -56,9 +55,9 @@ graphics programming with OpenGL. */
 
 #include "game/asset/AssetDescriptor.h"
 #include "game/asset/AssetDescriptorRegistry.h";
-#include "game/asset/TestAsset.h"
-#include "game/asset/TestAssetLoader.h"
-#include "game/asset/TestAssetRepository.h"
+#include "game/asset/texture/Texture.h"
+#include "game/asset/texture/TextureLoader.h"
+#include "game/asset/texture/TextureRepository.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
@@ -218,15 +217,11 @@ int main()
 
 	AssetDescriptorRegistry assetDescriptorRegistry;
 
-	// TestAsset
-	TestAssetLoader testAssetLoader;
-	TestAssetRepository testAssetRepository;
-	AssetDescriptor<TestAsset> testAssetDescriptor(testAssetLoader, testAssetRepository);
-	assetDescriptorRegistry.Register(&testAssetDescriptor);
-
-	auto retrievedTestAssetDescriptor = assetDescriptorRegistry.Find<TestAsset>();
-	auto retrievedTestAsset = retrievedTestAssetDescriptor->GetAssetLoader().Load("blabla");
-	retrievedTestAssetDescriptor->GetAssetRepository().Add(retrievedTestAsset);
+	// Texture
+	GlTextureLoader textureLoader;
+	TextureRepository textureRepository;
+	AssetDescriptor<Texture> textureAssetDescriptor(textureLoader, textureRepository, {".jpg", ".jpeg", ".png"});
+	assetDescriptorRegistry.Register(&textureAssetDescriptor);
 
 	// --- Graphics ---
 
@@ -248,7 +243,7 @@ int main()
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = graphicsEngine->GetTextureLoader().Load(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = assetDescriptorRegistry.Find<Texture>()->GetAssetLoader().Load(AWESOME_EMOJI_TEXTURE_PATH);
 
 	// --- Cubemaps ---
 

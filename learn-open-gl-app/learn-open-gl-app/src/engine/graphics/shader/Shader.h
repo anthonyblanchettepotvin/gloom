@@ -6,7 +6,7 @@
 
 #include "../globaldata/GlobalData.h"
 #include "../texture/Cubemap.h"
-#include "../texture/Texture.h"
+#include "../../../game/asset/texture/Texture.h"
 
 class Shader
 {

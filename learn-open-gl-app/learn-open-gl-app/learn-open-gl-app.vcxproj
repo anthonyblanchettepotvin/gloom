@@ -214,17 +214,15 @@
     <ClCompile Include="src\vendor\glad\glad.c" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\vendor\stbi\stb_image.cpp" />
-    <ClCompile Include="src\engine\graphics\texture\Texture.cpp" />
+    <ClCompile Include="src\game\asset\texture\Texture.cpp" />
     <ClCompile Include="src\ui\UiActorAdapter.cpp" />
     <ClCompile Include="src\engine\graphics\model\Vertex.cpp" />
     <ClCompile Include="src\game\world\World.cpp" />
     <ClCompile Include="src\game\component\TransformComponent.cpp" />
     <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
-    <ClCompile Include="src\engine\graphics\texture\TextureLoader.cpp" />
-    <ClCompile Include="src\game\asset\TestAsset.cpp" />
-    <ClCompile Include="src\game\asset\TestAssetLoader.cpp" />
-    <ClCompile Include="src\game\asset\TestAssetRepository.cpp" />
+    <ClCompile Include="src\game\asset\texture\TextureLoader.cpp" />
+    <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\asset\AssetDescriptorBase.h" />
@@ -296,7 +294,7 @@
     <ClInclude Include="src\game\camera\Camera.h" />
     <ClInclude Include="src\engine\graphics\shader\Shader.h" />
     <ClInclude Include="src\vendor\stbi\stb_image.h" />
-    <ClInclude Include="src\engine\graphics\texture\Texture.h" />
+    <ClInclude Include="src\game\asset\texture\Texture.h" />
     <ClInclude Include="src\ui\UiActorAdapter.h" />
     <ClInclude Include="src\engine\graphics\model\Vertex.h" />
     <ClInclude Include="src\game\world\World.h" />
@@ -304,10 +302,8 @@
     <ClInclude Include="src\game\component\TransformComponent.h" />
     <ClInclude Include="src\ui\UiComponentAdapter.h" />
     <ClInclude Include="src\ui\UiAdapterFactory.h" />
-    <ClInclude Include="src\engine\graphics\texture\TextureLoader.h" />
-    <ClInclude Include="src\game\asset\TestAsset.h" />
-    <ClInclude Include="src\game\asset\TestAssetLoader.h" />
-    <ClInclude Include="src\game\asset\TestAssetRepository.h" />
+    <ClInclude Include="src\game\asset\texture\TextureLoader.h" />
+    <ClInclude Include="src\game\asset\texture\TextureRepository.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll">

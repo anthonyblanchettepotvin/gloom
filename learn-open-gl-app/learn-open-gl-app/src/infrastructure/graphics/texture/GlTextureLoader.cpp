@@ -6,7 +6,7 @@
 
 #include "GlTexture.h"
 
-Texture* GlTextureLoader::Load(const std::string& path)
+Texture* GlTextureLoader::Load(const std::string& filePath)
 {
 	/* OpenGL expects the 0.0 coordinate on the y-axis to be on the bottom side of the image,
 	but images usually have 0.0 at the top of the y-axis. */
@@ -16,14 +16,18 @@ Texture* GlTextureLoader::Load(const std::string& path)
 
 	/* Here, we load an image from a file. */
 	int width, height, channelCount;
-	unsigned char* data = stbi_load(path.c_str(), &width, &height, &channelCount, 0);
+	unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channelCount, 0);
 	if (data)
 	{
 		texture = new GlTexture(width, height, channelCount, data);
+		
+		size_t pos = filePath.find_last_of('\\');
+		std::string fileName = filePath.substr(pos, filePath.size() - pos);
+		texture->SetName(fileName);
 	}
 	else
 	{
-		std::cout << "ERROR::TEXTURE::LOADING::" << path << std::endl;
+		std::cout << "ERROR::TEXTURE::LOADING::" << filePath << std::endl;
 	}
 
 	return texture;

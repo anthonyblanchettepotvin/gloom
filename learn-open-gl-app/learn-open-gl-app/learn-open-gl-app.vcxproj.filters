@@ -30,7 +30,7 @@
     <ClCompile Include="src\game\camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\texture\Texture.cpp">
+    <ClCompile Include="src\game\asset\texture\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\graphics\model\Model.cpp">
@@ -183,7 +183,7 @@
     <ClCompile Include="src\infrastructure\graphics\texture\GlSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\texture\TextureLoader.cpp">
+    <ClCompile Include="src\game\asset\texture\TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\texture\GlTextureLoader.cpp">
@@ -240,19 +240,13 @@
     <ClCompile Include="src\game\asset\AssetRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\TestAsset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\TestAssetLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\TestAssetRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\game\asset\AssetDescriptorRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\asset\AssetDescriptorBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\asset\texture\TextureRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -266,7 +260,7 @@
     <ClInclude Include="src\game\camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\texture\Texture.h">
+    <ClInclude Include="src\game\asset\texture\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\graphics\model\Model.h">
@@ -428,7 +422,7 @@
     <ClInclude Include="src\infrastructure\graphics\texture\GlSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\texture\TextureLoader.h">
+    <ClInclude Include="src\game\asset\texture\TextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\texture\GlTextureLoader.h">
@@ -485,19 +479,13 @@
     <ClInclude Include="src\game\asset\AssetRepository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\TestAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\TestAssetLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\TestAssetRepository.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\game\asset\AssetDescriptorRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\asset\AssetDescriptorBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\asset\texture\TextureRepository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
