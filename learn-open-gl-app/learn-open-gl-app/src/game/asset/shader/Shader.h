@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "../../../engine/graphics/globaldata/GlobalData.h"
-#include "../../../engine/graphics/texture/Cubemap.h"
+#include "../../../game/asset/cubemap/Cubemap.h"
 #include "../../../game/asset/texture/Texture.h"
 
 #include "../Asset.h"

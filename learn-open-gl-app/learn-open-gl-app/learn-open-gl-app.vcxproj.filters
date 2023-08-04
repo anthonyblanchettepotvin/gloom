@@ -126,7 +126,7 @@
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\texture\Cubemap.cpp">
+    <ClCompile Include="src\game\asset\cubemap\Cubemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\asset\model\ModelLoader.cpp">
@@ -192,13 +192,13 @@
     <ClCompile Include="src\infrastructure\graphics\texture\GlTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\texture\CubemapLoader.cpp">
+    <ClCompile Include="src\game\asset\cubemap\CubemapLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\texture\GlCubemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\texture\CubemapTexture.cpp">
+    <ClCompile Include="src\game\asset\cubemap\CubemapTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\texture\GlCubemapLoader.cpp">
@@ -253,6 +253,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\asset\shader\ShaderRepository.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\asset\cubemap\CubemapRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -371,7 +374,7 @@
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\texture\Cubemap.h">
+    <ClInclude Include="src\game\asset\cubemap\Cubemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\asset\model\ModelLoader.h">
@@ -437,13 +440,13 @@
     <ClInclude Include="src\infrastructure\graphics\texture\GlTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\texture\CubemapLoader.h">
+    <ClInclude Include="src\game\asset\cubemap\CubemapLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\texture\GlCubemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\texture\CubemapTexture.h">
+    <ClInclude Include="src\game\asset\cubemap\CubemapTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\texture\GlCubemapLoader.h">
@@ -498,6 +501,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\asset\shader\ShaderRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\asset\cubemap\CubemapRepository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

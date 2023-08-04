@@ -3,7 +3,7 @@
 #include "../globaldata/GlobalData.h"
 #include "../lighting/DirectionalLight.h"
 #include "../lighting/PointLight.h"
-#include "../texture/CubemapLoader.h"
+#include "../../../game/asset/cubemap/CubemapLoader.h"
 #include "../../../game/asset/shader/ShaderLoader.h"
 #include "../../../game/asset/model/ModelLoader.h"
 #include "../../../game/asset/texture/TextureLoader.h"

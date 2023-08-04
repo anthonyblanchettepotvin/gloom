@@ -2,8 +2,6 @@
 
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/lighting/Skybox.h"
-#include "engine/graphics/texture/Cubemap.h"
-#include "engine/graphics/texture/CubemapLoader.h"
 #include "engine/graphics/texture/Sprite.h"
 #include "game/actor/Actor.h"
 #include "game/camera/Camera.h"
@@ -60,7 +58,10 @@ graphics programming with OpenGL. */
 #include "game/asset/model/ModelRepository.h"
 #include "game/asset/shader/Shader.h"
 #include "game/asset/shader/ShaderLoader.h"
-#include "game/asset/shader/ShaderRepository.h"
+#include "game/asset/shader/ShaderRepository.h" 
+#include "game/asset/cubemap/Cubemap.h"
+#include "game/asset/cubemap/CubemapLoader.h"
+#include "game/asset/cubemap/CubemapRepository.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
@@ -76,14 +77,7 @@ const std::string SUZANNE_MODEL_PATH = ".\\models\\suzanne\\suzanne.obj";
 
 const std::string AWESOME_EMOJI_TEXTURE_PATH = ".\\images\\awesomeface.png";
 
-const std::vector<std::string> CUBEMAP_FACES_PATH = {
-		".\\images\\nightCubemap\\posx.jpg",
-		".\\images\\nightCubemap\\negx.jpg",
-		".\\images\\nightCubemap\\posy.jpg",
-		".\\images\\nightCubemap\\negy.jpg",
-		".\\images\\nightCubemap\\posz.jpg",
-		".\\images\\nightCubemap\\negz.jpg"
-};
+const std::string CUBEMAP_FACES_PATH = ".\\images\\nightCubemap";
 
 // Settings
 const unsigned int SCR_WIDTH = 1600;
@@ -238,6 +232,12 @@ int main()
 	AssetDescriptor<Shader> shaderAssetDescriptor(shaderLoader, shaderRepository, { ".shader" });
 	assetDescriptorRegistry.Register(&shaderAssetDescriptor);
 
+	// Cubemap
+	GlCubemapLoader cubemapLoader;
+	CubemapRepository cubemapRepository;
+	AssetDescriptor<Cubemap> cubemapAssetDescriptor(cubemapLoader, cubemapRepository, {});
+	assetDescriptorRegistry.Register(&cubemapAssetDescriptor);
+
 	// --- Graphics ---
 
 	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
@@ -262,7 +262,7 @@ int main()
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = graphicsEngine->GetCubemapLoader().Load(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = assetDescriptorRegistry.Find<Cubemap>()->GetAssetLoader().Load(CUBEMAP_FACES_PATH);
 
 	// --- Skyboxes ---
 
