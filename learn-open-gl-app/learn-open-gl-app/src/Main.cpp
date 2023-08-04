@@ -2,8 +2,6 @@
 
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/lighting/Skybox.h"
-#include "engine/graphics/shader/Shader.h"
-#include "engine/graphics/shader/ShaderLoader.h"
 #include "engine/graphics/texture/Cubemap.h"
 #include "engine/graphics/texture/CubemapLoader.h"
 #include "engine/graphics/texture/Sprite.h"
@@ -60,6 +58,9 @@ graphics programming with OpenGL. */
 #include "game/asset/model/Model.h"
 #include "game/asset/model/ModelLoader.h"
 #include "game/asset/model/ModelRepository.h"
+#include "game/asset/shader/Shader.h"
+#include "game/asset/shader/ShaderLoader.h"
+#include "game/asset/shader/ShaderRepository.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
@@ -231,6 +232,12 @@ int main()
 	AssetDescriptor<Model> modelAssetDescriptor(modelLoader, modelRepository, { ".obj" });
 	assetDescriptorRegistry.Register(&modelAssetDescriptor);
 
+	// Shader
+	GlShaderLoader shaderLoader;
+	ShaderRepository shaderRepository;
+	AssetDescriptor<Shader> shaderAssetDescriptor(shaderLoader, shaderRepository, { ".shader" });
+	assetDescriptorRegistry.Register(&shaderAssetDescriptor);
+
 	// --- Graphics ---
 
 	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
@@ -239,15 +246,15 @@ int main()
 	// --- Models ---
 
 	Model* backpackModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(BACKPACK_MODEL_PATH);
-	Shader* backpackShader = graphicsEngine->GetShaderLoader().Load(PHONG_SHADER_PATH);
+	Shader* backpackShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(PHONG_SHADER_PATH);
 	backpackShader->Use();
 	backpackShader->SetFloat("material.shininess", 4.0f);
 
 	Model* cubeModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(CUBE_MODEL_PATH);
-	Shader* cubeShader = graphicsEngine->GetShaderLoader().Load(REFLECTION_SHADER_PATH);
+	Shader* cubeShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(REFLECTION_SHADER_PATH);
 
 	Model* suzanneModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(SUZANNE_MODEL_PATH);
-	Shader* suzanneShader = graphicsEngine->GetShaderLoader().Load(REFRACTION_SHADER_PATH);
+	Shader* suzanneShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(REFRACTION_SHADER_PATH);
 
 	// --- Textures ---
 
@@ -263,10 +270,10 @@ int main()
 
 	// --- Shaders ---
 
-	Shader* spriteShader = graphicsEngine->GetShaderLoader().Load(SPRITE_SHADER_PATH);
-	Shader* renderShader = graphicsEngine->GetShaderLoader().Load(RENDER_SHADER_PATH);
-	Shader* skyboxShader = graphicsEngine->GetShaderLoader().Load(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = graphicsEngine->GetShaderLoader().Load(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* spriteShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(SPRITE_SHADER_PATH);
+	Shader* renderShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(RENDER_SHADER_PATH);
+	Shader* skyboxShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(SKYBOX_SHADER_PATH);
+	Shader* chromaticAberrationShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	// --- Sprite ---
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../shader/Shader.h"
+#include "../../../game/asset/shader/Shader.h"
 #include "../texture/Cubemap.h"
 
 class Skybox

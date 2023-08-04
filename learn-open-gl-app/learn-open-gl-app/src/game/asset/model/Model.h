@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "../../../engine/graphics/model/Mesh.h"
-#include "../../../engine/graphics/shader/Shader.h"
+#include "../../../game/asset/shader/Shader.h"
 
 #include "../Asset.h"
 

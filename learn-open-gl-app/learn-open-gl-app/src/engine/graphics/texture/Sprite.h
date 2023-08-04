@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../../../game/asset/texture/Texture.h"
-
-#include "../shader/Shader.h"
+#include "../../../game/asset/shader/Shader.h"
 
 class Sprite
 {

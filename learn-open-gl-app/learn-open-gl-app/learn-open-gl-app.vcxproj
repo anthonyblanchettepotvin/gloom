@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\asset\shader\ShaderRepository.cpp" />
     <ClCompile Include="src\game\asset\model\ModelRepository.cpp" />
     <ClCompile Include="src\game\asset\AssetDescriptorBase.cpp" />
     <ClCompile Include="src\game\asset\AssetDescriptorRegistry.cpp" />
@@ -178,7 +179,7 @@
     <ClCompile Include="src\engine\graphics\engine\GraphicsEngine.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp" />
-    <ClCompile Include="src\engine\graphics\shader\ShaderLoader.cpp" />
+    <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp" />
     <ClCompile Include="src\engine\graphics\shader\PhongMaterial.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Material.cpp" />
     <ClCompile Include="src\infrastructure\graphics\model\GlModelLoader.cpp" />
@@ -211,7 +212,7 @@
     <ClCompile Include="src\engine\graphics\model\Mesh.cpp" />
     <ClCompile Include="src\game\asset\model\Model.cpp" />
     <ClCompile Include="src\game\camera\Camera.cpp" />
-    <ClCompile Include="src\engine\graphics\shader\Shader.cpp" />
+    <ClCompile Include="src\game\asset\shader\Shader.cpp" />
     <ClCompile Include="src\vendor\glad\glad.c" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\vendor\stbi\stb_image.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\asset\shader\ShaderRepository.h" />
     <ClInclude Include="src\game\asset\model\ModelRepository.h" />
     <ClInclude Include="src\game\asset\AssetDescriptorBase.h" />
     <ClInclude Include="src\game\asset\AssetDescriptorRegistry.h" />
@@ -259,7 +261,7 @@
     <ClInclude Include="src\engine\graphics\engine\GraphicsEngine.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h" />
-    <ClInclude Include="src\engine\graphics\shader\ShaderLoader.h" />
+    <ClInclude Include="src\game\asset\shader\ShaderLoader.h" />
     <ClInclude Include="src\engine\graphics\shader\PhongMaterial.h" />
     <ClInclude Include="src\engine\graphics\shader\Material.h" />
     <ClInclude Include="src\infrastructure\graphics\model\GlModelLoader.h" />
@@ -294,7 +296,7 @@
     <ClInclude Include="src\engine\graphics\model\Mesh.h" />
     <ClInclude Include="src\game\asset\model\Model.h" />
     <ClInclude Include="src\game\camera\Camera.h" />
-    <ClInclude Include="src\engine\graphics\shader\Shader.h" />
+    <ClInclude Include="src\game\asset\shader\Shader.h" />
     <ClInclude Include="src\vendor\stbi\stb_image.h" />
     <ClInclude Include="src\game\asset\texture\Texture.h" />
     <ClInclude Include="src\ui\UiActorAdapter.h" />

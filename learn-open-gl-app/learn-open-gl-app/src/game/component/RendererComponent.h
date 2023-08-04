@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../engine/graphics/shader/Shader.h"
+#include "../../game/asset/shader/Shader.h"
 
 #include "ActorComponent.h"
 

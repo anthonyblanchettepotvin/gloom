@@ -21,7 +21,7 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\shader\Shader.cpp">
+    <ClCompile Include="src\game\asset\shader\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vendor\stbi\stb_image.cpp">
@@ -144,7 +144,7 @@
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\shader\ShaderLoader.cpp">
+    <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp">
@@ -252,9 +252,12 @@
     <ClCompile Include="src\game\asset\model\ModelRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\asset\shader\ShaderRepository.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\graphics\shader\Shader.h">
+    <ClInclude Include="src\game\asset\shader\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -386,7 +389,7 @@
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\shader\ShaderLoader.h">
+    <ClInclude Include="src\game\asset\shader\ShaderLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h">
@@ -492,6 +495,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\asset\model\ModelRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\asset\shader\ShaderRepository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
