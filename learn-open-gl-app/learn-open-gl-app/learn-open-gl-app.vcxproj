@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\asset\model\ModelRepository.cpp" />
     <ClCompile Include="src\game\asset\AssetDescriptorBase.cpp" />
     <ClCompile Include="src\game\asset\AssetDescriptorRegistry.cpp" />
     <ClCompile Include="src\game\asset\AssetRepository.cpp" />
@@ -181,7 +182,7 @@
     <ClCompile Include="src\engine\graphics\shader\PhongMaterial.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Material.cpp" />
     <ClCompile Include="src\infrastructure\graphics\model\GlModelLoader.cpp" />
-    <ClCompile Include="src\engine\graphics\model\ModelLoader.cpp" />
+    <ClCompile Include="src\game\asset\model\ModelLoader.cpp" />
     <ClCompile Include="src\engine\graphics\texture\Cubemap.cpp" />
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c" />
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp" />
@@ -208,7 +209,7 @@
     <ClCompile Include="src\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\engine\graphics\model\Mesh.cpp" />
-    <ClCompile Include="src\engine\graphics\model\Model.cpp" />
+    <ClCompile Include="src\game\asset\model\Model.cpp" />
     <ClCompile Include="src\game\camera\Camera.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Shader.cpp" />
     <ClCompile Include="src\vendor\glad\glad.c" />
@@ -225,6 +226,7 @@
     <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\asset\model\ModelRepository.h" />
     <ClInclude Include="src\game\asset\AssetDescriptorBase.h" />
     <ClInclude Include="src\game\asset\AssetDescriptorRegistry.h" />
     <ClInclude Include="src\game\asset\AssetRepository.h" />
@@ -261,7 +263,7 @@
     <ClInclude Include="src\engine\graphics\shader\PhongMaterial.h" />
     <ClInclude Include="src\engine\graphics\shader\Material.h" />
     <ClInclude Include="src\infrastructure\graphics\model\GlModelLoader.h" />
-    <ClInclude Include="src\engine\graphics\model\ModelLoader.h" />
+    <ClInclude Include="src\game\asset\model\ModelLoader.h" />
     <ClInclude Include="src\engine\graphics\texture\Cubemap.h" />
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h" />
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h" />
@@ -290,7 +292,7 @@
     <ClInclude Include="src\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\engine\graphics\model\Mesh.h" />
-    <ClInclude Include="src\engine\graphics\model\Model.h" />
+    <ClInclude Include="src\game\asset\model\Model.h" />
     <ClInclude Include="src\game\camera\Camera.h" />
     <ClInclude Include="src\engine\graphics\shader\Shader.h" />
     <ClInclude Include="src\vendor\stbi\stb_image.h" />

@@ -1,13 +1,13 @@
 #include "Model.h"
 
 Model::Model(const std::vector<Mesh*>& meshes)
-	: meshes(meshes)
+	: m_Meshes(meshes)
 {
 }
 
 void Model::Render(Shader* shader)
 {
-	for (const auto& mesh : meshes)
+	for (const auto& mesh : m_Meshes)
 	{
 		if (mesh)
 		{

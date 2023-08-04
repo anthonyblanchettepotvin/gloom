@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "engine/graphics/model/Model.h"
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/lighting/Skybox.h"
 #include "engine/graphics/shader/Shader.h"
@@ -58,6 +57,9 @@ graphics programming with OpenGL. */
 #include "game/asset/texture/Texture.h"
 #include "game/asset/texture/TextureLoader.h"
 #include "game/asset/texture/TextureRepository.h"
+#include "game/asset/model/Model.h"
+#include "game/asset/model/ModelLoader.h"
+#include "game/asset/model/ModelRepository.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
@@ -220,8 +222,14 @@ int main()
 	// Texture
 	GlTextureLoader textureLoader;
 	TextureRepository textureRepository;
-	AssetDescriptor<Texture> textureAssetDescriptor(textureLoader, textureRepository, {".jpg", ".jpeg", ".png"});
+	AssetDescriptor<Texture> textureAssetDescriptor(textureLoader, textureRepository, { ".jpg", ".jpeg", ".png" });
 	assetDescriptorRegistry.Register(&textureAssetDescriptor);
+
+	// Model
+	GlModelLoader modelLoader(textureLoader);
+	ModelRepository modelRepository;
+	AssetDescriptor<Model> modelAssetDescriptor(modelLoader, modelRepository, { ".obj" });
+	assetDescriptorRegistry.Register(&modelAssetDescriptor);
 
 	// --- Graphics ---
 
@@ -230,15 +238,15 @@ int main()
 
 	// --- Models ---
 
-	Model* backpackModel = graphicsEngine->GetModelLoader().Load(BACKPACK_MODEL_PATH);
+	Model* backpackModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(BACKPACK_MODEL_PATH);
 	Shader* backpackShader = graphicsEngine->GetShaderLoader().Load(PHONG_SHADER_PATH);
 	backpackShader->Use();
 	backpackShader->SetFloat("material.shininess", 4.0f);
 
-	Model* cubeModel = graphicsEngine->GetModelLoader().Load(CUBE_MODEL_PATH);
+	Model* cubeModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(CUBE_MODEL_PATH);
 	Shader* cubeShader = graphicsEngine->GetShaderLoader().Load(REFLECTION_SHADER_PATH);
 
-	Model* suzanneModel = graphicsEngine->GetModelLoader().Load(SUZANNE_MODEL_PATH);
+	Model* suzanneModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(SUZANNE_MODEL_PATH);
 	Shader* suzanneShader = graphicsEngine->GetShaderLoader().Load(REFRACTION_SHADER_PATH);
 
 	// --- Textures ---
