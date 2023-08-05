@@ -48,6 +48,7 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "game/asset/AssetController.h"
 #include "game/asset/AssetDescriptor.h"
 #include "game/asset/AssetDescriptorRegistry.h";
 #include "game/asset/texture/Texture.h"
@@ -238,6 +239,10 @@ int main()
 	AssetDescriptor<Cubemap> cubemapAssetDescriptor(cubemapLoader, cubemapRepository, {});
 	assetDescriptorRegistry.Register(&cubemapAssetDescriptor);
 
+	// --- Asset Controller ---
+
+	AssetController assetController(assetDescriptorRegistry);
+
 	// --- Graphics ---
 
 	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
@@ -245,24 +250,24 @@ int main()
 
 	// --- Models ---
 
-	Model* backpackModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(BACKPACK_MODEL_PATH);
-	Shader* backpackShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(PHONG_SHADER_PATH);
+	Model* backpackModel = assetController.LoadAsset<Model>(BACKPACK_MODEL_PATH);
+	Shader* backpackShader = assetController.LoadAsset<Shader>(PHONG_SHADER_PATH);
 	backpackShader->Use();
 	backpackShader->SetFloat("material.shininess", 4.0f);
 
-	Model* cubeModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(CUBE_MODEL_PATH);
-	Shader* cubeShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(REFLECTION_SHADER_PATH);
+	Model* cubeModel = assetController.LoadAsset<Model>(CUBE_MODEL_PATH);
+	Shader* cubeShader = assetController.LoadAsset<Shader>(REFLECTION_SHADER_PATH);
 
-	Model* suzanneModel = assetDescriptorRegistry.Find<Model>()->GetAssetLoader().Load(SUZANNE_MODEL_PATH);
-	Shader* suzanneShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(REFRACTION_SHADER_PATH);
+	Model* suzanneModel = assetController.LoadAsset<Model>(SUZANNE_MODEL_PATH);
+	Shader* suzanneShader = assetController.LoadAsset<Shader>(REFRACTION_SHADER_PATH);
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = assetDescriptorRegistry.Find<Texture>()->GetAssetLoader().Load(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = assetController.LoadAsset<Texture>(AWESOME_EMOJI_TEXTURE_PATH);
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = assetDescriptorRegistry.Find<Cubemap>()->GetAssetLoader().Load(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = assetController.LoadAsset<Cubemap>(CUBEMAP_FACES_PATH);
 
 	// --- Skyboxes ---
 
@@ -270,10 +275,10 @@ int main()
 
 	// --- Shaders ---
 
-	Shader* spriteShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(SPRITE_SHADER_PATH);
-	Shader* renderShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(RENDER_SHADER_PATH);
-	Shader* skyboxShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = assetDescriptorRegistry.Find<Shader>()->GetAssetLoader().Load(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* spriteShader = assetController.LoadAsset<Shader>(SPRITE_SHADER_PATH);
+	Shader* renderShader = assetController.LoadAsset<Shader>(RENDER_SHADER_PATH);
+	Shader* skyboxShader = assetController.LoadAsset<Shader>(SKYBOX_SHADER_PATH);
+	Shader* chromaticAberrationShader = assetController.LoadAsset<Shader>(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	// --- Sprite ---
 

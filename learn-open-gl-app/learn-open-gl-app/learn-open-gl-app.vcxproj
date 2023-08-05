@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\asset\AssetController.cpp" />
     <ClCompile Include="src\game\asset\cubemap\CubemapRepository.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderRepository.cpp" />
     <ClCompile Include="src\game\asset\model\ModelRepository.cpp" />
@@ -228,6 +229,7 @@
     <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\asset\AssetController.h" />
     <ClInclude Include="src\game\asset\cubemap\CubemapRepository.h" />
     <ClInclude Include="src\game\asset\shader\ShaderRepository.h" />
     <ClInclude Include="src\game\asset\model\ModelRepository.h" />

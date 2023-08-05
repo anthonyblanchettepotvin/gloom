@@ -258,6 +258,9 @@
     <ClCompile Include="src\game\asset\cubemap\CubemapRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\asset\AssetController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\asset\shader\Shader.h">
@@ -504,6 +507,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\asset\cubemap\CubemapRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\asset\AssetController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
