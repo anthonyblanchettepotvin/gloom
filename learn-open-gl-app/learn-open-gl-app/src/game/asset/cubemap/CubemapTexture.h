@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Texture.h"
+#include "../texture/Texture.h"
 
 class CubemapTexture : public Texture
 {

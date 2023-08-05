@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../../engine/graphics/texture/CubemapLoader.h"
+#include "../../../game/asset/cubemap/CubemapLoader.h"
 
 class GlCubemapLoader : public CubemapLoader
 {
 public:
-	Cubemap* Load(const std::vector<std::string>& facesPath);
+	Cubemap* Load(const std::string& filePath) override;
 };

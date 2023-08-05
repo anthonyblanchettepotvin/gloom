@@ -5,7 +5,7 @@
 #include "Vertex.h"
 
 #include "../shader/Material.h"
-#include "../shader/Shader.h"
+#include "../../../game/asset/shader/Shader.h"
 
 class Mesh
 {

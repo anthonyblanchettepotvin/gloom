@@ -145,6 +145,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\asset\AssetController.cpp" />
+    <ClCompile Include="src\game\asset\cubemap\CubemapRepository.cpp" />
+    <ClCompile Include="src\game\asset\shader\ShaderRepository.cpp" />
+    <ClCompile Include="src\game\asset\model\ModelRepository.cpp" />
+    <ClCompile Include="src\game\asset\AssetDescriptorBase.cpp" />
+    <ClCompile Include="src\game\asset\AssetDescriptorRegistry.cpp" />
+    <ClCompile Include="src\game\asset\AssetRepository.cpp" />
+    <ClCompile Include="src\game\asset\AssetLoader.cpp" />
+    <ClCompile Include="src\game\asset\AssetID.cpp" />
+    <ClCompile Include="src\game\asset\Asset.cpp" />
+    <ClCompile Include="src\game\asset\AssetDescriptor.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp" />
@@ -153,9 +164,9 @@
     <ClCompile Include="src\engine\graphics\lighting\Skybox.cpp" />
     <ClCompile Include="src\infrastructure\graphics\texture\GlCubemapTexture.cpp" />
     <ClCompile Include="src\infrastructure\graphics\texture\GlCubemapLoader.cpp" />
-    <ClCompile Include="src\engine\graphics\texture\CubemapTexture.cpp" />
+    <ClCompile Include="src\game\asset\cubemap\CubemapTexture.cpp" />
     <ClCompile Include="src\infrastructure\graphics\texture\GlCubemap.cpp" />
-    <ClCompile Include="src\engine\graphics\texture\CubemapLoader.cpp" />
+    <ClCompile Include="src\game\asset\cubemap\CubemapLoader.cpp" />
     <ClCompile Include="src\infrastructure\graphics\texture\GlTexture.cpp" />
     <ClCompile Include="src\infrastructure\graphics\texture\GlTextureLoader.cpp" />
     <ClCompile Include="src\infrastructure\graphics\texture\GlSprite.cpp" />
@@ -170,12 +181,12 @@
     <ClCompile Include="src\engine\graphics\engine\GraphicsEngine.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp" />
-    <ClCompile Include="src\engine\graphics\shader\ShaderLoader.cpp" />
+    <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp" />
     <ClCompile Include="src\engine\graphics\shader\PhongMaterial.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Material.cpp" />
     <ClCompile Include="src\infrastructure\graphics\model\GlModelLoader.cpp" />
-    <ClCompile Include="src\engine\graphics\model\ModelLoader.cpp" />
-    <ClCompile Include="src\engine\graphics\texture\Cubemap.cpp" />
+    <ClCompile Include="src\game\asset\model\ModelLoader.cpp" />
+    <ClCompile Include="src\game\asset\cubemap\Cubemap.cpp" />
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c" />
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.cpp" />
@@ -201,22 +212,34 @@
     <ClCompile Include="src\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\engine\graphics\model\Mesh.cpp" />
-    <ClCompile Include="src\engine\graphics\model\Model.cpp" />
+    <ClCompile Include="src\game\asset\model\Model.cpp" />
     <ClCompile Include="src\game\camera\Camera.cpp" />
-    <ClCompile Include="src\engine\graphics\shader\Shader.cpp" />
+    <ClCompile Include="src\game\asset\shader\Shader.cpp" />
     <ClCompile Include="src\vendor\glad\glad.c" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\vendor\stbi\stb_image.cpp" />
-    <ClCompile Include="src\engine\graphics\texture\Texture.cpp" />
+    <ClCompile Include="src\game\asset\texture\Texture.cpp" />
     <ClCompile Include="src\ui\UiActorAdapter.cpp" />
     <ClCompile Include="src\engine\graphics\model\Vertex.cpp" />
     <ClCompile Include="src\game\world\World.cpp" />
     <ClCompile Include="src\game\component\TransformComponent.cpp" />
     <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
-    <ClCompile Include="src\engine\graphics\texture\TextureLoader.cpp" />
+    <ClCompile Include="src\game\asset\texture\TextureLoader.cpp" />
+    <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\asset\AssetController.h" />
+    <ClInclude Include="src\game\asset\cubemap\CubemapRepository.h" />
+    <ClInclude Include="src\game\asset\shader\ShaderRepository.h" />
+    <ClInclude Include="src\game\asset\model\ModelRepository.h" />
+    <ClInclude Include="src\game\asset\AssetDescriptorBase.h" />
+    <ClInclude Include="src\game\asset\AssetDescriptorRegistry.h" />
+    <ClInclude Include="src\game\asset\AssetRepository.h" />
+    <ClInclude Include="src\game\asset\AssetLoader.h" />
+    <ClInclude Include="src\game\asset\AssetID.h" />
+    <ClInclude Include="src\game\asset\Asset.h" />
+    <ClInclude Include="src\game\asset\AssetDescriptor.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h" />
@@ -225,9 +248,9 @@
     <ClInclude Include="src\engine\graphics\lighting\Skybox.h" />
     <ClInclude Include="src\infrastructure\graphics\texture\GlCubemapTexture.h" />
     <ClInclude Include="src\infrastructure\graphics\texture\GlCubemapLoader.h" />
-    <ClInclude Include="src\engine\graphics\texture\CubemapTexture.h" />
+    <ClInclude Include="src\game\asset\cubemap\CubemapTexture.h" />
     <ClInclude Include="src\infrastructure\graphics\texture\GlCubemap.h" />
-    <ClInclude Include="src\engine\graphics\texture\CubemapLoader.h" />
+    <ClInclude Include="src\game\asset\cubemap\CubemapLoader.h" />
     <ClInclude Include="src\infrastructure\graphics\texture\GlTexture.h" />
     <ClInclude Include="src\infrastructure\graphics\texture\GlTextureLoader.h" />
     <ClInclude Include="src\infrastructure\graphics\texture\GlSprite.h" />
@@ -242,12 +265,12 @@
     <ClInclude Include="src\engine\graphics\engine\GraphicsEngine.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h" />
-    <ClInclude Include="src\engine\graphics\shader\ShaderLoader.h" />
+    <ClInclude Include="src\game\asset\shader\ShaderLoader.h" />
     <ClInclude Include="src\engine\graphics\shader\PhongMaterial.h" />
     <ClInclude Include="src\engine\graphics\shader\Material.h" />
     <ClInclude Include="src\infrastructure\graphics\model\GlModelLoader.h" />
-    <ClInclude Include="src\engine\graphics\model\ModelLoader.h" />
-    <ClInclude Include="src\engine\graphics\texture\Cubemap.h" />
+    <ClInclude Include="src\game\asset\model\ModelLoader.h" />
+    <ClInclude Include="src\game\asset\cubemap\Cubemap.h" />
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h" />
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.h" />
@@ -275,11 +298,11 @@
     <ClInclude Include="src\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\engine\graphics\model\Mesh.h" />
-    <ClInclude Include="src\engine\graphics\model\Model.h" />
+    <ClInclude Include="src\game\asset\model\Model.h" />
     <ClInclude Include="src\game\camera\Camera.h" />
-    <ClInclude Include="src\engine\graphics\shader\Shader.h" />
+    <ClInclude Include="src\game\asset\shader\Shader.h" />
     <ClInclude Include="src\vendor\stbi\stb_image.h" />
-    <ClInclude Include="src\engine\graphics\texture\Texture.h" />
+    <ClInclude Include="src\game\asset\texture\Texture.h" />
     <ClInclude Include="src\ui\UiActorAdapter.h" />
     <ClInclude Include="src\engine\graphics\model\Vertex.h" />
     <ClInclude Include="src\game\world\World.h" />
@@ -287,7 +310,8 @@
     <ClInclude Include="src\game\component\TransformComponent.h" />
     <ClInclude Include="src\ui\UiComponentAdapter.h" />
     <ClInclude Include="src\ui\UiAdapterFactory.h" />
-    <ClInclude Include="src\engine\graphics\texture\TextureLoader.h" />
+    <ClInclude Include="src\game\asset\texture\TextureLoader.h" />
+    <ClInclude Include="src\game\asset\texture\TextureRepository.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll">

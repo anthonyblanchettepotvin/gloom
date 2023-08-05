@@ -3,7 +3,7 @@
 #include <vector>
 #include <fstream>
 
-#include "../../../engine/graphics/shader/ShaderLoader.h"
+#include "../../../game/asset/shader/ShaderLoader.h"
 
 class GlShaderLoader : public ShaderLoader
 {

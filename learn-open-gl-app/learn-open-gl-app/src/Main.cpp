@@ -1,14 +1,8 @@
 #include <iostream>
 
-#include "engine/graphics/model/Model.h"
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/lighting/Skybox.h"
-#include "engine/graphics/shader/Shader.h"
-#include "engine/graphics/shader/ShaderLoader.h"
-#include "engine/graphics/texture/Cubemap.h"
-#include "engine/graphics/texture/CubemapLoader.h"
 #include "engine/graphics/texture/Sprite.h"
-#include "engine/graphics/texture/TextureLoader.h"
 #include "game/actor/Actor.h"
 #include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
@@ -54,6 +48,22 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "game/asset/AssetController.h"
+#include "game/asset/AssetDescriptor.h"
+#include "game/asset/AssetDescriptorRegistry.h";
+#include "game/asset/texture/Texture.h"
+#include "game/asset/texture/TextureLoader.h"
+#include "game/asset/texture/TextureRepository.h"
+#include "game/asset/model/Model.h"
+#include "game/asset/model/ModelLoader.h"
+#include "game/asset/model/ModelRepository.h"
+#include "game/asset/shader/Shader.h"
+#include "game/asset/shader/ShaderLoader.h"
+#include "game/asset/shader/ShaderRepository.h" 
+#include "game/asset/cubemap/Cubemap.h"
+#include "game/asset/cubemap/CubemapLoader.h"
+#include "game/asset/cubemap/CubemapRepository.h"
+
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
 const std::string REFRACTION_SHADER_PATH = ".\\shaders\\refraction.shader";
@@ -68,14 +78,7 @@ const std::string SUZANNE_MODEL_PATH = ".\\models\\suzanne\\suzanne.obj";
 
 const std::string AWESOME_EMOJI_TEXTURE_PATH = ".\\images\\awesomeface.png";
 
-const std::vector<std::string> CUBEMAP_FACES_PATH = {
-		".\\images\\nightCubemap\\posx.jpg",
-		".\\images\\nightCubemap\\negx.jpg",
-		".\\images\\nightCubemap\\posy.jpg",
-		".\\images\\nightCubemap\\negy.jpg",
-		".\\images\\nightCubemap\\posz.jpg",
-		".\\images\\nightCubemap\\negz.jpg"
-};
+const std::string CUBEMAP_FACES_PATH = ".\\images\\nightCubemap";
 
 // Settings
 const unsigned int SCR_WIDTH = 1600;
@@ -208,6 +211,38 @@ int main()
 
 	initImGui(window);
 
+	// --- Asset Descriptors ---
+
+	AssetDescriptorRegistry assetDescriptorRegistry;
+
+	// Texture
+	GlTextureLoader textureLoader;
+	TextureRepository textureRepository;
+	AssetDescriptor<Texture> textureAssetDescriptor(textureLoader, textureRepository, { ".jpg", ".jpeg", ".png" });
+	assetDescriptorRegistry.Register(&textureAssetDescriptor);
+
+	// Model
+	GlModelLoader modelLoader(textureLoader);
+	ModelRepository modelRepository;
+	AssetDescriptor<Model> modelAssetDescriptor(modelLoader, modelRepository, { ".obj" });
+	assetDescriptorRegistry.Register(&modelAssetDescriptor);
+
+	// Shader
+	GlShaderLoader shaderLoader;
+	ShaderRepository shaderRepository;
+	AssetDescriptor<Shader> shaderAssetDescriptor(shaderLoader, shaderRepository, { ".shader" });
+	assetDescriptorRegistry.Register(&shaderAssetDescriptor);
+
+	// Cubemap
+	GlCubemapLoader cubemapLoader;
+	CubemapRepository cubemapRepository;
+	AssetDescriptor<Cubemap> cubemapAssetDescriptor(cubemapLoader, cubemapRepository, {});
+	assetDescriptorRegistry.Register(&cubemapAssetDescriptor);
+
+	// --- Asset Controller ---
+
+	AssetController assetController(assetDescriptorRegistry);
+
 	// --- Graphics ---
 
 	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
@@ -215,24 +250,24 @@ int main()
 
 	// --- Models ---
 
-	Model* backpackModel = graphicsEngine->GetModelLoader().Load(BACKPACK_MODEL_PATH);
-	Shader* backpackShader = graphicsEngine->GetShaderLoader().Load(PHONG_SHADER_PATH);
+	Model* backpackModel = assetController.LoadAsset<Model>(BACKPACK_MODEL_PATH);
+	Shader* backpackShader = assetController.LoadAsset<Shader>(PHONG_SHADER_PATH);
 	backpackShader->Use();
 	backpackShader->SetFloat("material.shininess", 4.0f);
 
-	Model* cubeModel = graphicsEngine->GetModelLoader().Load(CUBE_MODEL_PATH);
-	Shader* cubeShader = graphicsEngine->GetShaderLoader().Load(REFLECTION_SHADER_PATH);
+	Model* cubeModel = assetController.LoadAsset<Model>(CUBE_MODEL_PATH);
+	Shader* cubeShader = assetController.LoadAsset<Shader>(REFLECTION_SHADER_PATH);
 
-	Model* suzanneModel = graphicsEngine->GetModelLoader().Load(SUZANNE_MODEL_PATH);
-	Shader* suzanneShader = graphicsEngine->GetShaderLoader().Load(REFRACTION_SHADER_PATH);
+	Model* suzanneModel = assetController.LoadAsset<Model>(SUZANNE_MODEL_PATH);
+	Shader* suzanneShader = assetController.LoadAsset<Shader>(REFRACTION_SHADER_PATH);
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = graphicsEngine->GetTextureLoader().Load(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = assetController.LoadAsset<Texture>(AWESOME_EMOJI_TEXTURE_PATH);
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = graphicsEngine->GetCubemapLoader().Load(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = assetController.LoadAsset<Cubemap>(CUBEMAP_FACES_PATH);
 
 	// --- Skyboxes ---
 
@@ -240,10 +275,10 @@ int main()
 
 	// --- Shaders ---
 
-	Shader* spriteShader = graphicsEngine->GetShaderLoader().Load(SPRITE_SHADER_PATH);
-	Shader* renderShader = graphicsEngine->GetShaderLoader().Load(RENDER_SHADER_PATH);
-	Shader* skyboxShader = graphicsEngine->GetShaderLoader().Load(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = graphicsEngine->GetShaderLoader().Load(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* spriteShader = assetController.LoadAsset<Shader>(SPRITE_SHADER_PATH);
+	Shader* renderShader = assetController.LoadAsset<Shader>(RENDER_SHADER_PATH);
+	Shader* skyboxShader = assetController.LoadAsset<Shader>(SKYBOX_SHADER_PATH);
+	Shader* chromaticAberrationShader = assetController.LoadAsset<Shader>(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	// --- Sprite ---
 

@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-#include "../../../engine/graphics/shader/Shader.h"
+#include "../../../game/asset/shader/Shader.h"
 
 #include "../texture/GlCubemap.h"
 #include "../texture/GlTexture.h"

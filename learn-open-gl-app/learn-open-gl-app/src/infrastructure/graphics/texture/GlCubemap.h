@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../engine/graphics/texture/Cubemap.h"
+#include "../../../game/asset/cubemap/Cubemap.h"
 
 class GlCubemap : public Cubemap
 {

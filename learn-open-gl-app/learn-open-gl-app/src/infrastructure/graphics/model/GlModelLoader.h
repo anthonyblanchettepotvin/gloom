@@ -4,9 +4,9 @@
 
 #include <assimp/scene.h>
 
-#include "../../../engine/graphics/model/ModelLoader.h"
-#include "../../../engine/graphics/texture/Texture.h"
-#include "../../../engine/graphics/texture/TextureLoader.h"
+#include "../../../game/asset/model/ModelLoader.h"
+#include "../../../game/asset/texture/Texture.h"
+#include "../../../game/asset/texture/TextureLoader.h"
 
 class GlModelLoader : public ModelLoader
 {

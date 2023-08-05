@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../engine/graphics/lighting/Skybox.h"
-#include "../../engine/graphics/shader/Shader.h"
+#include "../../game/asset/shader/Shader.h"
 
 #include "RendererComponent.h"
 

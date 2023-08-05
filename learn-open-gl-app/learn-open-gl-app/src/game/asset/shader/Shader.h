@@ -4,11 +4,13 @@
 
 #include <glm/glm.hpp>
 
-#include "../globaldata/GlobalData.h"
-#include "../texture/Cubemap.h"
-#include "../texture/Texture.h"
+#include "../../../engine/graphics/globaldata/GlobalData.h"
+#include "../../../game/asset/cubemap/Cubemap.h"
+#include "../../../game/asset/texture/Texture.h"
 
-class Shader
+#include "../Asset.h"
+
+class Shader : public Asset
 {
 public:
 	virtual void Use() = 0;

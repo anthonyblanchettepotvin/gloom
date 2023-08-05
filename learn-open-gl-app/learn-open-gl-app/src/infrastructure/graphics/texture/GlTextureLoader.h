@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../../engine/graphics/texture/TextureLoader.h"
+#include "../../../game/asset/texture/TextureLoader.h"
 
 class GlTextureLoader : public TextureLoader
 {
 public:
-	Texture* Load(const std::string& path) override;
+	Texture* Load(const std::string& filePath) override;
 };
