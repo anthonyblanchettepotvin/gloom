@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../engine/graphics/rendering/primitive/Skybox.h"
+#include "../../engine/graphics/rendering/GraphicsObject.h"
 
 #include "RendererComponent.h"
 
@@ -15,4 +16,6 @@ public:
 
 private:
 	Skybox* m_Skybox;
+
+	GraphicsObject* m_GraphicsObject = nullptr;
 };

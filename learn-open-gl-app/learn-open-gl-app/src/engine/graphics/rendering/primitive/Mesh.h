@@ -4,18 +4,14 @@
 
 #include <glm/glm.hpp>
 
-#include "../../engine/GraphicsEngine.h"
 #include "../../material/Material.h"
-#include "../RenderingPrimitive.h"
 
 #include "Vertex.h"
 
-class Mesh : public RenderingPrimitive
+class Mesh
 {
 public:
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material);
-
-	void Render(GraphicsEngine& graphicsEngine);
 
 	void SetTransform(const glm::mat4& transform) { m_Transform = transform; }
 	glm::mat4 GetTransform() const { return m_Transform; }

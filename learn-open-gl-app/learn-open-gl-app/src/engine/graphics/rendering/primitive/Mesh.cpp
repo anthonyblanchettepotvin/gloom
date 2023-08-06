@@ -4,8 +4,3 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
 	: m_Vertices(vertices), m_Indices(indices), m_Material(material)
 {
 }
-
-void Mesh::Render(GraphicsEngine& graphicsEngine)
-{
-	graphicsEngine.RenderPrimitive(*this);
-}

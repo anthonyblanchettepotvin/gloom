@@ -5,7 +5,10 @@
 #include "../globaldata/GlobalData.h"
 #include "../lighting/DirectionalLight.h"
 #include "../lighting/PointLight.h"
-#include "../rendering/RenderingPrimitive.h"
+#include "../rendering/primitive/Mesh.h"
+#include "../rendering/primitive/Skybox.h"
+#include "../rendering/primitive/Sprite.h"
+#include "../rendering/GraphicsObject.h"
 
 class GraphicsEngine
 {
@@ -25,5 +28,7 @@ public:
 	virtual void AddDataReferenceToGlobalData(const std::string& name, DirectionalLight& reference, GlobalData* globalData) = 0;
 	virtual void AddDataReferenceToGlobalData(const std::string& name, PointLight& reference, GlobalData* globalData) = 0;
 
-	virtual void RenderPrimitive(RenderingPrimitive& primitive) = 0;
+	virtual GraphicsObject* CreateGraphicsObject(const Mesh& mesh) = 0;
+	virtual GraphicsObject* CreateGraphicsObject(const Skybox& skybox) = 0;
+	virtual GraphicsObject* CreateGraphicsObject(const Sprite& sprite) = 0;
 };

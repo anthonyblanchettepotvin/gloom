@@ -2,16 +2,12 @@
 
 #include <glm/glm.hpp>
 
-#include "../../engine/GraphicsEngine.h"
 #include "../../material/Material.h"
-#include "../RenderingPrimitive.h"
 
-class Sprite : public RenderingPrimitive
+class Sprite
 {
 public:
 	Sprite(Material* material);
-
-	void Render(GraphicsEngine& graphicsEngine);
 
 	void SetTransform(const glm::mat4& transform) { m_Transform = transform; }
 	glm::mat4 GetTransform() const { return m_Transform; }

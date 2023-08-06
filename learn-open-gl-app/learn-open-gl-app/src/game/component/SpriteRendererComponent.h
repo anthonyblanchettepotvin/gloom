@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../engine/graphics/rendering/primitive/Sprite.h"
+#include "../../engine/graphics/rendering/GraphicsObject.h"
 
 #include "RendererComponent.h"
 
@@ -15,4 +16,6 @@ public:
 
 private:
 	Sprite* m_Sprite;
+
+	GraphicsObject* m_GraphicsObject = nullptr;
 };

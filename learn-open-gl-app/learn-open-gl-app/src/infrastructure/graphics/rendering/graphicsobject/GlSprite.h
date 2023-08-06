@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../../../../engine/graphics/rendering/primitive/Sprite.h"
 #include "../../../../engine/graphics/rendering/GraphicsObject.h"
+#include "../../../../engine/graphics/rendering/primitive/Sprite.h"
 
 class GlSprite : public GraphicsObject
 {
 public:
 	GlSprite(const Sprite& sprite);
 
-	void Render() override;
+	void Render();
 
 private:
 	const Sprite& m_Sprite;

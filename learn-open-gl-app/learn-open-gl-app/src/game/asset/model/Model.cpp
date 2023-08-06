@@ -26,14 +26,3 @@ void Model::SetMaterial(Material* material)
 		}
 	}
 }
-
-void Model::Render(GraphicsEngine& graphicsEngine)
-{
-	for (const auto& mesh : m_Meshes)
-	{
-		if (mesh)
-		{
-			mesh->Render(graphicsEngine);
-		}
-	}
-}

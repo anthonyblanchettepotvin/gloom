@@ -28,7 +28,9 @@ public:
 	void AddDataReferenceToGlobalData(const std::string& name, DirectionalLight& reference, GlobalData* globalData) override;
 	void AddDataReferenceToGlobalData(const std::string& name, PointLight& reference, GlobalData* globalData) override;
 
-	void RenderPrimitive(RenderingPrimitive& primitive) override;
+	GraphicsObject* CreateGraphicsObject(const Mesh& mesh) override;
+	GraphicsObject* CreateGraphicsObject(const Skybox& skybox) override;
+	GraphicsObject* CreateGraphicsObject(const Sprite& sprite) override;
 
 private:
 	GlShaderLoader m_ShaderLoader;

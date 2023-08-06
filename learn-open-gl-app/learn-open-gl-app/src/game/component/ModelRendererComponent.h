@@ -1,5 +1,10 @@
 #pragma once
 
+#include <vector>
+
+#include "../../engine/graphics/rendering/primitive/Mesh.h"
+#include "../../engine/graphics/rendering/GraphicsObject.h"
+
 #include "../../game/asset/model/Model.h"
 
 #include "RendererComponent.h"
@@ -15,4 +20,6 @@ public:
 
 private:
 	Model* m_Model;
+
+	std::vector<GraphicsObject*> m_GraphicsObjects;
 };

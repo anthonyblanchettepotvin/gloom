@@ -145,7 +145,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\engine\graphics\rendering\RenderingPrimitive.cpp" />
     <ClCompile Include="src\engine\graphics\rendering\GraphicsObject.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
@@ -233,7 +232,6 @@
     <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\graphics\rendering\RenderingPrimitive.h" />
     <ClInclude Include="src\engine\graphics\rendering\GraphicsObject.h" />
     <ClInclude Include="src\game\asset\shader\ShaderRegistry.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />

@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../../../../engine/graphics/rendering/primitive/Skybox.h"
 #include "../../../../engine/graphics/rendering/GraphicsObject.h"
+#include "../../../../engine/graphics/rendering/primitive/Skybox.h"
 
 class GlSkybox : public GraphicsObject
 {
 public:
 	GlSkybox(const Skybox& skybox);
 
-	void Render() override;
+	void Render();
 
 private:
 	const Skybox& m_Skybox;

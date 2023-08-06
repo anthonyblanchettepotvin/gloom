@@ -4,7 +4,6 @@
 
 #include <glm/glm.hpp>
 
-#include "../../../engine/graphics/engine/GraphicsEngine.h"
 #include "../../../engine/graphics/rendering/primitive/Mesh.h"
 
 #include "../Asset.h"
@@ -17,7 +16,7 @@ public:
 	void SetTransform(const glm::mat4& transform);
 	void SetMaterial(Material* material);
 
-	void Render(GraphicsEngine& graphicsEngine);
+	const std::vector<Mesh*>& GetMeshes() const { return m_Meshes; }
 
 private:
 	std::vector<Mesh*> m_Meshes;

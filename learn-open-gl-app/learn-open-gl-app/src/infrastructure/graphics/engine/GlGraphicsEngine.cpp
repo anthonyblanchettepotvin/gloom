@@ -191,53 +191,17 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, Poi
 	}
 }
 
-void GlGraphicsEngine::RenderPrimitive(RenderingPrimitive& primitive)
+GraphicsObject* GlGraphicsEngine::CreateGraphicsObject(const Mesh& mesh)
 {
+	return new GlMesh(mesh);
+}
 
-	GraphicsObject* graphicsObject = primitive.GetGraphicsObject();
+GraphicsObject* GlGraphicsEngine::CreateGraphicsObject(const Skybox& skybox)
+{
+	return new GlSkybox(skybox);
+}
 
-	// TODO: Implement a factory for making the right GraphicsObject
-	if (!graphicsObject)
-	{
-		try
-		{
-			Mesh& mesh = dynamic_cast<Mesh&>(primitive);
-			graphicsObject = new GlMesh(mesh);
-			mesh.SetGraphicsObject(graphicsObject);
-		}
-		catch (std::bad_cast)
-		{
-		}
-	}
-
-	if (!graphicsObject)
-	{
-		try
-		{
-			Sprite& sprite = dynamic_cast<Sprite&>(primitive);
-			graphicsObject = new GlSprite(sprite);
-			sprite.SetGraphicsObject(graphicsObject);
-		}
-		catch (std::bad_cast)
-		{
-		}
-	}
-
-	if (!graphicsObject)
-	{
-		try
-		{
-			Skybox& skybox = dynamic_cast<Skybox&>(primitive);
-			graphicsObject = new GlSkybox(skybox);
-			skybox.SetGraphicsObject(graphicsObject);
-		}
-		catch (std::bad_cast)
-		{
-		}
-	}
-
-	if (graphicsObject)
-	{
-		graphicsObject->Render();
-	}
+GraphicsObject* GlGraphicsEngine::CreateGraphicsObject(const Sprite& sprite)
+{
+	return new GlSprite(sprite);
 }

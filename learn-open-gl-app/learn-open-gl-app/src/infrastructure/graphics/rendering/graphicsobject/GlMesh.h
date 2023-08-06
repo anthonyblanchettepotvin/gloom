@@ -2,15 +2,15 @@
 
 #include <vector>
 
-#include "../../../../engine/graphics/rendering/primitive/Mesh.h"
 #include "../../../../engine/graphics/rendering/GraphicsObject.h"
+#include "../../../../engine/graphics/rendering/primitive/Mesh.h"
 
 class GlMesh : public GraphicsObject
 {
 public:
 	GlMesh(const Mesh& mesh);
 
-	void Render() override;
+	void Render();
 
 private:
 	const Mesh& m_Mesh;
