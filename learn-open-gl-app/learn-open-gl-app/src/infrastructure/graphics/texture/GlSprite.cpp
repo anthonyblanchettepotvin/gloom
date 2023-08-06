@@ -1,21 +1,23 @@
 #include "GlSprite.h"
 
-#include "GlTexture.h"
-#include "../shader/GlShader.h"
+#include <glad/glad.h>
 
-GlSprite::GlSprite(Material* material)
-    : Sprite(material)
+#include "../../../game/asset/shader/Shader.h"
+
+GlSprite::GlSprite(const Sprite& sprite)
+    : m_Sprite(sprite)
 {
-    SetupMesh();
+    Initialize();
 }
 
-void GlSprite::Render(const glm::mat4& transform)
+void GlSprite::Render()
 {
-    if (m_Material)
+    Material* material = m_Sprite.GetMaterial();
+    if (material)
     {
-        m_Material->Use();
+        material->Use();
 
-        m_Material->GetShader().SetFloatMat4("modelXform", transform);
+        material->GetShader().SetFloatMat4("modelXform", m_Sprite.GetTransform());
 
         glBindVertexArray(m_Vao);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -23,7 +25,7 @@ void GlSprite::Render(const glm::mat4& transform)
     }
 }
 
-void GlSprite::SetupMesh()
+void GlSprite::Initialize()
 {
     float vertices[] = {
         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,

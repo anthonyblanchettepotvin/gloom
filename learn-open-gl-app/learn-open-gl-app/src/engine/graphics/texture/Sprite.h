@@ -2,15 +2,25 @@
 
 #include <glm/glm.hpp>
 
+#include "../../../engine/graphics/engine/GraphicsEngine.h"
 #include "../../../engine/graphics/material/Material.h"
 
-class Sprite
+#include "../rendering/RenderingPrimitive.h"
+
+class Sprite : public RenderingPrimitive
 {
 public:
 	Sprite(Material* material);
 
-	virtual void Render(const glm::mat4& transform) = 0;
+	void Render(GraphicsEngine& graphicsEngine);
+
+	void SetTransform(const glm::mat4& transform) { m_Transform = transform; }
+	glm::mat4 GetTransform() const { return m_Transform; }
+
+	Material* GetMaterial() const { return m_Material; }
 
 protected:
-	Material* m_Material;
+	glm::mat4 m_Transform{ 0.0f };
+
+	Material* m_Material = nullptr;
 };

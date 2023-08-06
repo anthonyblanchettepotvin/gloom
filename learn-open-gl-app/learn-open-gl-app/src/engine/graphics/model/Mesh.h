@@ -28,10 +28,10 @@ public:
 	Material* GetMaterial() const { return m_Material; }
 
 protected:
-	glm::mat4 m_Transform;
+	glm::mat4 m_Transform{ 0.0f };
 
 	std::vector<Vertex> m_Vertices;
 	std::vector<unsigned int> m_Indices;
 
-	Material* m_Material;
+	Material* m_Material = nullptr;
 };

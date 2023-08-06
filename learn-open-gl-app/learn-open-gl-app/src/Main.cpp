@@ -33,8 +33,6 @@
 #include "infrastructure/graphics/lighting/GlSkybox.h"
 #include "infrastructure/graphics/shader/GlShaderLoader.h"
 #include "infrastructure/graphics/texture/GlCubemapLoader.h"
-#include "infrastructure/graphics/texture/GlSprite.h"
-#include "infrastructure/graphics/texture/GlTexture.h"
 #include "infrastructure/graphics/texture/GlTextureLoader.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
 
@@ -326,7 +324,7 @@ int main()
 		pointLightTextureAttribute->SetValue(pointLightTexture);
 	}
 
-	Sprite* pointLightSprite = new GlSprite(pointLightSpriteMaterial);
+	Sprite* pointLightSprite = new Sprite(pointLightSpriteMaterial);
 
 	// --- Actors ---
 

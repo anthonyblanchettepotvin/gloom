@@ -3,10 +3,12 @@
 #include <glad/glad.h>
 
 #include "../../../engine/graphics/model/Mesh.h"
+#include "../../../engine/graphics/texture/Sprite.h"
 
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
 #include "../model/GlMesh.h"
+#include "../texture/GlSprite.h"
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
@@ -190,21 +192,49 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, Poi
 
 void GlGraphicsEngine::RenderPrimitive(RenderingPrimitive& primitive)
 {
-	try
-	{
-		Mesh& mesh = dynamic_cast<Mesh&>(primitive);
 
-		GraphicsObject* graphicsObject = mesh.GetGraphicsObject();
-		if (!graphicsObject)
+	GraphicsObject* graphicsObject = primitive.GetGraphicsObject();
+
+	// TODO: Implement a factory for making the right GraphicsObject
+	if (!graphicsObject)
+	{
+		try
 		{
-			graphicsObject = new GlMesh(mesh);
-			mesh.SetGraphicsObject(graphicsObject);
-		}
+			Mesh& mesh = dynamic_cast<Mesh&>(primitive);
 
-		graphicsObject->Render();
+			GraphicsObject* graphicsObject = mesh.GetGraphicsObject();
+			if (!graphicsObject)
+			{
+				graphicsObject = new GlMesh(mesh);
+				mesh.SetGraphicsObject(graphicsObject);
+			}
+		}
+		catch (std::bad_cast)
+		{
+		}
 	}
-	catch (std::bad_cast)
+
+	if (!graphicsObject)
 	{
-		// TODO: Throw unsupported primitive type exception
+
+		try
+		{
+			Sprite& sprite = dynamic_cast<Sprite&>(primitive);
+
+			GraphicsObject* graphicsObject = sprite.GetGraphicsObject();
+			if (!graphicsObject)
+			{
+				graphicsObject = new GlSprite(sprite);
+				sprite.SetGraphicsObject(graphicsObject);
+			}
+		}
+		catch (std::bad_cast)
+		{
+		}
+	}
+
+	if (graphicsObject)
+	{
+		graphicsObject->Render();
 	}
 }

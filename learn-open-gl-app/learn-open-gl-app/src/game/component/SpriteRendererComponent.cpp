@@ -16,7 +16,9 @@ void SpriteRendererComponent::Render()
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			m_Sprite->Render(transformComponent->GetTransform());
+			m_Sprite->SetTransform(transformComponent->GetTransform());
+
+			m_Sprite->Render(m_GraphicsEngine);
 		}
 	}
 }

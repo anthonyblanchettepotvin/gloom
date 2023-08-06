@@ -1,17 +1,20 @@
 #pragma once
 
 #include "../../../engine/graphics/texture/Sprite.h"
+#include "../../../engine/graphics/rendering/GraphicsObject.h"
 
-class GlSprite : public Sprite
+class GlSprite : public GraphicsObject
 {
 public:
-	GlSprite(Material* material);
+	GlSprite(const Sprite& sprite);
 
-	void Render(const glm::mat4& transform) override;
+	void Render() override;
 
 private:
+	const Sprite& m_Sprite;
+
 	unsigned int m_Vao;
 	unsigned int m_Vbo;
 
-	void SetupMesh();
+	void Initialize();
 };
