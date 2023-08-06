@@ -2,9 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include "../../../engine/graphics/engine/GraphicsEngine.h"
-#include "../../../engine/graphics/material/Material.h"
-
+#include "../engine/GraphicsEngine.h"
+#include "../material/Material.h"
 #include "../rendering/RenderingPrimitive.h"
 
 class Sprite : public RenderingPrimitive

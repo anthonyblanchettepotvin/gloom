@@ -2,19 +2,18 @@
 
 #include "glad/glad.h"
 
-#include "../texture/GlCubemap.h"
-
-GlSkybox::GlSkybox(Material* material)
-	: Skybox(material)
+GlSkybox::GlSkybox(const Skybox& skybox)
+	: m_Skybox(skybox)
 {
-	SetupMesh();
+	Initialize();
 }
 
 void GlSkybox::Render()
 {
-	if (m_Material)
+	Material* material = m_Skybox.GetMaterial();
+	if (material)
 	{
-		m_Material->Use();
+		material->Use();
 
 		glBindVertexArray(m_Vao);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -22,7 +21,7 @@ void GlSkybox::Render()
 	}
 }
 
-void GlSkybox::SetupMesh()
+void GlSkybox::Initialize()
 {
 	float vertices[] = {
 		-1.0f,  1.0f, -1.0f,

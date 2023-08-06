@@ -4,11 +4,13 @@
 
 #include "../../../engine/graphics/model/Mesh.h"
 #include "../../../engine/graphics/texture/Sprite.h"
+#include "../../../engine/graphics/lighting/Skybox.h"
 
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
 #include "../model/GlMesh.h"
 #include "../texture/GlSprite.h"
+#include "../lighting/GlSkybox.h"
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
@@ -189,7 +191,6 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, Poi
 	}
 }
 
-
 void GlGraphicsEngine::RenderPrimitive(RenderingPrimitive& primitive)
 {
 
@@ -201,13 +202,8 @@ void GlGraphicsEngine::RenderPrimitive(RenderingPrimitive& primitive)
 		try
 		{
 			Mesh& mesh = dynamic_cast<Mesh&>(primitive);
-
-			GraphicsObject* graphicsObject = mesh.GetGraphicsObject();
-			if (!graphicsObject)
-			{
-				graphicsObject = new GlMesh(mesh);
-				mesh.SetGraphicsObject(graphicsObject);
-			}
+			graphicsObject = new GlMesh(mesh);
+			mesh.SetGraphicsObject(graphicsObject);
 		}
 		catch (std::bad_cast)
 		{
@@ -216,17 +212,24 @@ void GlGraphicsEngine::RenderPrimitive(RenderingPrimitive& primitive)
 
 	if (!graphicsObject)
 	{
-
 		try
 		{
 			Sprite& sprite = dynamic_cast<Sprite&>(primitive);
+			graphicsObject = new GlSprite(sprite);
+			sprite.SetGraphicsObject(graphicsObject);
+		}
+		catch (std::bad_cast)
+		{
+		}
+	}
 
-			GraphicsObject* graphicsObject = sprite.GetGraphicsObject();
-			if (!graphicsObject)
-			{
-				graphicsObject = new GlSprite(sprite);
-				sprite.SetGraphicsObject(graphicsObject);
-			}
+	if (!graphicsObject)
+	{
+		try
+		{
+			Skybox& skybox = dynamic_cast<Skybox&>(primitive);
+			graphicsObject = new GlSkybox(skybox);
+			skybox.SetGraphicsObject(graphicsObject);
 		}
 		catch (std::bad_cast)
 		{

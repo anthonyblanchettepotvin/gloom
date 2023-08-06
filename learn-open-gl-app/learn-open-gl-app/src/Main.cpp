@@ -30,7 +30,6 @@
 #include "game/component/DirectionalLightComponent.h"
 #include "game/world/World.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
-#include "infrastructure/graphics/lighting/GlSkybox.h"
 #include "infrastructure/graphics/shader/GlShaderLoader.h"
 #include "infrastructure/graphics/texture/GlCubemapLoader.h"
 #include "infrastructure/graphics/texture/GlTextureLoader.h"
@@ -312,7 +311,7 @@ int main()
 		skyboxCubemapAttribute->SetValue(cubemap);
 	}
 
-	Skybox* skybox = new GlSkybox(skyboxMaterial);
+	Skybox* skybox = new Skybox(skyboxMaterial);
 
 	// --- Sprite ---
 

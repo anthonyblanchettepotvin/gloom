@@ -1,17 +1,20 @@
 #pragma once
 
 #include "../../../engine/graphics/lighting/Skybox.h"
+#include "../../../engine/graphics/rendering/GraphicsObject.h"
 
-class GlSkybox : public Skybox
+class GlSkybox : public GraphicsObject
 {
 public:
-	GlSkybox(Material* material);
+	GlSkybox(const Skybox& skybox);
 
 	void Render() override;
 
 private:
+	const Skybox& m_Skybox;
+
 	unsigned int m_Vao;
 	unsigned int m_Vbo;
 
-	void SetupMesh();
+	void Initialize();
 };

@@ -9,6 +9,6 @@ void SkyboxRendererComponent::Render()
 {
 	if (m_Skybox)
 	{
-		m_Skybox->Render();
+		m_Skybox->Render(m_GraphicsEngine);
 	}
 }

@@ -1,13 +1,17 @@
 #pragma once
 
+#include "../engine/GraphicsEngine.h"
 #include "../material/Material.h"
+#include "../rendering/RenderingPrimitive.h"
 
-class Skybox
+class Skybox : public RenderingPrimitive
 {
 public:
 	Skybox(Material* material);
 
-	virtual void Render() = 0;
+	void Render(GraphicsEngine& graphicsEngine);
+
+	Material* GetMaterial() const { return m_Material; }
 
 protected:
 	Material* m_Material;
