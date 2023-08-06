@@ -17,43 +17,48 @@ GlShader::GlShader(unsigned int id)
 
 void GlShader::InitializeMaterialTemplate()
 {
-	GLint size; // size of the variable
-	GLenum type; // type of the variable (float, vec3 or mat4, etc)
-
-	const GLsizei bufSize = GL_ACTIVE_UNIFORM_MAX_LENGTH; // maximum name length
-	GLchar name[bufSize]; // variable name in GLSL
-	GLsizei length; // name length
-
 	GLint nbUniforms;
 	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORMS, &nbUniforms);
 
+	GLenum uniformType;
+	GLint uniformSize;
+
+	GLchar uniformName[MAX_UNIFORM_NAME_LENGTH];
+	GLsizei uniformNameLength;
+
 	for (size_t i = 0; i < nbUniforms; i++)
 	{
-		glGetActiveUniform(m_Id, (GLint)i, bufSize, &length, &size, &type, name);
+		glGetActiveUniform(m_Id, (GLint)i, MAX_UNIFORM_NAME_LENGTH, &uniformNameLength, &uniformSize, &uniformType, uniformName);
 
-		std::string cppName = (std::string)name;
+		std::string attributeName = (std::string)uniformName;
 
-		std::string structName = cppName.substr(0, cppName.find_first_of('.'));
-
-		if (structName != "material")
-			continue;
-
-		switch (type)
+		std::string structName = attributeName.substr(0, attributeName.find_first_of('.'));
+		if (structName == MATERIAL_STRUCT_NAME)
 		{
-		case GL_SAMPLER_2D:
-		{
-			std::unique_ptr<MaterialAttribute> attribute = std::make_unique<TextureMaterialAttribute>(cppName);
-			m_MaterialTemplate.AddAttribute(attribute);
-			break;
-		}
-		case GL_FLOAT:
-		{
-			std::unique_ptr<MaterialAttribute> attribute = std::make_unique<FloatMaterialAttribute>(cppName);
-			m_MaterialTemplate.AddAttribute(attribute);
-			break;
-		}
-		default:
-			break;
+			// TODO: Create a GlMaterialAttributeFactory to encapsulate this switch statement
+			switch (uniformType)
+			{
+			case GL_FLOAT:
+			{
+				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<FloatMaterialAttribute>(attributeName);
+				m_MaterialTemplate.AddAttribute(attribute);
+				break;
+			}
+			case GL_SAMPLER_2D:
+			{
+				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<TextureMaterialAttribute>(attributeName);
+				m_MaterialTemplate.AddAttribute(attribute);
+				break;
+			}
+			case GL_SAMPLER_CUBE:
+			{
+				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<CubemapMaterialAttribute>(attributeName);
+				m_MaterialTemplate.AddAttribute(attribute);
+				break;
+			}
+			default:
+				break;
+			}
 		}
 	}
 

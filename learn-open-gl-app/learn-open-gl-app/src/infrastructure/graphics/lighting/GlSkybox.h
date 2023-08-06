@@ -5,9 +5,9 @@
 class GlSkybox : public Skybox
 {
 public:
-	GlSkybox(Cubemap* cubemap);
+	GlSkybox(Material* material);
 
-	void Render(Shader* shader) override;
+	void Render() override;
 
 private:
 	unsigned int m_Vao;

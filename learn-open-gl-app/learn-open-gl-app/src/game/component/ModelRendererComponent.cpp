@@ -5,18 +5,18 @@
 #include "TransformComponent.h"
 
 ModelRendererComponent::ModelRendererComponent(Model* model)
-	: model(model)
+	: m_Model(model)
 {
 }
 
 void ModelRendererComponent::Render()
 {
-	if (parent && model)
+	if (parent && m_Model)
 	{
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			model->Render(transformComponent->GetModelTransformationMatrix(), transformComponent->GetNormalTransformationMatrix());
+			m_Model->Render(transformComponent->GetModelTransformationMatrix(), transformComponent->GetNormalTransformationMatrix());
 		}
 	}
 }

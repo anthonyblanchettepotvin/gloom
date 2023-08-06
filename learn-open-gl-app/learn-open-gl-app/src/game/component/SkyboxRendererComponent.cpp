@@ -1,16 +1,14 @@
 #include "SkyboxRendererComponent.h"
 
-SkyboxRendererComponent::SkyboxRendererComponent(Skybox* skybox, Shader* shader)
-	: RendererComponent(shader), skybox(skybox)
+SkyboxRendererComponent::SkyboxRendererComponent(Skybox* skybox)
+	: m_Skybox(skybox)
 {
 }
 
 void SkyboxRendererComponent::Render()
 {
-	if (shader && skybox)
+	if (m_Skybox)
 	{
-		shader->Use();
-
-		skybox->Render(shader);
+		m_Skybox->Render();
 	}
 }

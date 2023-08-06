@@ -4,17 +4,17 @@
 
 #include "../texture/GlCubemap.h"
 
-GlSkybox::GlSkybox(Cubemap* cubemap)
-	: Skybox(cubemap)
+GlSkybox::GlSkybox(Material* material)
+	: Skybox(material)
 {
 	SetupMesh();
 }
 
-void GlSkybox::Render(Shader* shader)
+void GlSkybox::Render()
 {
-	if (shader)
+	if (m_Material)
 	{
-		shader->SetCubemap("cubemap_skybox", cubemap);
+		m_Material->Use();
 
 		glBindVertexArray(m_Vao);
 		glDrawArrays(GL_TRIANGLES, 0, 36);

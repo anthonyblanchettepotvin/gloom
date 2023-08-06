@@ -1,19 +1,18 @@
 #pragma once
 
 #include "../../engine/graphics/lighting/Skybox.h"
-#include "../../game/asset/shader/Shader.h"
 
 #include "RendererComponent.h"
 
 class SkyboxRendererComponent : public RendererComponent
 {
 public:
-	SkyboxRendererComponent(Skybox* skybox, Shader* shader);
+	SkyboxRendererComponent(Skybox* skybox);
 
-	Skybox* GetSkybox() const { return skybox; }
+	Skybox* GetSkybox() const { return m_Skybox; }
 
 	void Render() override;
 
 private:
-	Skybox* skybox;
+	Skybox* m_Skybox;
 };

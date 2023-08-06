@@ -31,3 +31,18 @@ std::unique_ptr<MaterialAttribute> TextureMaterialAttribute::CreateAttributeInst
 {
 	return std::make_unique<TextureMaterialAttribute>(m_Name);
 }
+
+CubemapMaterialAttribute::CubemapMaterialAttribute(const std::string& name)
+	: MaterialAttribute(name)
+{
+}
+
+void CubemapMaterialAttribute::Set(Shader& shader) const
+{
+	shader.SetCubemap(m_Name, m_Value);
+}
+
+std::unique_ptr<MaterialAttribute> CubemapMaterialAttribute::CreateAttributeInstance() const
+{
+	return std::make_unique<CubemapMaterialAttribute>(m_Name);
+}

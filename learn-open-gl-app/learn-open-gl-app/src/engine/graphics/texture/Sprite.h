@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 
 #include "../../../engine/graphics/material/Material.h"
-#include "../../../game/asset/shader/Shader.h"
 
 class Sprite
 {

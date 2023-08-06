@@ -5,18 +5,18 @@
 #include "TransformComponent.h"
 
 SpriteRendererComponent::SpriteRendererComponent(Sprite* sprite)
-	: sprite(sprite)
+	: m_Sprite(sprite)
 {
 }
 
 void SpriteRendererComponent::Render()
 {
-	if (parent && sprite)
+	if (parent && m_Sprite)
 	{
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			sprite->Render(transformComponent->GetModelTransformationMatrix());
+			m_Sprite->Render(transformComponent->GetModelTransformationMatrix());
 		}
 	}
 }

@@ -9,11 +9,11 @@ class ModelRendererComponent : public RendererComponent
 public:
 	ModelRendererComponent(Model* model);
 
-	Model* GetModel() { return model; };
+	Model* GetModel() const { return m_Model; };
 
 	void Render() override;
 
 private:
-	Model* model;
+	Model* m_Model;
 };
 

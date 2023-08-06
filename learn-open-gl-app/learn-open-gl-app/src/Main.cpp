@@ -309,13 +309,21 @@ int main()
 
 	// --- Skyboxes ---
 
-	Skybox* skybox = new GlSkybox(cubemap);
+	Material* skyboxMaterial = skyboxShader->CreateMaterialInstance();
+
+	CubemapMaterialAttribute* skyboxCubemapAttribute = skyboxMaterial->FindAttribute<CubemapMaterialAttribute>("material.cubemap_skybox");
+	if (skyboxCubemapAttribute)
+	{
+		skyboxCubemapAttribute->SetValue(cubemap);
+	}
+
+	Skybox* skybox = new GlSkybox(skyboxMaterial);
 
 	// --- Sprite ---
 
 	Material* pointLightSpriteMaterial = spriteShader->CreateMaterialInstance();
 	
-	TextureMaterialAttribute* pointLightTextureAttribute = testModelMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_sprite");
+	TextureMaterialAttribute* pointLightTextureAttribute = pointLightSpriteMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_sprite");
 	if (pointLightTextureAttribute)
 	{
 		pointLightTextureAttribute->SetValue(pointLightTexture);
@@ -327,7 +335,7 @@ int main()
 
 	Actor skyboxActor("Skybox");
 
-	SkyboxRendererComponent skyboxRendererComponent(skybox, skyboxShader);
+	SkyboxRendererComponent skyboxRendererComponent(skybox);
 	skyboxActor.AddComponent(&skyboxRendererComponent);
 
 	Actor backpackActor("Backpack");

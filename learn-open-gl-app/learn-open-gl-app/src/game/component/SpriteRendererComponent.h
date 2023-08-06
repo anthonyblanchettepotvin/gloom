@@ -9,10 +9,10 @@ class SpriteRendererComponent : public RendererComponent
 public:
 	SpriteRendererComponent(Sprite* sprite);
 
-	Sprite* GetSprite() { return sprite; };
+	Sprite* GetSprite() const { return m_Sprite; };
 
 	void Render() override;
 
 private:
-	Sprite* sprite;
+	Sprite* m_Sprite;
 };

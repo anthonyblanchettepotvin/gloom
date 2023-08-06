@@ -1,5 +1,9 @@
 #pragma once
 
+#define MAX_UNIFORM_NAME_LENGTH 32
+
+#define MATERIAL_STRUCT_NAME "material"
+
 #include <unordered_map>
 
 #include "../../../game/asset/shader/Shader.h"

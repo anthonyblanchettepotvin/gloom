@@ -1,15 +1,14 @@
 #pragma once
 
-#include "../../../game/asset/shader/Shader.h"
-#include "../../../game/asset/cubemap/Cubemap.h"
+#include "../material/Material.h"
 
 class Skybox
 {
 public:
-	Skybox(Cubemap* cubemap);
+	Skybox(Material* material);
 
-	virtual void Render(Shader* shader) = 0;
+	virtual void Render() = 0;
 
 protected:
-	Cubemap* cubemap;
+	Material* m_Material;
 };

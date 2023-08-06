@@ -1,6 +1,6 @@
 #include "Skybox.h"
 
-Skybox::Skybox(Cubemap* cubemap)
-	: cubemap(cubemap)
+Skybox::Skybox(Material* material)
+	: m_Material(material)
 {
 }
