@@ -4,9 +4,9 @@
 
 #include <glm/glm.hpp>
 
-#include "../engine/GraphicsEngine.h"
-#include "../material/Material.h"
-#include "../rendering/RenderingPrimitive.h"
+#include "../../engine/GraphicsEngine.h"
+#include "../../material/Material.h"
+#include "../RenderingPrimitive.h"
 
 #include "Vertex.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../engine/graphics/texture/Sprite.h"
-#include "../../../engine/graphics/rendering/GraphicsObject.h"
+#include "../../../../engine/graphics/rendering/primitive/Sprite.h"
+#include "../../../../engine/graphics/rendering/GraphicsObject.h"
 
 class GlSprite : public GraphicsObject
 {

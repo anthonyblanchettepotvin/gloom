@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "../../../engine/graphics/engine/GraphicsEngine.h"
-#include "../../../engine/graphics/model/Mesh.h"
+#include "../../../engine/graphics/rendering/primitive/Mesh.h"
 
 #include "../Asset.h"
 

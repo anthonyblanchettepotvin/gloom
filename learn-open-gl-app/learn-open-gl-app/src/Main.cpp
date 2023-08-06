@@ -1,13 +1,13 @@
 #include <iostream>
 
 #include "engine/graphics/engine/GraphicsEngine.h"
-#include "engine/graphics/lighting/Skybox.h"
 #include "engine/graphics/material/MaterialAttributes.h"
-#include "engine/graphics/texture/Sprite.h"
+#include "engine/graphics/rendering/primitive/Skybox.h"
+#include "engine/graphics/rendering/primitive/Sprite.h"
 #include "game/actor/Actor.h"
 #include "game/asset/AssetController.h"
 #include "game/asset/AssetDescriptor.h"
-#include "game/asset/AssetDescriptorRegistry.h";
+#include "game/asset/AssetDescriptorRegistry.h"
 #include "game/asset/texture/Texture.h"
 #include "game/asset/texture/TextureLoader.h"
 #include "game/asset/texture/TextureRepository.h"

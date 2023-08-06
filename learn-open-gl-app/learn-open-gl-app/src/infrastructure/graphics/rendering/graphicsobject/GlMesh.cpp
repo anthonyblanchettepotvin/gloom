@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../../../game/asset/shader/Shader.h"
+#include "../../../../game/asset/shader/Shader.h"
 
 GlMesh::GlMesh(const Mesh& mesh)
 	: m_Mesh(mesh)

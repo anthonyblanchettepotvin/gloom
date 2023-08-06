@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../../../game/asset/shader/Shader.h"
+#include "../../../../game/asset/shader/Shader.h"
 
 GlSprite::GlSprite(const Sprite& sprite)
     : m_Sprite(sprite)

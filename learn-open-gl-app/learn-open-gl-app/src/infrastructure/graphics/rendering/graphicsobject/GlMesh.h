@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../../../engine/graphics/model/Mesh.h"
-#include "../../../engine/graphics/rendering/GraphicsObject.h"
+#include "../../../../engine/graphics/rendering/primitive/Mesh.h"
+#include "../../../../engine/graphics/rendering/GraphicsObject.h"
 
 class GlMesh : public GraphicsObject
 {

@@ -2,15 +2,15 @@
 
 #include <glad/glad.h>
 
-#include "../../../engine/graphics/model/Mesh.h"
-#include "../../../engine/graphics/texture/Sprite.h"
-#include "../../../engine/graphics/lighting/Skybox.h"
+#include "../../../engine/graphics/rendering/primitive/Mesh.h"
+#include "../../../engine/graphics/rendering/primitive/Sprite.h"
+#include "../../../engine/graphics/rendering/primitive/Skybox.h"
 
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
-#include "../model/GlMesh.h"
-#include "../texture/GlSprite.h"
-#include "../lighting/GlSkybox.h"
+#include "../rendering/graphicsobject/GlMesh.h"
+#include "../rendering/graphicsobject/GlSprite.h"
+#include "../rendering/graphicsobject/GlSkybox.h"
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {

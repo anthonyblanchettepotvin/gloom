@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../engine/GraphicsEngine.h"
-#include "../material/Material.h"
-#include "../rendering/RenderingPrimitive.h"
+#include "../../engine/GraphicsEngine.h"
+#include "../../material/Material.h"
+#include "../RenderingPrimitive.h"
 
 class Skybox : public RenderingPrimitive
 {

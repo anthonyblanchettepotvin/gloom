@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../engine/graphics/lighting/Skybox.h"
-#include "../../../engine/graphics/rendering/GraphicsObject.h"
+#include "../../../../engine/graphics/rendering/primitive/Skybox.h"
+#include "../../../../engine/graphics/rendering/GraphicsObject.h"
 
 class GlSkybox : public GraphicsObject
 {

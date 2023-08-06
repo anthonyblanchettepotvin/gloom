@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../engine/graphics/lighting/Skybox.h"
+#include "../../engine/graphics/rendering/primitive/Skybox.h"
 
 #include "RendererComponent.h"
 
