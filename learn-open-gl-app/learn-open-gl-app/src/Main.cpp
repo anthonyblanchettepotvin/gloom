@@ -59,10 +59,13 @@ graphics programming with OpenGL. */
 #include "game/asset/model/ModelRepository.h"
 #include "game/asset/shader/Shader.h"
 #include "game/asset/shader/ShaderLoader.h"
+#include "game/asset/shader/ShaderRegistry.h"
 #include "game/asset/shader/ShaderRepository.h" 
 #include "game/asset/cubemap/Cubemap.h"
 #include "game/asset/cubemap/CubemapLoader.h"
 #include "game/asset/cubemap/CubemapRepository.h"
+
+#include "engine/graphics/material/MaterialAttributes.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
@@ -221,17 +224,18 @@ int main()
 	AssetDescriptor<Texture> textureAssetDescriptor(textureLoader, textureRepository, { ".jpg", ".jpeg", ".png" });
 	assetDescriptorRegistry.Register(&textureAssetDescriptor);
 
-	// Model
-	GlModelLoader modelLoader(textureLoader);
-	ModelRepository modelRepository;
-	AssetDescriptor<Model> modelAssetDescriptor(modelLoader, modelRepository, { ".obj" });
-	assetDescriptorRegistry.Register(&modelAssetDescriptor);
-
 	// Shader
 	GlShaderLoader shaderLoader;
+	ShaderRegistry shaderRegistry;
 	ShaderRepository shaderRepository;
 	AssetDescriptor<Shader> shaderAssetDescriptor(shaderLoader, shaderRepository, { ".shader" });
 	assetDescriptorRegistry.Register(&shaderAssetDescriptor);
+
+	// Model
+	GlModelLoader modelLoader(textureLoader, shaderRegistry);
+	ModelRepository modelRepository;
+	AssetDescriptor<Model> modelAssetDescriptor(modelLoader, modelRepository, { ".obj" });
+	assetDescriptorRegistry.Register(&modelAssetDescriptor);
 
 	// Cubemap
 	GlCubemapLoader cubemapLoader;
@@ -248,22 +252,56 @@ int main()
 	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
 	graphicsEngine->Initialize(SCR_WIDTH, SCR_HEIGHT);
 
-	// --- Models ---
+	// --- Shaders ---
 
-	Model* backpackModel = assetController.LoadAsset<Model>(BACKPACK_MODEL_PATH);
-	Shader* backpackShader = assetController.LoadAsset<Shader>(PHONG_SHADER_PATH);
-	backpackShader->Use();
-	backpackShader->SetFloat("material.shininess", 4.0f);
-
-	Model* cubeModel = assetController.LoadAsset<Model>(CUBE_MODEL_PATH);
-	Shader* cubeShader = assetController.LoadAsset<Shader>(REFLECTION_SHADER_PATH);
-
-	Model* suzanneModel = assetController.LoadAsset<Model>(SUZANNE_MODEL_PATH);
-	Shader* suzanneShader = assetController.LoadAsset<Shader>(REFRACTION_SHADER_PATH);
+	Shader* phongShader = assetController.LoadAsset<Shader>(PHONG_SHADER_PATH);
+	Shader* reflectionShader = assetController.LoadAsset<Shader>(REFLECTION_SHADER_PATH);
+	Shader* refractionShader = assetController.LoadAsset<Shader>(REFRACTION_SHADER_PATH);
+	Shader* spriteShader = assetController.LoadAsset<Shader>(SPRITE_SHADER_PATH);
+	Shader* renderShader = assetController.LoadAsset<Shader>(RENDER_SHADER_PATH);
+	Shader* skyboxShader = assetController.LoadAsset<Shader>(SKYBOX_SHADER_PATH);
+	Shader* chromaticAberrationShader = assetController.LoadAsset<Shader>(CHROMATIC_ABERRATION_SHADER_PATH);
+	
+	shaderRegistry.Register(ShadingModel::Phong, *phongShader);
 
 	// --- Textures ---
 
 	Texture* pointLightTexture = assetController.LoadAsset<Texture>(AWESOME_EMOJI_TEXTURE_PATH);
+
+	// --- Models ---
+
+	Model* backpackModel = assetController.LoadAsset<Model>(BACKPACK_MODEL_PATH);
+	Model* testModel = assetController.LoadAsset<Model>(CUBE_MODEL_PATH);
+	Model* cubeModel = assetController.LoadAsset<Model>(CUBE_MODEL_PATH);
+	Model* suzanneModel = assetController.LoadAsset<Model>(SUZANNE_MODEL_PATH);
+	
+	Material* testModelMaterial = phongShader->CreateMaterialInstance();
+
+	TextureMaterialAttribute* testDiffuseAttribute = testModelMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_diffuse1");
+	if (testDiffuseAttribute)
+	{
+		testDiffuseAttribute->SetValue(pointLightTexture);
+	}
+
+	TextureMaterialAttribute* testSpecularAttribute = testModelMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_specular1");
+	if (testSpecularAttribute)
+	{
+		testSpecularAttribute->SetValue(pointLightTexture);
+	}
+
+	FloatMaterialAttribute* testShininessAttribute = testModelMaterial->FindAttribute<FloatMaterialAttribute>("material.shininess");
+	if (testShininessAttribute)
+	{
+		testShininessAttribute->SetValue(4.0f);
+	}
+
+	testModel->SetMaterial(testModelMaterial);
+
+	Material* reflectionMaterial = reflectionShader->CreateMaterialInstance();
+	cubeModel->SetMaterial(reflectionMaterial);
+
+	Material* refractionMaterial = refractionShader->CreateMaterialInstance();
+	suzanneModel->SetMaterial(refractionMaterial);
 
 	// --- Cubemaps ---
 
@@ -272,13 +310,6 @@ int main()
 	// --- Skyboxes ---
 
 	Skybox* skybox = new GlSkybox(cubemap);
-
-	// --- Shaders ---
-
-	Shader* spriteShader = assetController.LoadAsset<Shader>(SPRITE_SHADER_PATH);
-	Shader* renderShader = assetController.LoadAsset<Shader>(RENDER_SHADER_PATH);
-	Shader* skyboxShader = assetController.LoadAsset<Shader>(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = assetController.LoadAsset<Shader>(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	// --- Sprite ---
 
@@ -295,21 +326,28 @@ int main()
 
 	TransformComponent backpackTransformComponent;
 	backpackActor.AddComponent(&backpackTransformComponent);
-	ModelRendererComponent backpackRendererComponent(backpackModel, backpackShader);
+	ModelRendererComponent backpackRendererComponent(backpackModel);
 	backpackActor.AddComponent(&backpackRendererComponent);
+
+	Actor testActor("Test");
+
+	TransformComponent testTransformComponent(glm::vec3(4.0f, 0.0f, 0.0f));
+	testActor.AddComponent(&testTransformComponent);
+	ModelRendererComponent testRendererComponent(testModel);
+	testActor.AddComponent(&testRendererComponent);
 
 	Actor cubeActor("Cube");
 
 	TransformComponent cubeTransformComponent(glm::vec3(-4.0f, 0.0f, 0.0f));
 	cubeActor.AddComponent(&cubeTransformComponent);
-	ModelRendererComponent cubeRendererComponent(cubeModel, cubeShader);
+	ModelRendererComponent cubeRendererComponent(cubeModel);
 	cubeActor.AddComponent(&cubeRendererComponent);
 
 	Actor suzanneActor("Suzanne");
 
 	TransformComponent suzanneTransformComponent(glm::vec3(0.0f, 0.0f, 2.0f));
 	suzanneActor.AddComponent(&suzanneTransformComponent);
-	ModelRendererComponent suzanneRendererComponent(suzanneModel, suzanneShader);
+	ModelRendererComponent suzanneRendererComponent(suzanneModel);
 	suzanneActor.AddComponent(&suzanneRendererComponent);
 
 	// --- Lights ---
@@ -344,6 +382,7 @@ int main()
 
 	world.SpawnActor(&skyboxActor);
 	world.SpawnActor(&backpackActor);
+	world.SpawnActor(&testActor);
 	world.SpawnActor(&cubeActor);
 	world.SpawnActor(&suzanneActor);
 	world.SpawnActor(&pointLightActor);
@@ -371,9 +410,9 @@ int main()
 	graphicsEngine->AddDataReferenceToGlobalData("projection", projectionTransform, matricesGlobalData);
 
 	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO. */
-	backpackShader->BindToGlobalData(matricesGlobalData);
-	cubeShader->BindToGlobalData(matricesGlobalData);
-	suzanneShader->BindToGlobalData(matricesGlobalData);
+	phongShader->BindToGlobalData(matricesGlobalData);
+	reflectionShader->BindToGlobalData(matricesGlobalData);
+	refractionShader->BindToGlobalData(matricesGlobalData);
 	skyboxShader->BindToGlobalData(matricesGlobalData);
 	spriteShader->BindToGlobalData(matricesGlobalData);
 
@@ -412,8 +451,8 @@ int main()
 	GlobalData* pointLightsGlobalData = graphicsEngine->CreateGlobalData("ubo_pointLights");
 	graphicsEngine->AddDataReferenceToGlobalData("pointLight1", pointLight, pointLightsGlobalData);
 
-	backpackShader->BindToGlobalData(directionalLightsGlobalData);
-	backpackShader->BindToGlobalData(pointLightsGlobalData);
+	phongShader->BindToGlobalData(directionalLightsGlobalData);
+	phongShader->BindToGlobalData(pointLightsGlobalData);
 
 	// Camera UBO (12 bytes)
 	/*
@@ -430,9 +469,9 @@ int main()
 	GlobalData* cameraGlobalData = graphicsEngine->CreateGlobalData("ubo_camera");
 	graphicsEngine->AddDataReferenceToGlobalData("camera", cameraPosition, cameraGlobalData);
 
-	backpackShader->BindToGlobalData(cameraGlobalData);
-	cubeShader->BindToGlobalData(cameraGlobalData);
-	suzanneShader->BindToGlobalData(cameraGlobalData);
+	phongShader->BindToGlobalData(cameraGlobalData);
+	reflectionShader->BindToGlobalData(cameraGlobalData);
+	refractionShader->BindToGlobalData(cameraGlobalData);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -483,6 +522,7 @@ int main()
 
 		backpackActor.Render();
 		cubeActor.Render();
+		testActor.Render();
 		suzanneActor.Render();
 		/* We could've render the skybox first, but we would render fragments that might be overridden
 		by the rest of the scene. Knowing that, we render it last and by exploiting depth testing - see

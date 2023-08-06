@@ -2,21 +2,24 @@
 
 #include <vector>
 
-#include "Vertex.h"
+#include <glm/glm.hpp>
 
-#include "../shader/Material.h"
-#include "../../../game/asset/shader/Shader.h"
+#include "../material/Material.h"
+
+#include "Vertex.h"
 
 class Mesh
 {
 public:
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material);
 
-	virtual void Render(Shader* shader) = 0;
+	void SetMaterial(Material* material) { m_Material = material; }
+
+	virtual void Render(const glm::mat4& transform, const glm::mat3& normal) = 0;
 
 protected:
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
+	std::vector<Vertex> m_Vertices;
+	std::vector<unsigned int> m_Indices;
 
-	Material* material;
+	Material* m_Material;
 };

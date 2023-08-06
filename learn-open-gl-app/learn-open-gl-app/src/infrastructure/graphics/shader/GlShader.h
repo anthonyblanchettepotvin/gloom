@@ -12,6 +12,8 @@ class GlShader : public Shader
 public:
 	GlShader(unsigned int id);
 
+	void InitializeMaterialTemplate() override;
+
 	void Use() override;
 
 	void SetBool(const std::string& name, bool value) override;

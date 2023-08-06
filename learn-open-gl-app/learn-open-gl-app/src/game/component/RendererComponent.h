@@ -7,6 +7,7 @@
 class RendererComponent : public ActorComponent
 {
 public:
+	RendererComponent() = default;
 	RendererComponent(Shader* shader);
 
 	Shader* GetShader() { return shader; };

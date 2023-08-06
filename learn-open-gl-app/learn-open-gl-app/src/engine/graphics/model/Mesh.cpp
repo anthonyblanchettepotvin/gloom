@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
 Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material)
-	: vertices(vertices), indices(indices), material(material)
+	: m_Vertices(vertices), m_Indices(indices), m_Material(material)
 {
 }

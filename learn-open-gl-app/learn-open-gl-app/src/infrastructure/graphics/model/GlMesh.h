@@ -9,7 +9,7 @@ class GlMesh : public Mesh
 public:
 	GlMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material);
 
-	void Render(Shader* shader) override;
+	void Render(const glm::mat4& transform, const glm::mat3& normal) override;
 
 private:
 	unsigned int m_Vao;

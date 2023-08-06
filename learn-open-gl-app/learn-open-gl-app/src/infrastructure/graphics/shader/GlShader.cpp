@@ -1,13 +1,63 @@
 #include "GlShader.h"
 
+#include <iostream>
+#include <memory>
+
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "../../../engine/graphics/material/MaterialAttributes.h"
 
 #include "../globaldata/GlGlobalData.h"
 
 GlShader::GlShader(unsigned int id)
 	: m_Id(id), m_SamplerIndex(0)
 {
+}
+
+void GlShader::InitializeMaterialTemplate()
+{
+	GLint size; // size of the variable
+	GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+	const GLsizei bufSize = GL_ACTIVE_UNIFORM_MAX_LENGTH; // maximum name length
+	GLchar name[bufSize]; // variable name in GLSL
+	GLsizei length; // name length
+
+	GLint nbUniforms;
+	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORMS, &nbUniforms);
+
+	for (size_t i = 0; i < nbUniforms; i++)
+	{
+		glGetActiveUniform(m_Id, (GLint)i, bufSize, &length, &size, &type, name);
+
+		std::string cppName = (std::string)name;
+
+		std::string structName = cppName.substr(0, cppName.find_first_of('.'));
+
+		if (structName != "material")
+			continue;
+
+		switch (type)
+		{
+		case GL_SAMPLER_2D:
+		{
+			std::unique_ptr<MaterialAttribute> attribute = std::make_unique<TextureMaterialAttribute>(cppName);
+			m_MaterialTemplate.AddAttribute(attribute);
+			break;
+		}
+		case GL_FLOAT:
+		{
+			std::unique_ptr<MaterialAttribute> attribute = std::make_unique<FloatMaterialAttribute>(cppName);
+			m_MaterialTemplate.AddAttribute(attribute);
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	m_IsMaterialTemplateInitialized = true;
 }
 
 void GlShader::Use()

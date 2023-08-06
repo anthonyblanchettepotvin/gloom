@@ -5,12 +5,12 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-#include "../../../engine/graphics/shader/PhongMaterial.h"
+#include "../../../engine/graphics/material/MaterialAttributes.h"
 
 #include "GlMesh.h"
 
-GlModelLoader::GlModelLoader(TextureLoader& textureLoader)
-	: m_TextureLoader(textureLoader)
+GlModelLoader::GlModelLoader(TextureLoader& textureLoader, ShaderRegistry& shaderRegistry)
+	: m_TextureLoader(textureLoader), m_ShaderRegistry(shaderRegistry)
 {
 }
 
@@ -139,23 +139,37 @@ Material* GlModelLoader::LoadMaterial(aiMaterial* material)
 
 	if (materialShadingModel == aiShadingMode_Phong || materialShadingModel == aiReturn_FAILURE)
 	{
-		PhongMaterial* phong = new PhongMaterial();
+		Shader* phongShader = m_ShaderRegistry.FindShader(ShadingModel::Phong);
+		if (!phongShader)
+			return nullptr;
 
+		Material* phongMaterial = phongShader->CreateMaterialInstance();
+		if (!phongMaterial)
+			return nullptr;
+
+		TextureMaterialAttribute* diffuseTexture = phongMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_diffuse1");
 		std::vector<Texture*> diffuseTextures = LoadMaterialTextures(material, aiTextureType_DIFFUSE);
 		if (!diffuseTextures.empty())
 		{
-			phong->SetDiffuseTexture(diffuseTextures[0]);
+			diffuseTexture->SetValue(diffuseTextures[0]);
 		}
 
+		TextureMaterialAttribute* specularTexture = phongMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_specular1");
 		std::vector<Texture*> specularTextures = LoadMaterialTextures(material, aiTextureType_SPECULAR);
 		if (!specularTextures.empty())
 		{
-			phong->SetSpecularTexture(specularTextures[0]);
+			specularTexture->SetValue(specularTextures[0]);
 		}
 
-		m_LoadedMaterial[materialName] = phong;
+		FloatMaterialAttribute* shininess = phongMaterial->FindAttribute<FloatMaterialAttribute>("material.shininess");
+		if (shininess)
+		{
+			shininess->SetValue(4.0f);
+		}
 
-		return phong;
+		m_LoadedMaterial[materialName] = phongMaterial;
+
+		return phongMaterial;
 	}
 	else
 	{

@@ -5,18 +5,20 @@
 #include <assimp/scene.h>
 
 #include "../../../game/asset/model/ModelLoader.h"
+#include "../../../game/asset/shader/ShaderRegistry.h"
 #include "../../../game/asset/texture/Texture.h"
 #include "../../../game/asset/texture/TextureLoader.h"
 
 class GlModelLoader : public ModelLoader
 {
 public:
-	GlModelLoader(TextureLoader& textureLoader);
+	GlModelLoader(TextureLoader& textureLoader, ShaderRegistry& shaderRegistry);
 
 	Model* Load(const std::string& path) override;
 
 private:
 	TextureLoader& m_TextureLoader;
+	ShaderRegistry& m_ShaderRegistry;
 
 	std::string m_Directory;
 	std::unordered_map<std::string, Texture*> m_LoadedTextures;

@@ -4,24 +4,19 @@
 
 #include "TransformComponent.h"
 
-ModelRendererComponent::ModelRendererComponent(Model* model, Shader* shader)
-	: RendererComponent(shader), model(model)
+ModelRendererComponent::ModelRendererComponent(Model* model)
+	: model(model)
 {
 }
 
 void ModelRendererComponent::Render()
 {
-	if (parent && shader && model)
+	if (parent && model)
 	{
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			shader->Use();
-
-			shader->SetFloatMat4("modelXform", transformComponent->GetModelTransformationMatrix());
-			shader->SetFloatMat3("normalXform", transformComponent->GetNormalTransformationMatrix());
-
-			model->Render(shader);
+			model->Render(transformComponent->GetModelTransformationMatrix(), transformComponent->GetNormalTransformationMatrix());
 		}
 	}
 }

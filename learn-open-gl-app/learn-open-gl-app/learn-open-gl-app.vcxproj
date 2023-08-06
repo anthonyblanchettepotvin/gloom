@@ -145,6 +145,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp" />
+    <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
+    <ClCompile Include="src\engine\graphics\material\MaterialAttribute.cpp" />
+    <ClCompile Include="src\engine\graphics\material\MaterialTemplate.cpp" />
     <ClCompile Include="src\game\asset\AssetController.cpp" />
     <ClCompile Include="src\game\asset\cubemap\CubemapRepository.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderRepository.cpp" />
@@ -182,8 +186,7 @@
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp" />
-    <ClCompile Include="src\engine\graphics\shader\PhongMaterial.cpp" />
-    <ClCompile Include="src\engine\graphics\shader\Material.cpp" />
+    <ClCompile Include="src\engine\graphics\material\Material.cpp" />
     <ClCompile Include="src\infrastructure\graphics\model\GlModelLoader.cpp" />
     <ClCompile Include="src\game\asset\model\ModelLoader.cpp" />
     <ClCompile Include="src\game\asset\cubemap\Cubemap.cpp" />
@@ -229,6 +232,10 @@
     <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\asset\shader\ShaderRegistry.h" />
+    <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />
+    <ClInclude Include="src\engine\graphics\material\MaterialAttribute.h" />
+    <ClInclude Include="src\engine\graphics\material\MaterialTemplate.h" />
     <ClInclude Include="src\game\asset\AssetController.h" />
     <ClInclude Include="src\game\asset\cubemap\CubemapRepository.h" />
     <ClInclude Include="src\game\asset\shader\ShaderRepository.h" />
@@ -266,8 +273,7 @@
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h" />
     <ClInclude Include="src\game\asset\shader\ShaderLoader.h" />
-    <ClInclude Include="src\engine\graphics\shader\PhongMaterial.h" />
-    <ClInclude Include="src\engine\graphics\shader\Material.h" />
+    <ClInclude Include="src\engine\graphics\material\Material.h" />
     <ClInclude Include="src\infrastructure\graphics\model\GlModelLoader.h" />
     <ClInclude Include="src\game\asset\model\ModelLoader.h" />
     <ClInclude Include="src\game\asset\cubemap\Cubemap.h" />

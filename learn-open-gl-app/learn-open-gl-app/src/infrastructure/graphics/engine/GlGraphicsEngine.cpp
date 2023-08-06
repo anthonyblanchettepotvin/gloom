@@ -5,11 +5,6 @@
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
 
-GlGraphicsEngine::GlGraphicsEngine()
-	: m_ModelLoader(m_TextureLoader)
-{
-}
-
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
 	m_Framebuffer = new GlFramebuffer(width, height);

@@ -1,12 +1,10 @@
 #pragma once
 
+#include "../../../game/asset/shader/ShaderLoader.h"
+
 #include "../globaldata/GlobalData.h"
 #include "../lighting/DirectionalLight.h"
 #include "../lighting/PointLight.h"
-#include "../../../game/asset/cubemap/CubemapLoader.h"
-#include "../../../game/asset/shader/ShaderLoader.h"
-#include "../../../game/asset/model/ModelLoader.h"
-#include "../../../game/asset/texture/TextureLoader.h"
 
 class GraphicsEngine
 {
@@ -16,10 +14,7 @@ public:
 	virtual void StartFrame() = 0;
 	virtual void EndFrame() = 0;
 
-	virtual CubemapLoader& GetCubemapLoader() = 0;
-	virtual ModelLoader& GetModelLoader() = 0;
 	virtual ShaderLoader& GetShaderLoader() = 0;
-	virtual TextureLoader& GetTextureLoader() = 0;
 
 	virtual GlobalData* CreateGlobalData(const std::string& name) = 0;
 
