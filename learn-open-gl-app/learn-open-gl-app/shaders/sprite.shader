@@ -28,17 +28,21 @@ END_VERTEX_SHADER
 
 START_FRAGMENT_SHADER
 
+struct Material {
+	sampler2D texture_sprite;
+};
+
 in VS_OUT{
 	vec2 texCoords;
 } fs_in;
 
-uniform sampler2D texture_sprite;
+uniform Material material;
 
 out vec4 color;
 
 void main()
 {
-	color = texture(texture_sprite, fs_in.texCoords);
+	color = texture(material.texture_sprite, fs_in.texCoords);
 }
 
 END_FRAGMENT_SHADER

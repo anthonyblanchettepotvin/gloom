@@ -5,9 +5,9 @@
 class GlSprite : public Sprite
 {
 public:
-	GlSprite(Texture* texture);
+	GlSprite(Material* material);
 
-	void Render(Shader* shader) override;
+	void Render(const glm::mat4& transform) override;
 
 private:
 	unsigned int m_Vao;

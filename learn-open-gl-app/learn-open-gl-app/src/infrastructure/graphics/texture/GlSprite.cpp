@@ -3,17 +3,19 @@
 #include "GlTexture.h"
 #include "../shader/GlShader.h"
 
-GlSprite::GlSprite(Texture* texture)
-    : Sprite(texture)
+GlSprite::GlSprite(Material* material)
+    : Sprite(material)
 {
     SetupMesh();
 }
 
-void GlSprite::Render(Shader* shader)
+void GlSprite::Render(const glm::mat4& transform)
 {
-    if (shader)
+    if (m_Material)
     {
-        shader->SetTexture("texture_sprite", texture);
+        m_Material->Use();
+
+        m_Material->GetShader().SetFloatMat4("modelXform", transform);
 
         glBindVertexArray(m_Vao);
         glDrawArrays(GL_TRIANGLES, 0, 6);

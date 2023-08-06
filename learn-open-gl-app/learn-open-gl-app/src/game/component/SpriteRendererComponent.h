@@ -7,7 +7,7 @@
 class SpriteRendererComponent : public RendererComponent
 {
 public:
-	SpriteRendererComponent(Sprite* sprite, Shader* shader);
+	SpriteRendererComponent(Sprite* sprite);
 
 	Sprite* GetSprite() { return sprite; };
 

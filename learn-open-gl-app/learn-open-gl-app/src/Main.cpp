@@ -313,7 +313,15 @@ int main()
 
 	// --- Sprite ---
 
-	Sprite* pointLightSprite = new GlSprite(pointLightTexture);
+	Material* pointLightSpriteMaterial = spriteShader->CreateMaterialInstance();
+	
+	TextureMaterialAttribute* pointLightTextureAttribute = testModelMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_sprite");
+	if (pointLightTextureAttribute)
+	{
+		pointLightTextureAttribute->SetValue(pointLightTexture);
+	}
+
+	Sprite* pointLightSprite = new GlSprite(pointLightSpriteMaterial);
 
 	// --- Actors ---
 
@@ -360,7 +368,7 @@ int main()
 	pointLightActor.AddComponent(&pointLightTransformComponent);
 	PointLightComponent pointLightComponent(&pointLight);
 	pointLightActor.AddComponent(&pointLightComponent);
-	SpriteRendererComponent pointLightRendererComponent(pointLightSprite, spriteShader);
+	SpriteRendererComponent pointLightRendererComponent(pointLightSprite);
 	pointLightActor.AddComponent(&pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");

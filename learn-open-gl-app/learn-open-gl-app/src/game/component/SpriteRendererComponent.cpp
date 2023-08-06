@@ -4,23 +4,19 @@
 
 #include "TransformComponent.h"
 
-SpriteRendererComponent::SpriteRendererComponent(Sprite* sprite, Shader* shader)
-	: RendererComponent(shader), sprite(sprite)
+SpriteRendererComponent::SpriteRendererComponent(Sprite* sprite)
+	: sprite(sprite)
 {
 }
 
 void SpriteRendererComponent::Render()
 {
-	if (parent && shader && sprite)
+	if (parent && sprite)
 	{
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			shader->Use();
-
-			shader->SetFloatMat4("modelXform", transformComponent->GetModelTransformationMatrix());
-
-			sprite->Render(shader);
+			sprite->Render(transformComponent->GetModelTransformationMatrix());
 		}
 	}
 }

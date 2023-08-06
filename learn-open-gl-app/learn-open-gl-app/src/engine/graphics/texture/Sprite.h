@@ -1,17 +1,17 @@
 #pragma once
 
-#include "../../../game/asset/texture/Texture.h"
+#include <glm/glm.hpp>
+
+#include "../../../engine/graphics/material/Material.h"
 #include "../../../game/asset/shader/Shader.h"
 
 class Sprite
 {
 public:
-	Sprite(Texture* texture);
+	Sprite(Material* material);
 
-	Texture* GetTexture() { return texture; };
-
-	virtual void Render(Shader* shader) = 0;
+	virtual void Render(const glm::mat4& transform) = 0;
 
 protected:
-	Texture* texture;
+	Material* m_Material;
 };
