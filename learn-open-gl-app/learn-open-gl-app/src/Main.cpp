@@ -2,8 +2,25 @@
 
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/lighting/Skybox.h"
+#include "engine/graphics/material/MaterialAttributes.h"
 #include "engine/graphics/texture/Sprite.h"
 #include "game/actor/Actor.h"
+#include "game/asset/AssetController.h"
+#include "game/asset/AssetDescriptor.h"
+#include "game/asset/AssetDescriptorRegistry.h";
+#include "game/asset/texture/Texture.h"
+#include "game/asset/texture/TextureLoader.h"
+#include "game/asset/texture/TextureRepository.h"
+#include "game/asset/model/Model.h"
+#include "game/asset/model/ModelLoader.h"
+#include "game/asset/model/ModelRepository.h"
+#include "game/asset/shader/Shader.h"
+#include "game/asset/shader/ShaderLoader.h"
+#include "game/asset/shader/ShaderRegistry.h"
+#include "game/asset/shader/ShaderRepository.h" 
+#include "game/asset/cubemap/Cubemap.h"
+#include "game/asset/cubemap/CubemapLoader.h"
+#include "game/asset/cubemap/CubemapRepository.h"
 #include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
 #include "game/component/ModelRendererComponent.h"
@@ -14,7 +31,6 @@
 #include "game/world/World.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/lighting/GlSkybox.h"
-#include "infrastructure/graphics/model/GlModelLoader.h"
 #include "infrastructure/graphics/shader/GlShaderLoader.h"
 #include "infrastructure/graphics/texture/GlCubemapLoader.h"
 #include "infrastructure/graphics/texture/GlSprite.h"
@@ -47,25 +63,6 @@ graphics programming with OpenGL. */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include "game/asset/AssetController.h"
-#include "game/asset/AssetDescriptor.h"
-#include "game/asset/AssetDescriptorRegistry.h";
-#include "game/asset/texture/Texture.h"
-#include "game/asset/texture/TextureLoader.h"
-#include "game/asset/texture/TextureRepository.h"
-#include "game/asset/model/Model.h"
-#include "game/asset/model/ModelLoader.h"
-#include "game/asset/model/ModelRepository.h"
-#include "game/asset/shader/Shader.h"
-#include "game/asset/shader/ShaderLoader.h"
-#include "game/asset/shader/ShaderRegistry.h"
-#include "game/asset/shader/ShaderRepository.h" 
-#include "game/asset/cubemap/Cubemap.h"
-#include "game/asset/cubemap/CubemapLoader.h"
-#include "game/asset/cubemap/CubemapRepository.h"
-
-#include "engine/graphics/material/MaterialAttributes.h"
 
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
@@ -232,7 +229,7 @@ int main()
 	assetDescriptorRegistry.Register(&shaderAssetDescriptor);
 
 	// Model
-	GlModelLoader modelLoader(textureLoader, shaderRegistry);
+	ModelLoader modelLoader(textureLoader, shaderRegistry);
 	ModelRepository modelRepository;
 	AssetDescriptor<Model> modelAssetDescriptor(modelLoader, modelRepository, { ".obj" });
 	assetDescriptorRegistry.Register(&modelAssetDescriptor);
@@ -335,35 +332,35 @@ int main()
 
 	Actor skyboxActor("Skybox");
 
-	SkyboxRendererComponent skyboxRendererComponent(skybox);
+	SkyboxRendererComponent skyboxRendererComponent(*graphicsEngine, skybox);
 	skyboxActor.AddComponent(&skyboxRendererComponent);
 
 	Actor backpackActor("Backpack");
 
 	TransformComponent backpackTransformComponent;
 	backpackActor.AddComponent(&backpackTransformComponent);
-	ModelRendererComponent backpackRendererComponent(backpackModel);
+	ModelRendererComponent backpackRendererComponent(*graphicsEngine, backpackModel);
 	backpackActor.AddComponent(&backpackRendererComponent);
 
 	Actor testActor("Test");
 
 	TransformComponent testTransformComponent(glm::vec3(4.0f, 0.0f, 0.0f));
 	testActor.AddComponent(&testTransformComponent);
-	ModelRendererComponent testRendererComponent(testModel);
+	ModelRendererComponent testRendererComponent(*graphicsEngine, testModel);
 	testActor.AddComponent(&testRendererComponent);
 
 	Actor cubeActor("Cube");
 
 	TransformComponent cubeTransformComponent(glm::vec3(-4.0f, 0.0f, 0.0f));
 	cubeActor.AddComponent(&cubeTransformComponent);
-	ModelRendererComponent cubeRendererComponent(cubeModel);
+	ModelRendererComponent cubeRendererComponent(*graphicsEngine, cubeModel);
 	cubeActor.AddComponent(&cubeRendererComponent);
 
 	Actor suzanneActor("Suzanne");
 
 	TransformComponent suzanneTransformComponent(glm::vec3(0.0f, 0.0f, 2.0f));
 	suzanneActor.AddComponent(&suzanneTransformComponent);
-	ModelRendererComponent suzanneRendererComponent(suzanneModel);
+	ModelRendererComponent suzanneRendererComponent(*graphicsEngine, suzanneModel);
 	suzanneActor.AddComponent(&suzanneRendererComponent);
 
 	// --- Lights ---
@@ -376,7 +373,7 @@ int main()
 	pointLightActor.AddComponent(&pointLightTransformComponent);
 	PointLightComponent pointLightComponent(&pointLight);
 	pointLightActor.AddComponent(&pointLightComponent);
-	SpriteRendererComponent pointLightRendererComponent(pointLightSprite);
+	SpriteRendererComponent pointLightRendererComponent(*graphicsEngine, pointLightSprite);
 	pointLightActor.AddComponent(&pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");

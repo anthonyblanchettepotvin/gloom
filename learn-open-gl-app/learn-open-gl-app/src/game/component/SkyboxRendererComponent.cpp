@@ -1,7 +1,7 @@
 #include "SkyboxRendererComponent.h"
 
-SkyboxRendererComponent::SkyboxRendererComponent(Skybox* skybox)
-	: m_Skybox(skybox)
+SkyboxRendererComponent::SkyboxRendererComponent(GraphicsEngine& graphicsEngine, Skybox* skybox)
+	: RendererComponent(graphicsEngine), m_Skybox(skybox)
 {
 }
 

@@ -3,18 +3,21 @@
 #include <vector>
 
 #include "../../../engine/graphics/model/Mesh.h"
+#include "../../../engine/graphics/rendering/GraphicsObject.h"
 
-class GlMesh : public Mesh
+class GlMesh : public GraphicsObject
 {
 public:
-	GlMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material);
+	GlMesh(const Mesh& mesh);
 
-	void Render(const glm::mat4& transform, const glm::mat3& normal) override;
+	void Render() override;
 
 private:
+	const Mesh& m_Mesh;
+
 	unsigned int m_Vao;
 	unsigned int m_Vbo;
 	unsigned int m_Ebo;
 
-	void SetupMesh();
+	void Initialize();
 };

@@ -4,8 +4,8 @@
 
 #include "TransformComponent.h"
 
-SpriteRendererComponent::SpriteRendererComponent(Sprite* sprite)
-	: m_Sprite(sprite)
+SpriteRendererComponent::SpriteRendererComponent(GraphicsEngine& graphicsEngine, Sprite* sprite)
+	: RendererComponent(graphicsEngine), m_Sprite(sprite)
 {
 }
 
@@ -16,7 +16,7 @@ void SpriteRendererComponent::Render()
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			m_Sprite->Render(transformComponent->GetModelTransformationMatrix());
+			m_Sprite->Render(transformComponent->GetTransform());
 		}
 	}
 }

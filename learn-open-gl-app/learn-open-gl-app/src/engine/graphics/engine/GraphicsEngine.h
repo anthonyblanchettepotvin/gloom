@@ -5,6 +5,7 @@
 #include "../globaldata/GlobalData.h"
 #include "../lighting/DirectionalLight.h"
 #include "../lighting/PointLight.h"
+#include "../rendering/RenderingPrimitive.h"
 
 class GraphicsEngine
 {
@@ -23,4 +24,6 @@ public:
 	virtual void AddDataReferenceToGlobalData(const std::string& name, glm::vec3& reference, GlobalData* globalData) = 0;
 	virtual void AddDataReferenceToGlobalData(const std::string& name, DirectionalLight& reference, GlobalData* globalData) = 0;
 	virtual void AddDataReferenceToGlobalData(const std::string& name, PointLight& reference, GlobalData* globalData) = 0;
+
+	virtual void RenderPrimitive(RenderingPrimitive& primitive) = 0;
 };

@@ -4,8 +4,8 @@
 
 #include "TransformComponent.h"
 
-ModelRendererComponent::ModelRendererComponent(Model* model)
-	: m_Model(model)
+ModelRendererComponent::ModelRendererComponent(GraphicsEngine& graphicsEngine, Model* model)
+	: RendererComponent(graphicsEngine), m_Model(model)
 {
 }
 
@@ -16,7 +16,9 @@ void ModelRendererComponent::Render()
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			m_Model->Render(transformComponent->GetModelTransformationMatrix(), transformComponent->GetNormalTransformationMatrix());
+			m_Model->SetTransform(transformComponent->GetTransform());
+
+			m_Model->Render(m_GraphicsEngine);
 		}
 	}
 }

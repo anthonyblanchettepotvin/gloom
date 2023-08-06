@@ -13,7 +13,6 @@ layout(std140) uniform ubo_matrices{
 };
 
 uniform mat4 modelXform;
-uniform mat3 normalXform;
 
 out VS_OUT{
 	vec3 fragmentWorldPos;
@@ -24,6 +23,17 @@ out VS_OUT{
 void main()
 {
 	gl_Position = projection * view * modelXform * vec4(position, 1.0);
+
+	/* Here, we create our normal transformation matrix. Since our normals are hard-coded
+	data within the vertices data, we need to transform the normals if we apply a scaling or rotation
+	transformation on the cube. */
+	/* Note that we don't care about the translation, since normals are directions. That's why we
+	convert the 4x4 matrix into a 3x3 matrix -- to remove the translation. */
+	/* Note that if we apply a non-uniform scaling transformation, the normals may not be
+	perpendicular to the surface anymore. We then inverse then transpose the model matrix
+	that our normal transformation matrix is based on. */
+	/* See https://learnopengl.com/Lighting/Basic-Lighting for more details. */
+	mat3 normalXform = transpose(inverse(mat3(modelXform)));
 
 	vs_out.fragmentWorldPos = vec3(modelXform * vec4(position, 1.0));
 	vs_out.normal = normalXform * normal;

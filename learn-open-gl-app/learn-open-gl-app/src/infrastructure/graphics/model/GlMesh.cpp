@@ -4,28 +4,28 @@
 
 #include "../../../game/asset/shader/Shader.h"
 
-GlMesh::GlMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material)
-	: Mesh(vertices, indices, material)
+GlMesh::GlMesh(const Mesh& mesh)
+	: m_Mesh(mesh)
 {
-	SetupMesh();
+	Initialize();
 }
 
-void GlMesh::Render(const glm::mat4& transform, const glm::mat3& normal)
+void GlMesh::Render()
 {
-	if (m_Material)
+	Material* material = m_Mesh.GetMaterial();
+	if (material)
 	{
-		m_Material->Use();
+		material->Use();
 
-		m_Material->GetShader().SetFloatMat4("modelXform", transform);
-		m_Material->GetShader().SetFloatMat3("normalXform", normal);
+		material->GetShader().SetFloatMat4("modelXform", m_Mesh.GetTransform());
 
 		glBindVertexArray(m_Vao);
-		glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, m_Mesh.GetIndices().size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 }
 
-void GlMesh::SetupMesh()
+void GlMesh::Initialize()
 {
 	/* We create a Vertex Array Object (VAO). Any subsequent vertex attribute calls
 	from that point on will be stored inside the VAO (including the VBAs associated
@@ -47,7 +47,7 @@ void GlMesh::SetupMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, m_Vbo);
 	/* The following function is targeted to copy user-defined data into the currently
 	bound buffer. */
-	glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(Vertex), &m_Vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_Mesh.GetVertices().size() * sizeof(Vertex), &m_Mesh.GetVertices()[0], GL_STATIC_DRAW);
 
 	/* Here, we indicate how OpenGL should interpret the vertex data. */
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -63,7 +63,7 @@ void GlMesh::SetupMesh()
 	data as possible at once. */
 	glGenBuffers(1, &m_Ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(unsigned int), &m_Indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Mesh.GetIndices().size() * sizeof(unsigned int), &m_Mesh.GetIndices()[0], GL_STATIC_DRAW);
 
 	/* All the configuration made until this point should be between bind/unbind calls. */
 	glBindVertexArray(0);

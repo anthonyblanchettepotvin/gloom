@@ -2,8 +2,11 @@
 
 #include <glad/glad.h>
 
+#include "../../../engine/graphics/model/Mesh.h"
+
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
+#include "../model/GlMesh.h"
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
@@ -181,5 +184,27 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, Poi
 	else
 	{
 		// TODO: Throw bad global data type exception
+	}
+}
+
+
+void GlGraphicsEngine::RenderPrimitive(RenderingPrimitive& primitive)
+{
+	try
+	{
+		Mesh& mesh = dynamic_cast<Mesh&>(primitive);
+
+		GraphicsObject* graphicsObject = mesh.GetGraphicsObject();
+		if (!graphicsObject)
+		{
+			graphicsObject = new GlMesh(mesh);
+			mesh.SetGraphicsObject(graphicsObject);
+		}
+
+		graphicsObject->Render();
+	}
+	catch (std::bad_cast)
+	{
+		// TODO: Throw unsupported primitive type exception
 	}
 }

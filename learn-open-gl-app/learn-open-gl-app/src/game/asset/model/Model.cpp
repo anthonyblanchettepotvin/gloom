@@ -5,6 +5,17 @@ Model::Model(const std::vector<Mesh*>& meshes)
 {
 }
 
+void Model::SetTransform(const glm::mat4& transform)
+{
+	for (const auto& mesh : m_Meshes)
+	{
+		if (mesh)
+		{
+			mesh->SetTransform(transform);
+		}
+	}
+}
+
 void Model::SetMaterial(Material* material)
 {
 	for (const auto& mesh : m_Meshes)
@@ -16,13 +27,13 @@ void Model::SetMaterial(Material* material)
 	}
 }
 
-void Model::Render(const glm::mat4& transform, const glm::mat3& normal)
+void Model::Render(GraphicsEngine& graphicsEngine)
 {
 	for (const auto& mesh : m_Meshes)
 	{
 		if (mesh)
 		{
-			mesh->Render(transform, normal);
+			mesh->Render(graphicsEngine);
 		}
 	}
 }

@@ -1,11 +1,36 @@
 #pragma once
 
+#include <unordered_map>
+
+#include <assimp/scene.h>
+
+#include "../../../engine/graphics/material/Material.h"
+
 #include "../AssetLoader.h"
+#include "../shader/ShaderRegistry.h"
+#include "../texture/Texture.h"
+#include "../texture/TextureLoader.h"
 
 #include "Model.h"
 
 class ModelLoader : public AssetLoader<Model>
 {
 public:
-	virtual Model* Load(const std::string& filePath) override = 0;
+	ModelLoader(TextureLoader& textureLoader, ShaderRegistry& shaderRegistry);
+
+	Model* Load(const std::string& path) override;
+
+private:
+	TextureLoader& m_TextureLoader;
+	ShaderRegistry& m_ShaderRegistry;
+
+	std::string m_Directory;
+	std::unordered_map<std::string, Texture*> m_LoadedTextures;
+	std::unordered_map<std::string, Material*> m_LoadedMaterial;
+
+	void ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes);
+	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+	Material* LoadMaterial(aiMaterial* material);
+	std::vector<Texture*> LoadMaterialTextures(aiMaterial* material, aiTextureType type);
 };

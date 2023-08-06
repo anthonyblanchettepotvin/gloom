@@ -28,6 +28,8 @@ public:
 	void AddDataReferenceToGlobalData(const std::string& name, DirectionalLight& reference, GlobalData* globalData) override;
 	void AddDataReferenceToGlobalData(const std::string& name, PointLight& reference, GlobalData* globalData) override;
 
+	void RenderPrimitive(RenderingPrimitive& primitive) override;
+
 private:
 	GlShaderLoader m_ShaderLoader;
 

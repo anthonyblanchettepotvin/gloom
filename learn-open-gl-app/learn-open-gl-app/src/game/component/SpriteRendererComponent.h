@@ -7,7 +7,7 @@
 class SpriteRendererComponent : public RendererComponent
 {
 public:
-	SpriteRendererComponent(Sprite* sprite);
+	SpriteRendererComponent(GraphicsEngine& graphicsEngine, Sprite* sprite);
 
 	Sprite* GetSprite() const { return m_Sprite; };
 

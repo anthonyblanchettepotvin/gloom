@@ -7,7 +7,7 @@
 class SkyboxRendererComponent : public RendererComponent
 {
 public:
-	SkyboxRendererComponent(Skybox* skybox);
+	SkyboxRendererComponent(GraphicsEngine& graphicsEngine, Skybox* skybox);
 
 	Skybox* GetSkybox() const { return m_Skybox; }
 

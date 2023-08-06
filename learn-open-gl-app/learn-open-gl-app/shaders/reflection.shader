@@ -12,7 +12,6 @@ layout(std140) uniform ubo_matrices{
 };
 
 uniform mat4 modelXform;
-uniform mat3 normalXform;
 
 out VS_OUT{
 	vec3 position;
@@ -22,6 +21,8 @@ out VS_OUT{
 void main()
 {
 	gl_Position = projection * view * modelXform * vec4(position, 1.0);
+
+	mat3 normalXform = transpose(inverse(mat3(modelXform)));
 
 	vs_out.position = vec3(modelXform * vec4(position, 1.0));
 	vs_out.normal = normalXform * normal;

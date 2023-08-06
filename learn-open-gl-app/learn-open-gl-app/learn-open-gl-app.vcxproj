@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\graphics\rendering\RenderingPrimitive.cpp" />
+    <ClCompile Include="src\engine\graphics\rendering\GraphicsObject.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttribute.cpp" />
@@ -187,7 +189,6 @@
     <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp" />
     <ClCompile Include="src\engine\graphics\material\Material.cpp" />
-    <ClCompile Include="src\infrastructure\graphics\model\GlModelLoader.cpp" />
     <ClCompile Include="src\game\asset\model\ModelLoader.cpp" />
     <ClCompile Include="src\game\asset\cubemap\Cubemap.cpp" />
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c" />
@@ -232,6 +233,8 @@
     <ClCompile Include="src\game\asset\texture\TextureRepository.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\graphics\rendering\RenderingPrimitive.h" />
+    <ClInclude Include="src\engine\graphics\rendering\GraphicsObject.h" />
     <ClInclude Include="src\game\asset\shader\ShaderRegistry.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttribute.h" />
@@ -274,7 +277,6 @@
     <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h" />
     <ClInclude Include="src\game\asset\shader\ShaderLoader.h" />
     <ClInclude Include="src\engine\graphics\material\Material.h" />
-    <ClInclude Include="src\infrastructure\graphics\model\GlModelLoader.h" />
     <ClInclude Include="src\game\asset\model\ModelLoader.h" />
     <ClInclude Include="src\game\asset\cubemap\Cubemap.h" />
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h" />

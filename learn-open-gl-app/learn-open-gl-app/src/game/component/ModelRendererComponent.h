@@ -7,7 +7,7 @@
 class ModelRendererComponent : public RendererComponent
 {
 public:
-	ModelRendererComponent(Model* model);
+	ModelRendererComponent(GraphicsEngine& graphicsEngine, Model* model);
 
 	Model* GetModel() const { return m_Model; };
 
@@ -16,4 +16,3 @@ public:
 private:
 	Model* m_Model;
 };
-
