@@ -1,9 +1,7 @@
 #include "GlTexture.h"
 
-#include "../shader/GlShader.h"
-
-GlTexture::GlTexture(size_t width, size_t height, size_t channelCount, unsigned char* data)
-	: Texture(width, height, channelCount, data), m_Index(0)
+GlTexture::GlTexture(const Texture& texture)
+	: m_Texture(texture)
 {
 	/* Here, we create a texture. */
 	glGenTextures(1, &m_Id);
@@ -11,10 +9,10 @@ GlTexture::GlTexture(size_t width, size_t height, size_t channelCount, unsigned 
 	bound texture. */
 	glBindTexture(GL_TEXTURE_2D, m_Id);
 
-	GLenum format = ChannelCountToFormat(channelCount);
+	GLenum format = ChannelCountToFormat(m_Texture.GetChannelCount());
 
 	/* We assign the loaded image's data to the currently bound texture. */
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, (GLsizei)m_Texture.GetWidth(), (GLsizei)m_Texture.GetHeight(), 0, format, GL_UNSIGNED_BYTE, m_Texture.GetData());
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// TODO: Should be configurable.

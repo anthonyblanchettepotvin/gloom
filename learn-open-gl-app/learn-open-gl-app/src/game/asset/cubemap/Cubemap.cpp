@@ -1,6 +1,6 @@
 #include "Cubemap.h"
 
-Cubemap::Cubemap(const std::vector<CubemapTexture*>& textures)
+Cubemap::Cubemap(const std::vector<Texture*>& textures)
 	: textures(textures)
 {
 }

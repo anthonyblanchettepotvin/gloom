@@ -2,8 +2,6 @@
 
 #include <glad/glad.h>
 
-#include "../../../../game/asset/shader/Shader.h"
-
 GlSprite::GlSprite(const Sprite& sprite)
     : m_Sprite(sprite)
 {
@@ -12,17 +10,9 @@ GlSprite::GlSprite(const Sprite& sprite)
 
 void GlSprite::Render()
 {
-    Material* material = m_Sprite.GetMaterial();
-    if (material)
-    {
-        material->Use();
-
-        material->GetShader().SetFloatMat4("modelXform", m_Sprite.GetTransform());
-
-        glBindVertexArray(m_Vao);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glBindVertexArray(0);
-    }
+    glBindVertexArray(m_Vao);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
 }
 
 void GlSprite::Initialize()

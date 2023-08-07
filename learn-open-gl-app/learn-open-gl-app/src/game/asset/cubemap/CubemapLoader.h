@@ -7,5 +7,5 @@
 class CubemapLoader : public AssetLoader<Cubemap>
 {
 public:
-	virtual Cubemap* Load(const std::string& filePath) override = 0;
+	Cubemap* Load(const std::string& filePath) override;
 };

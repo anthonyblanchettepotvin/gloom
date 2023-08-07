@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../../../../engine/graphics/rendering/GraphicsObject.h"
-#include "../../../../engine/graphics/rendering/primitive/Sprite.h"
+#include "../../../engine/graphics/rendering/Sprite.h"
 
-class GlSprite : public GraphicsObject
+class GlSprite
 {
 public:
 	GlSprite(const Sprite& sprite);

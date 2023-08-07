@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "../../material/Material.h"
+#include "../material/Material.h"
 
 class Sprite
 {

@@ -2,8 +2,8 @@
 
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/material/MaterialAttributes.h"
-#include "engine/graphics/rendering/primitive/Skybox.h"
-#include "engine/graphics/rendering/primitive/Sprite.h"
+#include "engine/graphics/rendering/Skybox.h"
+#include "engine/graphics/rendering/Sprite.h"
 #include "game/actor/Actor.h"
 #include "game/asset/AssetController.h"
 #include "game/asset/AssetDescriptor.h"
@@ -31,8 +31,6 @@
 #include "game/world/World.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/shader/GlShaderLoader.h"
-#include "infrastructure/graphics/texture/GlCubemapLoader.h"
-#include "infrastructure/graphics/texture/GlTextureLoader.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
 
 /* UI library. */
@@ -213,7 +211,7 @@ int main()
 	AssetDescriptorRegistry assetDescriptorRegistry;
 
 	// Texture
-	GlTextureLoader textureLoader;
+	TextureLoader textureLoader;
 	TextureRepository textureRepository;
 	AssetDescriptor<Texture> textureAssetDescriptor(textureLoader, textureRepository, { ".jpg", ".jpeg", ".png" });
 	assetDescriptorRegistry.Register(&textureAssetDescriptor);
@@ -232,7 +230,7 @@ int main()
 	assetDescriptorRegistry.Register(&modelAssetDescriptor);
 
 	// Cubemap
-	GlCubemapLoader cubemapLoader;
+	CubemapLoader cubemapLoader;
 	CubemapRepository cubemapRepository;
 	AssetDescriptor<Cubemap> cubemapAssetDescriptor(cubemapLoader, cubemapRepository, {});
 	assetDescriptorRegistry.Register(&cubemapAssetDescriptor);

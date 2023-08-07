@@ -11,7 +11,7 @@
 #include "../globaldata/GlGlobalData.h"
 
 GlShader::GlShader(unsigned int id)
-	: m_Id(id), m_SamplerIndex(0)
+	: m_Id(id)
 {
 }
 
@@ -68,8 +68,6 @@ void GlShader::InitializeMaterialTemplate()
 void GlShader::Use()
 {
 	glUseProgram(m_Id);
-
-	m_SamplerIndex = 0;
 }
 
 void GlShader::SetBool(const std::string& name, bool value)
@@ -100,30 +98,6 @@ void GlShader::SetFloatMat3(const std::string& name, glm::mat3 value)
 void GlShader::SetFloatMat4(const std::string& name, glm::mat4 value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
-}
-
-void GlShader::SetTexture(const std::string& name, Texture* texture)
-{
-	if (GlTexture* glTexture = dynamic_cast<GlTexture*>(texture))
-	{
-		glTexture->Use(m_SamplerIndex);
-
-		SetInt(name, m_SamplerIndex);
-
-		m_SamplerIndex++;
-	}
-}
-
-void GlShader::SetCubemap(const std::string& name, Cubemap* cubemap)
-{
-	if (GlCubemap* glCubemap = dynamic_cast<GlCubemap*>(cubemap))
-	{
-		glCubemap->Use(m_SamplerIndex);
-
-		SetInt(name, m_SamplerIndex);
-
-		m_SamplerIndex++;
-	}
 }
 
 void GlShader::BindToGlobalData(GlobalData* globalData)

@@ -13,7 +13,16 @@ class Material
 public:
 	Material(Shader& shader, std::vector<std::unique_ptr<MaterialAttribute>>& attributes);
 
-	virtual void Use();
+	std::vector<MaterialAttribute*> GetAttributes() const {
+		std::vector<MaterialAttribute*> attributes;
+
+		for (const auto& attribute : m_Attributes)
+		{
+			attributes.push_back(attribute.get());
+		}
+
+		return attributes;
+	}
 
 	Shader& GetShader() const { return m_Shader; }
 

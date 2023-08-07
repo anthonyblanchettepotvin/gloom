@@ -18,12 +18,7 @@ void SpriteRendererComponent::Render()
 		{
 			m_Sprite->SetTransform(transformComponent->GetTransform());
 
-			if (!m_GraphicsObject)
-			{
-				m_GraphicsObject = m_GraphicsEngine.CreateGraphicsObject(*m_Sprite);
-			}
-
-			m_GraphicsObject->Render();
+			m_GraphicsEngine.Render(*m_Sprite);
 		}
 	}
 }

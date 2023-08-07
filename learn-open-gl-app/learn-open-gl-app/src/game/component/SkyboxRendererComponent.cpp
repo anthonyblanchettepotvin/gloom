@@ -9,11 +9,6 @@ void SkyboxRendererComponent::Render()
 {
 	if (m_Skybox)
 	{
-		if (!m_GraphicsObject)
-		{
-			m_GraphicsObject = m_GraphicsEngine.CreateGraphicsObject(*m_Skybox);
-		}
-
-		m_GraphicsObject->Render();
+		m_GraphicsEngine.Render(*m_Skybox);
 	}
 }

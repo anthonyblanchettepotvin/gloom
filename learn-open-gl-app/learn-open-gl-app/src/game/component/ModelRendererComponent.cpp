@@ -18,24 +18,9 @@ void ModelRendererComponent::Render()
 		{
 			m_Model->SetTransform(transformComponent->GetTransform());
 
-			m_GraphicsObjects.reserve(m_Model->GetMeshes().size());
-
-			for (size_t i = 0; i < m_Model->GetMeshes().size(); i++)
+			for (const auto& mesh : m_Model->GetMeshes())
 			{
-				GraphicsObject* graphicsObject = nullptr;
-				if (i >= m_GraphicsObjects.size())
-				{
-					auto mesh = m_Model->GetMeshes().at(i);
-
-					graphicsObject = m_GraphicsEngine.CreateGraphicsObject(*mesh);
-					m_GraphicsObjects.push_back(graphicsObject);
-				}
-				else
-				{
-					graphicsObject = m_GraphicsObjects[i];
-				}
-
-				graphicsObject->Render();
+				m_GraphicsEngine.Render(*mesh);
 			}
 		}
 	}

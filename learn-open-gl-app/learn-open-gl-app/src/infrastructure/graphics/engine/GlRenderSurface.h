@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../rendering/GlTexture.h"
 #include "../shader/GlShader.h"
-#include "../texture/GlTexture.h"
 
 class GlRenderSurface
 {

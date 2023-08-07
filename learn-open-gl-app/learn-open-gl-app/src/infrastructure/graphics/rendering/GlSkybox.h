@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../../../../engine/graphics/rendering/GraphicsObject.h"
-#include "../../../../engine/graphics/rendering/primitive/Skybox.h"
+#include "../../../engine/graphics/rendering/Skybox.h"
 
-class GlSkybox : public GraphicsObject
+class GlSkybox
 {
 public:
 	GlSkybox(const Skybox& skybox);

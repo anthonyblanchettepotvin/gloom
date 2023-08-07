@@ -2,8 +2,6 @@
 
 #include <glad/glad.h>
 
-#include "../../../../game/asset/shader/Shader.h"
-
 GlMesh::GlMesh(const Mesh& mesh)
 	: m_Mesh(mesh)
 {
@@ -12,17 +10,9 @@ GlMesh::GlMesh(const Mesh& mesh)
 
 void GlMesh::Render()
 {
-	Material* material = m_Mesh.GetMaterial();
-	if (material)
-	{
-		material->Use();
-
-		material->GetShader().SetFloatMat4("modelXform", m_Mesh.GetTransform());
-
-		glBindVertexArray(m_Vao);
-		glDrawElements(GL_TRIANGLES, m_Mesh.GetIndices().size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-	}
+	glBindVertexArray(m_Vao);
+	glDrawElements(GL_TRIANGLES, m_Mesh.GetIndices().size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 void GlMesh::Initialize()

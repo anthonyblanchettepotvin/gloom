@@ -4,10 +4,10 @@
 
 #include "../../../game/asset/texture/Texture.h"
 
-class GlTexture : public Texture
+class GlTexture
 {
 public:
-	GlTexture(size_t width, size_t height, size_t channelCount, unsigned char* data);
+	GlTexture(const Texture& texture);
 
 	void Use(unsigned int index);
 	void Free();
@@ -15,8 +15,10 @@ public:
 	unsigned int GetId() const { return m_Id; }
 
 private:
+	const Texture& m_Texture;
+
 	unsigned int m_Id;
-	unsigned int m_Index;
+	unsigned int m_Index = 0;
 
 	GLenum ChannelCountToFormat(size_t channelCount) const;
 };

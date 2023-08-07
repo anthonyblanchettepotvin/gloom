@@ -14,8 +14,3 @@ Material* Shader::CreateMaterialInstance()
 
 	return m_MaterialTemplate.CreateMaterialInstance();
 }
-
-void Shader::SetAttribute(const MaterialAttribute& attribute)
-{
-	attribute.Set(*this);
-}

@@ -8,9 +8,6 @@
 
 #include "../../../game/asset/shader/Shader.h"
 
-#include "../texture/GlCubemap.h"
-#include "../texture/GlTexture.h"
-
 class GlShader : public Shader
 {
 public:
@@ -27,13 +24,8 @@ public:
 	void SetFloatMat3(const std::string& name, glm::mat3 value) override;
 	void SetFloatMat4(const std::string& name, glm::mat4 value) override;
 
-	void SetTexture(const std::string& name, Texture* texture) override;
-	void SetCubemap(const std::string& name, Cubemap* cubemap) override;
-
 	void BindToGlobalData(GlobalData* globalData) override;
 
 private:
 	unsigned int m_Id;
-
-	unsigned int m_SamplerIndex;
 };

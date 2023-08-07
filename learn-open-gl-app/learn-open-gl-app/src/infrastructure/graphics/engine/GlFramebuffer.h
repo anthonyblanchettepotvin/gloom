@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../texture/GlTexture.h"
+#include "../rendering/GlTexture.h"
 
 #include "GlRenderbuffer.h"
 

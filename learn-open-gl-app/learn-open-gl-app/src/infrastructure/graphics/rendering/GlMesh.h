@@ -2,10 +2,9 @@
 
 #include <vector>
 
-#include "../../../../engine/graphics/rendering/GraphicsObject.h"
-#include "../../../../engine/graphics/rendering/primitive/Mesh.h"
+#include "../../../engine/graphics/rendering/Mesh.h"
 
-class GlMesh : public GraphicsObject
+class GlMesh
 {
 public:
 	GlMesh(const Mesh& mesh);

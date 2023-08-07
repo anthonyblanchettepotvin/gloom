@@ -3,16 +3,17 @@
 #include <string>
 #include <vector>
 
-#include "../Asset.h"
+#include "../texture/Texture.h"
 
-#include "CubemapTexture.h"
+#include "../Asset.h"
 
 class Cubemap : public Asset
 {
 public:
-	Cubemap(const std::vector<CubemapTexture*>& textures);
-	virtual ~Cubemap() = default;
+	Cubemap(const std::vector<Texture*>& textures);
+	
+	std::vector<Texture*> GetTextures() const { return textures; }
 
 protected:
-	std::vector<CubemapTexture*> textures;
+	std::vector<Texture*> textures;
 };

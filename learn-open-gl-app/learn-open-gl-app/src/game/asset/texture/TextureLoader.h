@@ -7,5 +7,5 @@
 class TextureLoader : public AssetLoader<Texture>
 {
 public:
-	virtual Texture* Load(const std::string& filePath) override = 0;
+	Texture* Load(const std::string& filePath) override;
 };

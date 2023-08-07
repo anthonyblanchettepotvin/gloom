@@ -12,8 +12,7 @@ class FloatMaterialAttribute : public MaterialAttribute
 public:
 	FloatMaterialAttribute(const std::string& name);
 
-	void Set(Shader& shader) const override;
-
+	float GetValue() const { return m_Value; }
 	void SetValue(float value) { m_Value = value; }
 
 	std::unique_ptr<MaterialAttribute> CreateAttributeInstance() const override;
@@ -27,8 +26,7 @@ class TextureMaterialAttribute : public MaterialAttribute
 public:
 	TextureMaterialAttribute(const std::string& name);
 
-	void Set(Shader& shader) const override;
-
+	Texture* GetValue() const { return m_Value; }
 	void SetValue(Texture* value) { m_Value = value; }
 
 	std::unique_ptr<MaterialAttribute> CreateAttributeInstance() const override;
@@ -42,8 +40,7 @@ class CubemapMaterialAttribute : public MaterialAttribute
 public:
 	CubemapMaterialAttribute(const std::string& name);
 
-	void Set(Shader& shader) const override;
-
+	Cubemap* GetValue() const { return m_Value; }
 	void SetValue(Cubemap* value) { m_Value = value; }
 
 	std::unique_ptr<MaterialAttribute> CreateAttributeInstance() const override;

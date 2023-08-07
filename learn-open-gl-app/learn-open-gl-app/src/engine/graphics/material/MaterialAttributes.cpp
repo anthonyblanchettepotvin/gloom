@@ -7,11 +7,6 @@ FloatMaterialAttribute::FloatMaterialAttribute(const std::string& name)
 {
 }
 
-void FloatMaterialAttribute::Set(Shader& shader) const
-{
-	shader.SetFloat(m_Name, m_Value);
-}
-
 std::unique_ptr<MaterialAttribute> FloatMaterialAttribute::CreateAttributeInstance() const
 {
 	return std::make_unique<FloatMaterialAttribute>(m_Name);
@@ -22,11 +17,6 @@ TextureMaterialAttribute::TextureMaterialAttribute(const std::string& name)
 {
 }
 
-void TextureMaterialAttribute::Set(Shader& shader) const
-{
-	shader.SetTexture(m_Name, m_Value);
-}
-
 std::unique_ptr<MaterialAttribute> TextureMaterialAttribute::CreateAttributeInstance() const
 {
 	return std::make_unique<TextureMaterialAttribute>(m_Name);
@@ -35,11 +25,6 @@ std::unique_ptr<MaterialAttribute> TextureMaterialAttribute::CreateAttributeInst
 CubemapMaterialAttribute::CubemapMaterialAttribute(const std::string& name)
 	: MaterialAttribute(name)
 {
-}
-
-void CubemapMaterialAttribute::Set(Shader& shader) const
-{
-	shader.SetCubemap(m_Name, m_Value);
 }
 
 std::unique_ptr<MaterialAttribute> CubemapMaterialAttribute::CreateAttributeInstance() const

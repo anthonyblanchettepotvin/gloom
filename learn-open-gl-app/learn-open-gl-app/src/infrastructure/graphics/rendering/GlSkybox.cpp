@@ -10,15 +10,9 @@ GlSkybox::GlSkybox(const Skybox& skybox)
 
 void GlSkybox::Render()
 {
-	Material* material = m_Skybox.GetMaterial();
-	if (material)
-	{
-		material->Use();
-
-		glBindVertexArray(m_Vao);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-	}
+	glBindVertexArray(m_Vao);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
 }
 
 void GlSkybox::Initialize()

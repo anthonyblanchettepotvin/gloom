@@ -2,21 +2,22 @@
 
 #include <glad/glad.h>
 
-#include "../../../engine/graphics/rendering/primitive/Mesh.h"
-#include "../../../engine/graphics/rendering/primitive/Sprite.h"
-#include "../../../engine/graphics/rendering/primitive/Skybox.h"
+#include "../../../engine/graphics/rendering/Mesh.h"
+#include "../../../engine/graphics/rendering/Sprite.h"
+#include "../../../engine/graphics/rendering/Skybox.h"
 
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
-#include "../rendering/graphicsobject/GlMesh.h"
-#include "../rendering/graphicsobject/GlSprite.h"
-#include "../rendering/graphicsobject/GlSkybox.h"
+#include "../rendering/GlMesh.h"
+#include "../rendering/GlSprite.h"
+#include "../rendering/GlSkybox.h"
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
 	m_Framebuffer = new GlFramebuffer(width, height);
 
-	m_RenderTexture = new GlTexture(width, height, 3, nullptr);
+	Texture* texture = new Texture(width, height, 3, nullptr);
+	m_RenderTexture = new GlTexture(*texture);
 	m_Renderbuffer = new GlRenderbuffer(width, height);
 
 	m_Framebuffer->BindTexture(*m_RenderTexture);
@@ -191,17 +192,156 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, Poi
 	}
 }
 
-GraphicsObject* GlGraphicsEngine::CreateGraphicsObject(const Mesh& mesh)
+void GlGraphicsEngine::Render(const Mesh& mesh)
 {
-	return new GlMesh(mesh);
+	GlMesh* glMesh = nullptr;
+
+	auto it = m_GlMeshes.find(&mesh);
+	if (it == m_GlMeshes.end())
+	{
+		glMesh = new GlMesh(mesh);
+		m_GlMeshes[&mesh] = glMesh;
+	}
+	else
+	{
+		glMesh = m_GlMeshes[&mesh];
+	}
+
+	ApplyMaterial(mesh.GetMaterial());
+
+	mesh.GetMaterial()->GetShader().SetFloatMat4("modelXform", mesh.GetTransform());
+
+	if (glMesh)
+	{
+		glMesh->Render();
+	}
+
+	m_SamplerIndex = 0;
 }
 
-GraphicsObject* GlGraphicsEngine::CreateGraphicsObject(const Skybox& skybox)
+void GlGraphicsEngine::Render(const Skybox& skybox)
 {
-	return new GlSkybox(skybox);
+	GlSkybox* glSkybox = nullptr;
+
+	auto it = m_GlSkyboxes.find(&skybox);
+	if (it == m_GlSkyboxes.end())
+	{
+		glSkybox = new GlSkybox(skybox);
+		m_GlSkyboxes[&skybox] = glSkybox;
+	}
+	else
+	{
+		glSkybox = m_GlSkyboxes[&skybox];
+	}
+
+	ApplyMaterial(skybox.GetMaterial());
+
+	if (glSkybox)
+	{
+		glSkybox->Render();
+	}
+
+	m_SamplerIndex = 0;
 }
 
-GraphicsObject* GlGraphicsEngine::CreateGraphicsObject(const Sprite& sprite)
+void GlGraphicsEngine::Render(const Sprite& sprite)
 {
-	return new GlSprite(sprite);
+	GlSprite* glSprite = nullptr;
+
+	auto it = m_GlSprites.find(&sprite);
+	if (it == m_GlSprites.end())
+	{
+		glSprite = new GlSprite(sprite);
+		m_GlSprites[&sprite] = glSprite;
+	}
+	else
+	{
+		glSprite = m_GlSprites[&sprite];
+	}
+
+	ApplyMaterial(sprite.GetMaterial());
+
+	sprite.GetMaterial()->GetShader().SetFloatMat4("modelXform", sprite.GetTransform());
+
+	if (glSprite)
+	{
+		glSprite->Render();
+	}
+
+	m_SamplerIndex = 0;
+}
+
+void GlGraphicsEngine::ApplyMaterial(Material* material)
+{
+	material->GetShader().Use();
+
+	for (const auto& attribute : material->GetAttributes())
+	{
+		ApplyMaterialAttributeToShader(attribute, material->GetShader());
+	}
+}
+
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(MaterialAttribute* attribute, Shader& shader)
+{
+	if (TextureMaterialAttribute* textureAttribute = dynamic_cast<TextureMaterialAttribute*>(attribute))
+	{
+		ApplyTextureAttributeToShader(textureAttribute, shader);
+	}
+	else if (CubemapMaterialAttribute* cubemapAttribute = dynamic_cast<CubemapMaterialAttribute*>(attribute))
+	{
+		ApplyCubemapAttributeToShader(cubemapAttribute, shader);
+	}
+	else if (FloatMaterialAttribute* floatAttribute = dynamic_cast<FloatMaterialAttribute*>(attribute))
+	{
+		ApplyFloatAttributeToShader(floatAttribute, shader);
+	}
+}
+
+void GlGraphicsEngine::ApplyTextureAttributeToShader(TextureMaterialAttribute* attribute, Shader& shader)
+{
+	Texture* texture = attribute->GetValue();
+	GlTexture* glTexture = nullptr;
+
+	auto it = m_GlTextures.find(texture);
+	if (it == m_GlTextures.end())
+	{
+		glTexture = new GlTexture(*texture);
+		m_GlTextures[texture] = glTexture;
+	}
+	else
+	{
+		glTexture = m_GlTextures[texture];
+	}
+
+	glTexture->Use(m_SamplerIndex);
+	shader.SetInt(attribute->GetName(), m_SamplerIndex);
+
+	m_SamplerIndex++;
+}
+
+void GlGraphicsEngine::ApplyCubemapAttributeToShader(CubemapMaterialAttribute* attribute, Shader& shader)
+{
+	Cubemap* cubemap = attribute->GetValue();
+	GlCubemap* glCubemap = nullptr;
+
+	auto it = m_GlCubemaps.find(cubemap);
+	if (it == m_GlCubemaps.end())
+	{
+		glCubemap = new GlCubemap(*cubemap);
+		m_GlCubemaps[cubemap] = glCubemap;
+	}
+	else
+	{
+		glCubemap = m_GlCubemaps[cubemap];
+	}
+
+	glCubemap->Use(m_SamplerIndex);
+	shader.SetInt(attribute->GetName(), m_SamplerIndex);
+
+	m_SamplerIndex++;
+}
+
+void GlGraphicsEngine::ApplyFloatAttributeToShader(FloatMaterialAttribute* attribute, Shader& shader)
+{
+	shader.SetFloat(attribute->GetName(), attribute->GetValue());
 }

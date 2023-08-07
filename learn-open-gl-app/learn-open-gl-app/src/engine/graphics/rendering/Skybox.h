@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../material/Material.h"
+#include "../material/Material.h"
 
 class Skybox
 {
