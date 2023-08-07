@@ -116,10 +116,6 @@ void GlGraphicsEngine::EndFrame()
 	glDisable(GL_DEPTH_TEST);
 
 	m_RenderSurface->RenderTexture(*m_RenderShader, *m_RenderTexture);
-
-	/*chromaticAberrationShader->Use();
-
-	glDrawArrays(GL_TRIANGLES, 0, 6);*/
 }
 
 GlobalData* GlGraphicsEngine::CreateGlobalData(const std::string& name)

@@ -588,7 +588,7 @@ void setupImGuiFrame()
 	std::vector<const char*> actorsCName;
 	for (const auto& actorName : actorsName)
 		actorsCName.push_back(actorName.c_str());
-	ImGui::ListBox("Actors", &currentItem, actorsCName.data(), world.GetActors().size());
+	ImGui::ListBox("Actors", &currentItem, actorsCName.data(), (int)world.GetActors().size());
 	ImGui::End();
 
 	ImGui::Begin("Properties");

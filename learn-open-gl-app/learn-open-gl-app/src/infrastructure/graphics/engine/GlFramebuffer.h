@@ -15,7 +15,7 @@ public:
 	bool CheckStatus();
 
 	void BindRenderbuffer(const GlRenderbuffer& renderbuffer);
-	void BindTexture(const GlTexture& renderbuffer);
+	void BindTexture(const GlTexture& texture);
 
 private:
 	unsigned int m_Id;
