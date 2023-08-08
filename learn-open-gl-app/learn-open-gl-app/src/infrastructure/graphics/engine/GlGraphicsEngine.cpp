@@ -29,7 +29,7 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 		// TODO: Throw incomplete framebuffer
 	}
 
-	std::unique_ptr<ShaderLoader> shaderLoader = CreateShaderLoader();
+	std::unique_ptr<ShaderLoader> shaderLoader = std::unique_ptr<ShaderLoader>(CreateShaderLoader());
 	m_RenderShader = std::unique_ptr<GlShader>((GlShader*)shaderLoader->Load(".\\shaders\\render.shader")); // FIXME: Should not have to call std::make_unique later
 	m_RenderSurface = std::make_unique<GlRenderSurface>();
 
@@ -120,14 +120,14 @@ void GlGraphicsEngine::EndFrame()
 	m_RenderSurface->RenderTexture(*m_RenderShader, *m_RenderTexture);
 }
 
-std::unique_ptr<ShaderLoader> GlGraphicsEngine::CreateShaderLoader() const
+ShaderLoader* GlGraphicsEngine::CreateShaderLoader() const
 {
-	return std::make_unique<GlShaderLoader>();
+	return new GlShaderLoader();
 }
 
-std::unique_ptr<GlobalData> GlGraphicsEngine::CreateGlobalData(const std::string& name) const
+GlobalData* GlGraphicsEngine::CreateGlobalData(const std::string& name) const
 {
-	return std::make_unique<GlGlobalData>(name);
+	return new GlGlobalData(name);
 }
 
 void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference)

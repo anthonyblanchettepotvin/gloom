@@ -27,9 +27,9 @@ public:
 	void StartFrame() override;
 	void EndFrame() override;
 
-	std::unique_ptr<ShaderLoader> CreateShaderLoader() const override;
+	ShaderLoader* CreateShaderLoader() const override;
 
-	std::unique_ptr<GlobalData> CreateGlobalData(const std::string& name) const override;
+	GlobalData* CreateGlobalData(const std::string& name) const override;
 
 	void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference) override;
 	void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::mat4& reference) override;

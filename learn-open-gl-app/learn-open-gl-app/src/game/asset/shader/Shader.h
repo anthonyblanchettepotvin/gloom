@@ -25,7 +25,7 @@ public:
 	virtual void SetFloatMat3(const std::string& name, glm::mat3 value) = 0;
 	virtual void SetFloatMat4(const std::string& name, glm::mat4 value) = 0;
 
-	virtual void BindToGlobalData(GlobalData* globalData) = 0;
+	virtual void BindToGlobalData(GlobalData& globalData) = 0;
 
 	virtual Material* CreateMaterialInstance();
 

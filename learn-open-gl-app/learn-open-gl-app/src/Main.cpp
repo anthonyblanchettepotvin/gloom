@@ -412,17 +412,17 @@ int main()
 	glm::mat4 viewTransform;
 	glm::mat4 skyboxTransform;
 	glm::mat4 projectionTransform;
-	std::unique_ptr<GlobalData> matricesGlobalData = graphicsEngine->CreateGlobalData("ubo_matrices");
+	std::unique_ptr<GlobalData> matricesGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_matrices"));
 	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
 	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
 	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
 
 	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO. */
-	phongShader->BindToGlobalData(matricesGlobalData.get());
-	reflectionShader->BindToGlobalData(matricesGlobalData.get());
-	refractionShader->BindToGlobalData(matricesGlobalData.get());
-	skyboxShader->BindToGlobalData(matricesGlobalData.get());
-	spriteShader->BindToGlobalData(matricesGlobalData.get());
+	phongShader->BindToGlobalData(*matricesGlobalData);
+	reflectionShader->BindToGlobalData(*matricesGlobalData);
+	refractionShader->BindToGlobalData(*matricesGlobalData);
+	skyboxShader->BindToGlobalData(*matricesGlobalData);
+	spriteShader->BindToGlobalData(*matricesGlobalData);
 
 	// Lights UBO (384 bytes)
 	/*
@@ -454,13 +454,13 @@ int main()
 	diffuse		vec3	16				32				12
 	specular	vec3	16				48				12
 	*/
-	std::unique_ptr<GlobalData> directionalLightsGlobalData = graphicsEngine->CreateGlobalData("ubo_directionalLights");
+	std::unique_ptr<GlobalData> directionalLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_directionalLights"));
 	graphicsEngine->AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
-	std::unique_ptr<GlobalData> pointLightsGlobalData = graphicsEngine->CreateGlobalData("ubo_pointLights");
+	std::unique_ptr<GlobalData> pointLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_pointLights"));
 	graphicsEngine->AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
 
-	phongShader->BindToGlobalData(directionalLightsGlobalData.get());
-	phongShader->BindToGlobalData(pointLightsGlobalData.get());
+	phongShader->BindToGlobalData(*directionalLightsGlobalData);
+	phongShader->BindToGlobalData(*pointLightsGlobalData);
 
 	// Camera UBO (12 bytes)
 	/*
@@ -474,12 +474,12 @@ int main()
 	position	vec3	16				0				12
 	*/
 	glm::vec3 cameraPosition;
-	std::unique_ptr<GlobalData> cameraGlobalData = graphicsEngine->CreateGlobalData("ubo_camera");
+	std::unique_ptr<GlobalData> cameraGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_camera"));
 	graphicsEngine->AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
 
-	phongShader->BindToGlobalData(cameraGlobalData.get());
-	reflectionShader->BindToGlobalData(cameraGlobalData.get());
-	refractionShader->BindToGlobalData(cameraGlobalData.get());
+	phongShader->BindToGlobalData(*cameraGlobalData);
+	reflectionShader->BindToGlobalData(*cameraGlobalData);
+	refractionShader->BindToGlobalData(*cameraGlobalData);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))

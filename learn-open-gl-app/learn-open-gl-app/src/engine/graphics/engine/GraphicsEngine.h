@@ -17,9 +17,9 @@ public:
 	virtual void StartFrame() = 0;
 	virtual void EndFrame() = 0;
 
-	virtual std::unique_ptr<ShaderLoader> CreateShaderLoader() const = 0;
+	virtual ShaderLoader* CreateShaderLoader() const = 0;
 
-	virtual std::unique_ptr<GlobalData> CreateGlobalData(const std::string& name) const = 0;
+	virtual GlobalData* CreateGlobalData(const std::string& name) const = 0;
 
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference) = 0;
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::mat4& reference) = 0;

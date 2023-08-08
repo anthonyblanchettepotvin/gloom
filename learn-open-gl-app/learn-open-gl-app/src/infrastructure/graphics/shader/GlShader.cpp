@@ -100,10 +100,15 @@ void GlShader::SetFloatMat4(const std::string& name, glm::mat4 value)
 	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void GlShader::BindToGlobalData(GlobalData* globalData)
+void GlShader::BindToGlobalData(GlobalData& globalData)
 {
-	if (GlGlobalData* glGlobalData = dynamic_cast<GlGlobalData*>(globalData))
+	try
 	{
-		glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, glGlobalData->GetName().c_str()), glGlobalData->GetIndex());
+		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
+
+		glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, glGlobalData.GetName().c_str()), glGlobalData.GetIndex());
+	}
+	catch (std::bad_cast e)
+	{
 	}
 }

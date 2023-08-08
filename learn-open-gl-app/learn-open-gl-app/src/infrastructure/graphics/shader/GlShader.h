@@ -24,7 +24,7 @@ public:
 	void SetFloatMat3(const std::string& name, glm::mat3 value) override;
 	void SetFloatMat4(const std::string& name, glm::mat4 value) override;
 
-	void BindToGlobalData(GlobalData* globalData) override;
+	void BindToGlobalData(GlobalData& globalData) override;
 
 private:
 	unsigned int m_Id;
