@@ -4,22 +4,24 @@
 
 #include "TransformComponent.h"
 
-ModelRendererComponent::ModelRendererComponent(Model* model, Shader* shader)
-	: RendererComponent(shader), model(model)
+ModelRendererComponent::ModelRendererComponent(GraphicsEngine& graphicsEngine, Model* model)
+	: RendererComponent(graphicsEngine), m_Model(model)
 {
 }
 
 void ModelRendererComponent::Render()
 {
-	if (parent && shader && model)
+	if (parent && m_Model)
 	{
 		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
 		if (transformComponent)
 		{
-			shader->setFloatMat4("modelXform", transformComponent->GetModelTransformationMatrix());
-			shader->setFloatMat3("normalXform", transformComponent->GetNormalTransformationMatrix());
+			m_Model->SetTransform(transformComponent->GetTransform());
 
-			model->Draw(shader);
+			for (const auto& mesh : m_Model->GetMeshes())
+			{
+				m_GraphicsEngine.Render(*mesh);
+			}
 		}
 	}
 }

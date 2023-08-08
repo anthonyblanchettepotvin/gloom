@@ -1,6 +1,6 @@
 #include "RendererComponent.h"
 
-RendererComponent::RendererComponent(Shader* shader)
-	: shader(shader)
+RendererComponent::RendererComponent(GraphicsEngine& graphicsEngine)
+	: m_GraphicsEngine(graphicsEngine)
 {
 }

@@ -1,20 +1,20 @@
 #pragma once
 
-#include "../../engine/graphics/model/Model.h"
-#include "../../engine/graphics/shader/Shader.h"
+#include <vector>
+
+#include "../../game/asset/model/Model.h"
 
 #include "RendererComponent.h"
 
 class ModelRendererComponent : public RendererComponent
 {
 public:
-	ModelRendererComponent(Model* model, Shader* shader);
+	ModelRendererComponent(GraphicsEngine& graphicsEngine, Model* model);
 
-	Model* GetModel() { return model; };
+	Model* GetModel() const { return m_Model; };
 
 	void Render() override;
 
 private:
-	Model* model;
+	Model* m_Model;
 };
-

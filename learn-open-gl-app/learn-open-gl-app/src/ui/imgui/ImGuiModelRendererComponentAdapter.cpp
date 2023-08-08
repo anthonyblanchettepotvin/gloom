@@ -13,7 +13,5 @@ void ImGuiModelRendererComponentAdapter::RenderUi() const
 {
 	if (ModelRendererComponent* castedComponent = dynamic_cast<ModelRendererComponent*>(component))
 	{
-		ImGui::Text(castedComponent->GetShader()->GetVertexShaderPath().c_str());
-		ImGui::Text(castedComponent->GetShader()->GetFragmentShaderPath().c_str());
 	}
 }

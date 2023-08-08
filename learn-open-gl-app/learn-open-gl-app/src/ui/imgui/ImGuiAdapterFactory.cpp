@@ -7,7 +7,6 @@
 #include "../../game/component/SpriteRendererComponent.h"
 #include "../../game/component/PointLightComponent.h"
 #include "../../game/component/DirectionalLightComponent.h"
-#include "../../game/component/OpenGLSettingsComponent.h"
 
 #include "ImGuiActorAdapter.h"
 
@@ -16,7 +15,6 @@
 #include "ImGuiSpriteRendererComponentAdapter.h"
 #include "ImGuiPointLightComponentAdapter.h"
 #include "ImGuiDirectionalLightComponentAdapter.h"
-#include "ImGuiOpenGLSettingsComponentAdapter.h"
 
 UiActorAdapter* ImGuiAdapterFactory::CreateActorAdapter(Actor* actor) const
 {
@@ -35,6 +33,4 @@ UiComponentAdapter* ImGuiAdapterFactory::CreateComponentAdapter(ActorComponent* 
 		return new ImGuiPointLightComponentAdapter(castedComponent);
 	if (DirectionalLightComponent* castedComponent = dynamic_cast<DirectionalLightComponent*>(component))
 		return new ImGuiDirectionalLightComponentAdapter(castedComponent);
-	if (OpenGLSettingsComponent* castedComponent = dynamic_cast<OpenGLSettingsComponent*>(component))
-		return new ImGuiOpenGLSettingsComponentAdapter(castedComponent);
 }
