@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <vector>
-#include <type_traits>
 
 #include "MaterialAttribute.h"
 
@@ -13,16 +12,7 @@ class Material
 public:
 	Material(Shader& shader, std::vector<std::unique_ptr<MaterialAttribute>>& attributes);
 
-	std::vector<MaterialAttribute*> GetAttributes() const {
-		std::vector<MaterialAttribute*> attributes;
-
-		for (const auto& attribute : m_Attributes)
-		{
-			attributes.push_back(attribute.get());
-		}
-
-		return attributes;
-	}
+	std::vector<MaterialAttribute*> GetAttributes() const;
 
 	Shader& GetShader() const { return m_Shader; }
 
@@ -41,7 +31,7 @@ inline T* Material::FindAttribute(const std::string& name) const
 	for (const auto& attribute : m_Attributes)
 	{
 		T* typedAttribute = dynamic_cast<T*>(attribute.get());
-		if (typedAttribute && attribute.get()->GetName() == name)
+		if (typedAttribute && attribute->GetName() == name)
 			return typedAttribute;
 	}
 

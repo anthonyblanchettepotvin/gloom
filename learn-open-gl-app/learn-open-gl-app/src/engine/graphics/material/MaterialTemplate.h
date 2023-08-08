@@ -13,9 +13,9 @@ class MaterialTemplate
 public:
 	MaterialTemplate(Shader& shader);
 
-	virtual void AddAttribute(std::unique_ptr<MaterialAttribute>& attribute);
+	void AddAttribute(std::unique_ptr<MaterialAttribute>& attribute);
 
-	virtual Material* CreateMaterialInstance() const;
+	Material* CreateMaterialInstance() const;
 
 private:
 	Shader& m_Shader;

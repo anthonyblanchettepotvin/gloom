@@ -35,7 +35,6 @@ void GlShader::InitializeMaterialTemplate()
 		std::string structName = attributeName.substr(0, attributeName.find_first_of('.'));
 		if (structName == MATERIAL_STRUCT_NAME)
 		{
-			// TODO: Create a GlMaterialAttributeFactory to encapsulate this switch statement
 			switch (uniformType)
 			{
 			case GL_FLOAT:
@@ -110,5 +109,6 @@ void GlShader::BindToGlobalData(GlobalData& globalData)
 	}
 	catch (std::bad_cast e)
 	{
+		// TODO: Display error
 	}
 }

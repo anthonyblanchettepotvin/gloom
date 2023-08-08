@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "../../../engine/graphics/rendering/Mesh.h"
 
 class GlMesh

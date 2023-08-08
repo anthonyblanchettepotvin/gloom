@@ -56,7 +56,6 @@ unsigned int GlGlobalData::GetUniformBufferSize() const
     {
         GlGlobalDataType& currentReference = *m_References.at(referenceName);
 
-        // TODO: Put this function in a math library
         unsigned int offset = currentReference.GetBaseAlignment() == 0 ? currentReference.GetBaseAlignment() : ceil(size / currentReference.GetBaseAlignment()) * currentReference.GetBaseAlignment();
 
         size = offset + currentReference.GetSize();

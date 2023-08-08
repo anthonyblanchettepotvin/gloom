@@ -16,7 +16,6 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
 	m_Framebuffer = std::make_unique<GlFramebuffer>(width, height);
 
-	// TODO: GlTexture and TextureAttachment should not be the same thing
 	Texture* texture = new Texture(width, height, 3, nullptr);
 	m_RenderTexture = std::make_unique<GlTexture>(*texture);
 	m_Renderbuffer = std::make_unique<GlRenderbuffer>(width, height);
@@ -267,8 +266,6 @@ void GlGraphicsEngine::ApplyMaterial(const Material& material)
 
 void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, MaterialAttribute* attribute)
 {
-	// TODO: Get rid of this if..elseif..else statement -- bad architecture
-
 	if (TextureMaterialAttribute* textureAttribute = dynamic_cast<TextureMaterialAttribute*>(attribute))
 	{
 		ApplyMaterialAttributeToShader(shader, textureAttribute);

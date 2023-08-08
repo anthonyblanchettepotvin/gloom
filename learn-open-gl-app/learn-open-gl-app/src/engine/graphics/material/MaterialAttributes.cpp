@@ -1,7 +1,5 @@
 #include "MaterialAttributes.h"
 
-#include "../../../game/asset/shader/Shader.h"
-
 FloatMaterialAttribute::FloatMaterialAttribute(const std::string& name)
 	: MaterialAttribute(name)
 {
