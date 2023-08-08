@@ -11,7 +11,7 @@ public:
 	MaterialAttribute(const std::string& name);
 	virtual ~MaterialAttribute() = default;
 
-	virtual std::unique_ptr<MaterialAttribute> CreateAttributeInstance() const = 0;
+	virtual MaterialAttribute* CreateAttributeInstance() const = 0;
 
 	std::string GetName() const { return m_Name; }
 

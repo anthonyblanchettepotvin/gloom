@@ -19,7 +19,7 @@ Material* MaterialTemplate::CreateMaterialInstance() const
 	std::vector<std::unique_ptr<MaterialAttribute>> attributes;
 	for (const auto& attribute : m_Attributes)
 	{
-		attributes.push_back(attribute.get()->CreateAttributeInstance());
+		attributes.push_back(std::unique_ptr<MaterialAttribute>(attribute->CreateAttributeInstance()));
 	}
 
 	return new Material(m_Shader, attributes);

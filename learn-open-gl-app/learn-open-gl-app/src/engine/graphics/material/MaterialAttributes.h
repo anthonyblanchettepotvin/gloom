@@ -15,7 +15,7 @@ public:
 	float GetValue() const { return m_Value; }
 	void SetValue(float value) { m_Value = value; }
 
-	std::unique_ptr<MaterialAttribute> CreateAttributeInstance() const override;
+	MaterialAttribute* CreateAttributeInstance() const override;
 
 private:
 	float m_Value = 1.0f;
@@ -29,7 +29,7 @@ public:
 	Texture* GetValue() const { return m_Value; }
 	void SetValue(Texture* value) { m_Value = value; }
 
-	std::unique_ptr<MaterialAttribute> CreateAttributeInstance() const override;
+	MaterialAttribute* CreateAttributeInstance() const override;
 
 private:
 	Texture* m_Value = nullptr;
@@ -43,7 +43,7 @@ public:
 	Cubemap* GetValue() const { return m_Value; }
 	void SetValue(Cubemap* value) { m_Value = value; }
 
-	std::unique_ptr<MaterialAttribute> CreateAttributeInstance() const override;
+	MaterialAttribute* CreateAttributeInstance() const override;
 
 private:
 	Cubemap* m_Value = nullptr;
