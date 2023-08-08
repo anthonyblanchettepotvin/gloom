@@ -14,11 +14,12 @@
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
-	m_Framebuffer = new GlFramebuffer(width, height);
+	m_Framebuffer = std::make_unique<GlFramebuffer>(width, height);
 
+	// TODO: GlTexture and TextureAttachment should not be the same thing
 	Texture* texture = new Texture(width, height, 3, nullptr);
-	m_RenderTexture = new GlTexture(*texture);
-	m_Renderbuffer = new GlRenderbuffer(width, height);
+	m_RenderTexture = std::make_unique<GlTexture>(*texture);
+	m_Renderbuffer = std::make_unique<GlRenderbuffer>(width, height);
 
 	m_Framebuffer->BindTexture(*m_RenderTexture);
 	m_Framebuffer->BindRenderbuffer(*m_Renderbuffer);
@@ -28,8 +29,9 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 		// TODO: Throw incomplete framebuffer
 	}
 
-	m_RenderShader = (GlShader*)m_ShaderLoader.Load(".\\shaders\\render.shader");
-	m_RenderSurface = new GlRenderSurface();
+	std::unique_ptr<ShaderLoader> shaderLoader = CreateShaderLoader();
+	m_RenderShader = std::unique_ptr<GlShader>((GlShader*)shaderLoader->Load(".\\shaders\\render.shader")); // FIXME: Should not have to call std::make_unique later
+	m_RenderSurface = std::make_unique<GlRenderSurface>();
 
 	// --- Options ---
 
@@ -118,226 +120,212 @@ void GlGraphicsEngine::EndFrame()
 	m_RenderSurface->RenderTexture(*m_RenderShader, *m_RenderTexture);
 }
 
-GlobalData* GlGraphicsEngine::CreateGlobalData(const std::string& name)
+std::unique_ptr<ShaderLoader> GlGraphicsEngine::CreateShaderLoader() const
 {
-	return new GlGlobalData(name);
+	return std::make_unique<GlShaderLoader>();
 }
 
-void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, float& reference, GlobalData* globalData)
+std::unique_ptr<GlobalData> GlGraphicsEngine::CreateGlobalData(const std::string& name) const
 {
-	if (GlGlobalData* glGlobalData = dynamic_cast<GlGlobalData*>(globalData))
+	return std::make_unique<GlGlobalData>(name);
+}
+
+void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference)
+{
+	try
 	{
+		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
 		GlGlobalDataFloat* glReference = new GlGlobalDataFloat(reference);
-		glGlobalData->AddDataReference(name, *glReference);
+		glGlobalData.AddDataReference(name, *glReference);
 	}
-	else
+	catch (std::bad_cast e)
 	{
-		// TODO: Throw bad global data type exception
+		// TODO: Display error
 	}
 }
 
-void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, glm::mat4& reference, GlobalData* globalData)
+void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::mat4& reference)
 {
-	if (GlGlobalData* glGlobalData = dynamic_cast<GlGlobalData*>(globalData))
+	try
 	{
+		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
 		GlGlobalDataMat4* glReference = new GlGlobalDataMat4(reference);
-		glGlobalData->AddDataReference(name, *glReference);
+		glGlobalData.AddDataReference(name, *glReference);
 	}
-	else
+	catch (std::bad_cast e)
 	{
-		// TODO: Throw bad global data type exception
+		// TODO: Display error
 	}
 }
 
-void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, glm::vec3& reference, GlobalData* globalData)
+void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::vec3& reference)
 {
-	if (GlGlobalData* glGlobalData = dynamic_cast<GlGlobalData*>(globalData))
+	try
 	{
+		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
 		GlGlobalDataVec3* glReference = new GlGlobalDataVec3(reference);
-		glGlobalData->AddDataReference(name, *glReference);
+		glGlobalData.AddDataReference(name, *glReference);
 	}
-	else
+	catch (std::bad_cast e)
 	{
-		// TODO: Throw bad global data type exception
+		// TODO: Display error
 	}
 }
 
-void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, DirectionalLight& reference, GlobalData* globalData)
+void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, DirectionalLight& reference)
 {
-	if (GlGlobalData* glGlobalData = dynamic_cast<GlGlobalData*>(globalData))
+	try
 	{
+		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
 		GlGlobalDataDirectionalLight* glReference = new GlGlobalDataDirectionalLight(reference);
-		glGlobalData->AddDataReference(name, *glReference);
+		glGlobalData.AddDataReference(name, *glReference);
 	}
-	else
+	catch (std::bad_cast e)
 	{
-		// TODO: Throw bad global data type exception
+		// TODO: Display error
 	}
 }
 
-void GlGraphicsEngine::AddDataReferenceToGlobalData(const std::string& name, PointLight& reference, GlobalData* globalData)
+void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, PointLight& reference)
 {
-	if (GlGlobalData* glGlobalData = dynamic_cast<GlGlobalData*>(globalData))
+	try
 	{
+		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
 		GlGlobalDataPointLight* glReference = new GlGlobalDataPointLight(reference);
-		glGlobalData->AddDataReference(name, *glReference);
+		glGlobalData.AddDataReference(name, *glReference);
 	}
-	else
+	catch (std::bad_cast e)
 	{
-		// TODO: Throw bad global data type exception
+		// TODO: Display error
 	}
 }
 
 void GlGraphicsEngine::Render(const Mesh& mesh)
 {
-	GlMesh* glMesh = nullptr;
-
 	auto it = m_GlMeshes.find(&mesh);
 	if (it == m_GlMeshes.end())
 	{
-		glMesh = new GlMesh(mesh);
-		m_GlMeshes[&mesh] = glMesh;
-	}
-	else
-	{
-		glMesh = m_GlMeshes[&mesh];
+		m_GlMeshes[&mesh] = std::make_unique<GlMesh>(mesh);
 	}
 
-	ApplyMaterial(mesh.GetMaterial());
+	GlMesh& glMesh = *m_GlMeshes[&mesh];
+
+	ApplyMaterial(*mesh.GetMaterial());
 
 	mesh.GetMaterial()->GetShader().SetFloatMat4("modelXform", mesh.GetTransform());
 
-	if (glMesh)
-	{
-		glMesh->Render();
-	}
+	glMesh.Render();
 
 	m_SamplerIndex = 0;
 }
 
 void GlGraphicsEngine::Render(const Skybox& skybox)
 {
-	GlSkybox* glSkybox = nullptr;
-
 	auto it = m_GlSkyboxes.find(&skybox);
 	if (it == m_GlSkyboxes.end())
 	{
-		glSkybox = new GlSkybox(skybox);
-		m_GlSkyboxes[&skybox] = glSkybox;
+		m_GlSkyboxes[&skybox] = std::make_unique<GlSkybox>(skybox);
 	}
-	else
-	{
-		glSkybox = m_GlSkyboxes[&skybox];
-	}
+	
+	GlSkybox& glSkybox = *m_GlSkyboxes[&skybox];
 
-	ApplyMaterial(skybox.GetMaterial());
+	ApplyMaterial(*skybox.GetMaterial());
 
-	if (glSkybox)
-	{
-		glSkybox->Render();
-	}
+	glSkybox.Render();
 
 	m_SamplerIndex = 0;
 }
 
 void GlGraphicsEngine::Render(const Sprite& sprite)
 {
-	GlSprite* glSprite = nullptr;
-
 	auto it = m_GlSprites.find(&sprite);
 	if (it == m_GlSprites.end())
 	{
-		glSprite = new GlSprite(sprite);
-		m_GlSprites[&sprite] = glSprite;
+		m_GlSprites[&sprite] = std::make_unique<GlSprite>(sprite);
 	}
-	else
-	{
-		glSprite = m_GlSprites[&sprite];
-	}
+	
+	GlSprite& glSprite = *m_GlSprites[&sprite];
 
-	ApplyMaterial(sprite.GetMaterial());
+	ApplyMaterial(*sprite.GetMaterial());
 
 	sprite.GetMaterial()->GetShader().SetFloatMat4("modelXform", sprite.GetTransform());
 
-	if (glSprite)
-	{
-		glSprite->Render();
-	}
+	glSprite.Render();
 
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::ApplyMaterial(Material* material)
+void GlGraphicsEngine::ApplyMaterial(const Material& material)
 {
-	material->GetShader().Use();
+	material.GetShader().Use();
 
-	for (const auto& attribute : material->GetAttributes())
+	for (const auto& attribute : material.GetAttributes())
 	{
-		ApplyMaterialAttributeToShader(attribute, material->GetShader());
+		ApplyMaterialAttributeToShader(material.GetShader(), attribute);
 	}
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(MaterialAttribute* attribute, Shader& shader)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, MaterialAttribute* attribute)
 {
+	// TODO: Get rid of this if..elseif..else statement -- bad architecture
+
 	if (TextureMaterialAttribute* textureAttribute = dynamic_cast<TextureMaterialAttribute*>(attribute))
 	{
-		ApplyTextureAttributeToShader(textureAttribute, shader);
+		ApplyMaterialAttributeToShader(shader, textureAttribute);
 	}
 	else if (CubemapMaterialAttribute* cubemapAttribute = dynamic_cast<CubemapMaterialAttribute*>(attribute))
 	{
-		ApplyCubemapAttributeToShader(cubemapAttribute, shader);
+		ApplyMaterialAttributeToShader(shader, cubemapAttribute);
 	}
 	else if (FloatMaterialAttribute* floatAttribute = dynamic_cast<FloatMaterialAttribute*>(attribute))
 	{
-		ApplyFloatAttributeToShader(floatAttribute, shader);
+		ApplyMaterialAttributeToShader(shader, floatAttribute);
 	}
+
+	// TODO: Display error
 }
 
-void GlGraphicsEngine::ApplyTextureAttributeToShader(TextureMaterialAttribute* attribute, Shader& shader)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, TextureMaterialAttribute* attribute)
 {
 	Texture* texture = attribute->GetValue();
-	GlTexture* glTexture = nullptr;
+	if (!texture)
+		return;
 
 	auto it = m_GlTextures.find(texture);
 	if (it == m_GlTextures.end())
 	{
-		glTexture = new GlTexture(*texture);
-		m_GlTextures[texture] = glTexture;
+		m_GlTextures[texture] = std::make_unique<GlTexture>(*texture);
 	}
-	else
-	{
-		glTexture = m_GlTextures[texture];
-	}
+	
+	GlTexture& glTexture = *m_GlTextures[texture];
 
-	glTexture->Use(m_SamplerIndex);
+	glTexture.Use(m_SamplerIndex);
 	shader.SetInt(attribute->GetName(), m_SamplerIndex);
 
 	m_SamplerIndex++;
 }
 
-void GlGraphicsEngine::ApplyCubemapAttributeToShader(CubemapMaterialAttribute* attribute, Shader& shader)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, CubemapMaterialAttribute* attribute)
 {
 	Cubemap* cubemap = attribute->GetValue();
-	GlCubemap* glCubemap = nullptr;
+	if (!cubemap)
+		return;
 
 	auto it = m_GlCubemaps.find(cubemap);
 	if (it == m_GlCubemaps.end())
 	{
-		glCubemap = new GlCubemap(*cubemap);
-		m_GlCubemaps[cubemap] = glCubemap;
-	}
-	else
-	{
-		glCubemap = m_GlCubemaps[cubemap];
+		m_GlCubemaps[cubemap] = std::make_unique<GlCubemap>(*cubemap);
 	}
 
-	glCubemap->Use(m_SamplerIndex);
+	GlCubemap& glCubemap = *m_GlCubemaps[cubemap];
+
+	glCubemap.Use(m_SamplerIndex);
 	shader.SetInt(attribute->GetName(), m_SamplerIndex);
 
 	m_SamplerIndex++;
 }
 
-void GlGraphicsEngine::ApplyFloatAttributeToShader(FloatMaterialAttribute* attribute, Shader& shader)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, FloatMaterialAttribute* attribute)
 {
 	shader.SetFloat(attribute->GetName(), attribute->GetValue());
 }

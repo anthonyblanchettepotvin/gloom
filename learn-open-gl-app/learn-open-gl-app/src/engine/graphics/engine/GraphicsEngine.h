@@ -17,15 +17,15 @@ public:
 	virtual void StartFrame() = 0;
 	virtual void EndFrame() = 0;
 
-	virtual ShaderLoader& GetShaderLoader() = 0;
+	virtual std::unique_ptr<ShaderLoader> CreateShaderLoader() const = 0;
 
-	virtual GlobalData* CreateGlobalData(const std::string& name) = 0;
+	virtual std::unique_ptr<GlobalData> CreateGlobalData(const std::string& name) const = 0;
 
-	virtual void AddDataReferenceToGlobalData(const std::string& name, float& reference, GlobalData* globalData) = 0;
-	virtual void AddDataReferenceToGlobalData(const std::string& name, glm::mat4& reference, GlobalData* globalData) = 0;
-	virtual void AddDataReferenceToGlobalData(const std::string& name, glm::vec3& reference, GlobalData* globalData) = 0;
-	virtual void AddDataReferenceToGlobalData(const std::string& name, DirectionalLight& reference, GlobalData* globalData) = 0;
-	virtual void AddDataReferenceToGlobalData(const std::string& name, PointLight& reference, GlobalData* globalData) = 0;
+	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference) = 0;
+	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::mat4& reference) = 0;
+	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::vec3& reference) = 0;
+	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, DirectionalLight& reference) = 0;
+	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, PointLight& reference) = 0;
 
 	virtual void Render(const Mesh& mesh) = 0;
 	virtual void Render(const Skybox& skybox) = 0;
