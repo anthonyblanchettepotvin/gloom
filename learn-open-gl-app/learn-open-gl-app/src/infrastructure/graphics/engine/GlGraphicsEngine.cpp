@@ -135,8 +135,8 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	try
 	{
 		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		GlGlobalDataFloat* glReference = new GlGlobalDataFloat(reference);
-		glGlobalData.AddDataReference(name, *glReference);
+		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataFloat>(reference);
+		glGlobalData.AddDataReference(name, glReference);
 	}
 	catch (std::bad_cast e)
 	{
@@ -149,8 +149,8 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	try
 	{
 		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		GlGlobalDataMat4* glReference = new GlGlobalDataMat4(reference);
-		glGlobalData.AddDataReference(name, *glReference);
+		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataMat4>(reference);
+		glGlobalData.AddDataReference(name, glReference);
 	}
 	catch (std::bad_cast e)
 	{
@@ -163,8 +163,8 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	try
 	{
 		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		GlGlobalDataVec3* glReference = new GlGlobalDataVec3(reference);
-		glGlobalData.AddDataReference(name, *glReference);
+		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataVec3>(reference);
+		glGlobalData.AddDataReference(name, glReference);
 	}
 	catch (std::bad_cast e)
 	{
@@ -177,8 +177,8 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	try
 	{
 		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		GlGlobalDataDirectionalLight* glReference = new GlGlobalDataDirectionalLight(reference);
-		glGlobalData.AddDataReference(name, *glReference);
+		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataDirectionalLight>(reference);
+		glGlobalData.AddDataReference(name, glReference);
 	}
 	catch (std::bad_cast e)
 	{
@@ -191,8 +191,8 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	try
 	{
 		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		GlGlobalDataPointLight* glReference = new GlGlobalDataPointLight(reference);
-		glGlobalData.AddDataReference(name, *glReference);
+		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataPointLight>(reference);
+		glGlobalData.AddDataReference(name, glReference);
 	}
 	catch (std::bad_cast e)
 	{

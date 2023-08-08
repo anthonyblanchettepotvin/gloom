@@ -1,7 +1,5 @@
 #include "GlGlobalData.h"
 
-#include <iostream>
-
 #include <glad/glad.h>
 
 GlGlobalData::GlGlobalData(const std::string& name)
@@ -13,9 +11,9 @@ GlGlobalData::GlGlobalData(const std::string& name)
     glBindBufferBase(GL_UNIFORM_BUFFER, m_Index, m_Id);
 }
 
-void GlGlobalData::AddDataReference(const std::string& name, GlGlobalDataType& reference)
+void GlGlobalData::AddDataReference(const std::string& name, std::unique_ptr<GlGlobalDataType>& reference)
 {
-    m_References[name] = &reference;
+    m_References[name] = std::move(reference);
     m_ReferencesNameOrdered.push_back(name);
 }
 
@@ -44,9 +42,9 @@ void GlGlobalData::Send()
     unsigned int offset = 0;
     for (const auto& referenceName : m_ReferencesNameOrdered)
     {
-        GlGlobalDataType* currentReference = m_References.at(referenceName);
+        GlGlobalDataType& currentReference = *m_References.at(referenceName);
 
-        currentReference->SendToDevice(offset);
+        currentReference.SendToDevice(offset);
     }
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -56,12 +54,12 @@ unsigned int GlGlobalData::GetUniformBufferSize() const
     unsigned int size = 0;
     for (const auto& referenceName : m_ReferencesNameOrdered)
     {
-        GlGlobalDataType* currentReference = m_References.at(referenceName);
+        GlGlobalDataType& currentReference = *m_References.at(referenceName);
 
         // TODO: Put this function in a math library
-        unsigned int offset = currentReference->GetBaseAlignment() == 0 ? currentReference->GetBaseAlignment() : ceil(size / currentReference->GetBaseAlignment()) * currentReference->GetBaseAlignment();
+        unsigned int offset = currentReference.GetBaseAlignment() == 0 ? currentReference.GetBaseAlignment() : ceil(size / currentReference.GetBaseAlignment()) * currentReference.GetBaseAlignment();
 
-        size = offset + currentReference->GetSize();
+        size = offset + currentReference.GetSize();
     }
     return size;
 }

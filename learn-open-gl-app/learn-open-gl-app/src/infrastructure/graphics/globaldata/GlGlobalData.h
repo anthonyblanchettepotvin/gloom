@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -16,7 +18,7 @@ public:
 
     unsigned int GetIndex() { return m_Index; }
 
-    void AddDataReference(const std::string& name, GlGlobalDataType& reference);
+    void AddDataReference(const std::string& name, std::unique_ptr<GlGlobalDataType>& reference);
 
     void SendToDevice() override;
 
@@ -28,7 +30,7 @@ private:
 
     bool m_IsAllocated = false;
 
-    std::unordered_map<std::string, GlGlobalDataType*> m_References;
+    std::unordered_map<std::string, std::unique_ptr<GlGlobalDataType>> m_References;
     std::vector<std::string> m_ReferencesNameOrdered;
 
     void Allocate();
