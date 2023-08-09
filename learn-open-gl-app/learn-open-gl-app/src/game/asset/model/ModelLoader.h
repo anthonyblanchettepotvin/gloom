@@ -5,13 +5,12 @@
 #include <assimp/scene.h>
 
 #include "../../../engine/graphics/material/Material.h"
+#include "../../../engine/graphics/model/Model.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
 #include "../AssetLoader.h"
 #include "../shader/ShaderRegistry.h"
-#include "../texture/Texture.h"
 #include "../texture/TextureLoader.h"
-
-#include "Model.h"
 
 class ModelLoader : public AssetLoader<Model>
 {

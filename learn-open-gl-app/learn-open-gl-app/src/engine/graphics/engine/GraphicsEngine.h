@@ -5,9 +5,9 @@
 #include "../globaldata/GlobalData.h"
 #include "../lighting/DirectionalLight.h"
 #include "../lighting/PointLight.h"
-#include "../rendering/Mesh.h"
-#include "../rendering/Skybox.h"
-#include "../rendering/Sprite.h"
+#include "../mesh/Mesh.h"
+#include "../skybox/Skybox.h"
+#include "../sprite/Sprite.h"
 
 class GraphicsEngine
 {

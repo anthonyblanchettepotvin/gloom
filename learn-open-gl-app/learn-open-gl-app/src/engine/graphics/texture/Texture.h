@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "../Asset.h"
+#include "../../object/Object.h"
 
-class Texture : public Asset
+class Texture : public Object
 {
 public:
 	Texture(size_t width, size_t height, size_t channelCount, unsigned char* data);

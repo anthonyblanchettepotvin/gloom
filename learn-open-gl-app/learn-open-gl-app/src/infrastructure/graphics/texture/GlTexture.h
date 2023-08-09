@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../../../game/asset/texture/Texture.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
 class GlTexture
 {

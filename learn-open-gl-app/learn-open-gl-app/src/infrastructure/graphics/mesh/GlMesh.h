@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../engine/graphics/rendering/Mesh.h"
+#include "../../../engine/graphics/mesh/Mesh.h"
 
 class GlMesh
 {

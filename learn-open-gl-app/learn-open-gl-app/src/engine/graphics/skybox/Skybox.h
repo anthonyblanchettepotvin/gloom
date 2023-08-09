@@ -1,8 +1,10 @@
 #pragma once
 
+#include "../../object/Object.h"
+
 #include "../material/Material.h"
 
-class Skybox
+class Skybox : public Object
 {
 public:
 	Skybox(Material* material);

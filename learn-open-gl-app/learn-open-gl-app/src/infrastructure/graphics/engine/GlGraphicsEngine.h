@@ -2,18 +2,19 @@
 
 #include <unordered_map>
 
+#include "../../../engine/object/ObjectID.h"
 #include "../../../engine/graphics/engine/GraphicsEngine.h"
 #include "../../../engine/graphics/material/Material.h"
 #include "../../../engine/graphics/material/MaterialAttribute.h"
 #include "../../../engine/graphics/material/MaterialAttributes.h"
 
+#include "../cubemap/GlCubemap.h"
+#include "../mesh/GlMesh.h"
 #include "../shader/GlShader.h"
 #include "../shader/GlShaderLoader.h"
-#include "../rendering/GlCubemap.h"
-#include "../rendering/GlMesh.h"
-#include "../rendering/GlSkybox.h"
-#include "../rendering/GlSprite.h"
-#include "../rendering/GlTexture.h"
+#include "../skybox/GlSkybox.h"
+#include "../sprite/GlSprite.h"
+#include "../texture/GlTexture.h"
 
 #include "GlFramebuffer.h"
 #include "GlRenderbuffer.h"
@@ -48,11 +49,11 @@ private:
 	std::unique_ptr<GlShader> m_RenderShader = nullptr;
 	std::unique_ptr<GlRenderSurface> m_RenderSurface = nullptr;
 
-	std::unordered_map<const Mesh*, std::unique_ptr<GlMesh>> m_GlMeshes;
-	std::unordered_map<const Skybox*, std::unique_ptr<GlSkybox>> m_GlSkyboxes;
-	std::unordered_map<const Sprite*, std::unique_ptr<GlSprite>> m_GlSprites;
-	std::unordered_map<const Texture*, std::unique_ptr<GlTexture>> m_GlTextures;
-	std::unordered_map<const Cubemap*, std::unique_ptr<GlCubemap>> m_GlCubemaps;
+	std::unordered_map<ObjectID, std::unique_ptr<GlMesh>> m_GlMeshes;
+	std::unordered_map<ObjectID, std::unique_ptr<GlSkybox>> m_GlSkyboxes;
+	std::unordered_map<ObjectID, std::unique_ptr<GlSprite>> m_GlSprites;
+	std::unordered_map<ObjectID, std::unique_ptr<GlTexture>> m_GlTextures;
+	std::unordered_map<ObjectID, std::unique_ptr<GlCubemap>> m_GlCubemaps;
 
 	size_t m_SamplerIndex = 0;
 

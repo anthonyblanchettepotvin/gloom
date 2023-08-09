@@ -6,7 +6,7 @@
 #include <assimp/postprocess.h>
 
 #include "../../../engine/graphics/material/MaterialAttributes.h"
-#include "../../../engine/graphics/rendering/Mesh.h"
+#include "../../../engine/graphics/mesh/Mesh.h"
 
 ModelLoader::ModelLoader(TextureLoader& textureLoader, ShaderRegistry& shaderRegistry)
 	: m_TextureLoader(textureLoader), m_ShaderRegistry(shaderRegistry)

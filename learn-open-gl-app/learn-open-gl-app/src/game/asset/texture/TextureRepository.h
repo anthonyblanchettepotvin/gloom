@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../AssetRepository.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
-#include "Texture.h"
+#include "../AssetRepository.h"
 
 class TextureRepository : public AssetRepository<Texture>
 {

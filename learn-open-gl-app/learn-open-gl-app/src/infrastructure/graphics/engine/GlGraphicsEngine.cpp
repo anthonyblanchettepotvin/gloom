@@ -2,15 +2,15 @@
 
 #include <glad/glad.h>
 
-#include "../../../engine/graphics/rendering/Mesh.h"
-#include "../../../engine/graphics/rendering/Sprite.h"
-#include "../../../engine/graphics/rendering/Skybox.h"
+#include "../../../engine/graphics/mesh/Mesh.h"
+#include "../../../engine/graphics/sprite/Sprite.h"
+#include "../../../engine/graphics/skybox/Skybox.h"
 
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
-#include "../rendering/GlMesh.h"
-#include "../rendering/GlSprite.h"
-#include "../rendering/GlSkybox.h"
+#include "../mesh/GlMesh.h"
+#include "../sprite/GlSprite.h"
+#include "../skybox/GlSkybox.h"
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
@@ -201,13 +201,15 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 
 void GlGraphicsEngine::Render(const Mesh& mesh)
 {
-	auto it = m_GlMeshes.find(&mesh);
+	ObjectID meshId = mesh.GetId();
+
+	auto it = m_GlMeshes.find(meshId);
 	if (it == m_GlMeshes.end())
 	{
-		m_GlMeshes[&mesh] = std::make_unique<GlMesh>(mesh);
+		m_GlMeshes[meshId] = std::make_unique<GlMesh>(mesh);
 	}
 
-	GlMesh& glMesh = *m_GlMeshes[&mesh];
+	GlMesh& glMesh = *m_GlMeshes[meshId];
 
 	ApplyMaterial(*mesh.GetMaterial());
 
@@ -220,13 +222,15 @@ void GlGraphicsEngine::Render(const Mesh& mesh)
 
 void GlGraphicsEngine::Render(const Skybox& skybox)
 {
-	auto it = m_GlSkyboxes.find(&skybox);
+	ObjectID skyboxId = skybox.GetId();
+
+	auto it = m_GlSkyboxes.find(skyboxId);
 	if (it == m_GlSkyboxes.end())
 	{
-		m_GlSkyboxes[&skybox] = std::make_unique<GlSkybox>(skybox);
+		m_GlSkyboxes[skyboxId] = std::make_unique<GlSkybox>(skybox);
 	}
 	
-	GlSkybox& glSkybox = *m_GlSkyboxes[&skybox];
+	GlSkybox& glSkybox = *m_GlSkyboxes[skyboxId];
 
 	ApplyMaterial(*skybox.GetMaterial());
 
@@ -237,13 +241,13 @@ void GlGraphicsEngine::Render(const Skybox& skybox)
 
 void GlGraphicsEngine::Render(const Sprite& sprite)
 {
-	auto it = m_GlSprites.find(&sprite);
+	auto it = m_GlSprites.find(sprite.GetId());
 	if (it == m_GlSprites.end())
 	{
-		m_GlSprites[&sprite] = std::make_unique<GlSprite>(sprite);
+		m_GlSprites[sprite.GetId()] = std::make_unique<GlSprite>(sprite);
 	}
 	
-	GlSprite& glSprite = *m_GlSprites[&sprite];
+	GlSprite& glSprite = *m_GlSprites[sprite.GetId()];
 
 	ApplyMaterial(*sprite.GetMaterial());
 
@@ -288,13 +292,15 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, TextureMat
 	if (!texture)
 		return;
 
-	auto it = m_GlTextures.find(texture);
+	ObjectID textureId = texture->GetId();
+
+	auto it = m_GlTextures.find(textureId);
 	if (it == m_GlTextures.end())
 	{
-		m_GlTextures[texture] = std::make_unique<GlTexture>(*texture);
+		m_GlTextures[textureId] = std::make_unique<GlTexture>(*texture);
 	}
 	
-	GlTexture& glTexture = *m_GlTextures[texture];
+	GlTexture& glTexture = *m_GlTextures[textureId];
 
 	glTexture.Use(m_SamplerIndex);
 	shader.SetInt(attribute->GetName(), m_SamplerIndex);
@@ -308,13 +314,15 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, CubemapMat
 	if (!cubemap)
 		return;
 
-	auto it = m_GlCubemaps.find(cubemap);
+	ObjectID cubemapId = cubemap->GetId();
+
+	auto it = m_GlCubemaps.find(cubemapId);
 	if (it == m_GlCubemaps.end())
 	{
-		m_GlCubemaps[cubemap] = std::make_unique<GlCubemap>(*cubemap);
+		m_GlCubemaps[cubemapId] = std::make_unique<GlCubemap>(*cubemap);
 	}
 
-	GlCubemap& glCubemap = *m_GlCubemaps[cubemap];
+	GlCubemap& glCubemap = *m_GlCubemaps[cubemapId];
 
 	glCubemap.Use(m_SamplerIndex);
 	shader.SetInt(attribute->GetName(), m_SamplerIndex);

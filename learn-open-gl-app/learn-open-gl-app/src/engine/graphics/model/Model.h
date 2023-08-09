@@ -4,11 +4,11 @@
 
 #include <glm/glm.hpp>
 
-#include "../../../engine/graphics/rendering/Mesh.h"
+#include "../../object/Object.h"
 
-#include "../Asset.h"
+#include "../mesh/Mesh.h"
 
-class Model : public Asset
+class Model : public Object
 {
 public:
 	Model(const std::vector<Mesh*>& meshes);

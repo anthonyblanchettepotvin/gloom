@@ -4,12 +4,12 @@
 
 #include <glm/glm.hpp>
 
-#include "../../../engine/graphics/globaldata/GlobalData.h"
-#include "../../../engine/graphics/material/MaterialTemplate.h"
+#include "../../object/Object.h"
 
-#include "../Asset.h"
+#include "../globaldata/GlobalData.h"
+#include "../material/MaterialTemplate.h"
 
-class Shader : public Asset
+class Shader : public Object
 {
 public:
 	Shader();

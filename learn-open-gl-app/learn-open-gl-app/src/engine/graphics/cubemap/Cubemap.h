@@ -3,11 +3,11 @@
 #include <string>
 #include <vector>
 
+#include "../../object/Object.h"
+
 #include "../texture/Texture.h"
 
-#include "../Asset.h"
-
-class Cubemap : public Asset
+class Cubemap : public Object
 {
 public:
 	Cubemap(const std::vector<Texture*>& textures);

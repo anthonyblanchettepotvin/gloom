@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include "../../../game/asset/cubemap/Cubemap.h"
-#include "../../../game/asset/texture/Texture.h"
+#include "../cubemap/Cubemap.h"
+#include "../texture/Texture.h"
 
 #include "MaterialAttribute.h"
 

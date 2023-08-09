@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../AssetRepository.h"
+#include "../../../engine/graphics/shader/Shader.h"
 
-#include "Shader.h"
+#include "../AssetRepository.h"
 
 class ShaderRepository : public AssetRepository<Shader>
 {

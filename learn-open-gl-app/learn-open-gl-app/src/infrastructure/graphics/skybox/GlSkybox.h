@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../engine/graphics/rendering/Skybox.h"
+#include "../../../engine/graphics/skybox/Skybox.h"
 
 class GlSkybox
 {

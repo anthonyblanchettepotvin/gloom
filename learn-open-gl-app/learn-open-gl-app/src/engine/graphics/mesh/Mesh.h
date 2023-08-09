@@ -4,11 +4,13 @@
 
 #include <glm/glm.hpp>
 
+#include "../../object/Object.h"
+
 #include "../material/Material.h"
 
 #include "Vertex.h"
 
-class Mesh
+class Mesh : public Object
 {
 public:
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material);

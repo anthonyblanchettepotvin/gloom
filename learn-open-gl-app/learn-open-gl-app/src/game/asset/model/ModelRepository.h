@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../AssetRepository.h"
+#include "../../../engine/graphics/model/Model.h"
 
-#include "Model.h"
+#include "../AssetRepository.h"
 
 class ModelRepository : public AssetRepository<Model>
 {

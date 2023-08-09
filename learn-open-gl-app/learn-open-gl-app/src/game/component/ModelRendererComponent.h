@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../game/asset/model/Model.h"
+#include "../../engine/graphics/model/Model.h"
 
 #include "RendererComponent.h"
 

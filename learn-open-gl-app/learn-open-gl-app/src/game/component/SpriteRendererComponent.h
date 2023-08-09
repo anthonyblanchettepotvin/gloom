@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../engine/graphics/rendering/Sprite.h"
+#include "../../engine/graphics/sprite/Sprite.h"
 
 #include "RendererComponent.h"
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../AssetLoader.h"
+#include "../../../engine/graphics/cubemap/Cubemap.h"
 
-#include "Cubemap.h"
+#include "../AssetLoader.h"
 
 class CubemapLoader : public AssetLoader<Cubemap>
 {

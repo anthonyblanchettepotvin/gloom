@@ -2,9 +2,11 @@
 
 #include <glm/glm.hpp>
 
+#include "../../object/Object.h"
+
 #include "../material/Material.h"
 
-class Sprite
+class Sprite : public Object
 {
 public:
 	Sprite(Material* material);

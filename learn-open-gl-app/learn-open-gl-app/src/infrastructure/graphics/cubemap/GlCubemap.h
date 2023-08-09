@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../../../game/asset/cubemap/Cubemap.h"
+#include "../../../engine/graphics/cubemap/Cubemap.h"
 
 class GlCubemap
 {
