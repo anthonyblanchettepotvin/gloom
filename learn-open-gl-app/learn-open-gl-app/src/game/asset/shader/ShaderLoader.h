@@ -2,10 +2,8 @@
 
 #include "../../../engine/graphics/shader/Shader.h"
 
-#include "../AssetLoader.h"
-
-class ShaderLoader : public AssetLoader<Shader>
+class ShaderLoader
 {
 public:
-	virtual Shader* Load(const std::string& filePath) override = 0;
+	virtual Shader* Load(const std::string& filePath) = 0;
 };

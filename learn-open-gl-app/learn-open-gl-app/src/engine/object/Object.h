@@ -9,6 +9,7 @@ class Object
 {
 public:
 	Object();
+	virtual ~Object() = default;
 
 	inline bool operator==(const Object& other) const noexcept
 	{
