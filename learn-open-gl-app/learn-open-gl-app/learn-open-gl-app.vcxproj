@@ -154,6 +154,8 @@
     <ClCompile Include="src\engine\asset\AssetRegistry.cpp" />
     <ClCompile Include="src\engine\asset\AssetDescriptor.cpp" />
     <ClCompile Include="src\engine\asset\Asset.cpp" />
+    <ClCompile Include="src\game\asset\cubemap\CubemapLoader.cpp" />
+    <ClCompile Include="src\game\asset\model\ModelLoader.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
@@ -161,6 +163,7 @@
     <ClCompile Include="src\engine\graphics\material\MaterialTemplate.cpp" />
     <ClCompile Include="src\engine\object\ObjectID.cpp" />
     <ClCompile Include="src\engine\object\Object.cpp" />
+    <ClCompile Include="src\game\asset\texture\TextureLoader.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp" />
@@ -232,6 +235,8 @@
     <ClInclude Include="src\engine\asset\AssetRegistry.h" />
     <ClInclude Include="src\engine\asset\AssetDescriptor.h" />
     <ClInclude Include="src\engine\asset\Asset.h" />
+    <ClInclude Include="src\game\asset\cubemap\CubemapLoader.h" />
+    <ClInclude Include="src\game\asset\model\ModelLoader.h" />
     <ClInclude Include="src\game\asset\shader\ShaderLoader.h" />
     <ClInclude Include="src\game\asset\shader\ShaderRegistry.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />
@@ -239,6 +244,7 @@
     <ClInclude Include="src\engine\graphics\material\MaterialTemplate.h" />
     <ClInclude Include="src\engine\object\ObjectID.h" />
     <ClInclude Include="src\engine\object\Object.h" />
+    <ClInclude Include="src\game\asset\texture\TextureLoader.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h" />

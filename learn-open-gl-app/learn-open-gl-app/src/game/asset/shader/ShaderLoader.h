@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../../engine/graphics/shader/Shader.h"
+#include <string>
+
+class Shader;
 
 class ShaderLoader
 {

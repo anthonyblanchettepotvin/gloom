@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../../engine/graphics/shader/Shader.h"
-
 #include <unordered_map>
+
+class Shader;
 
 enum class ShadingModel
 {

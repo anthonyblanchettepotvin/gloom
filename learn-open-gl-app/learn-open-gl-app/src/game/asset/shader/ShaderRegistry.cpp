@@ -1,5 +1,7 @@
 #include "ShaderRegistry.h"
 
+#include "../../../engine/graphics/shader/Shader.h"
+
 void ShaderRegistry::Register(const ShadingModel& shadingModel, Shader& shader)
 {
 	m_Shaders.emplace(shadingModel, shader);
