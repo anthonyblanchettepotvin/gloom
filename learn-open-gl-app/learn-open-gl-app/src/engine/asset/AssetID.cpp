@@ -11,4 +11,3 @@ AssetID AssetID::Generate()
 
     return AssetID(nextValue++);
 }
-
