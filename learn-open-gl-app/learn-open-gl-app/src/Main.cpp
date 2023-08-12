@@ -194,9 +194,9 @@ int main()
 
 	// Quick test
 
-	Asset* textureAsset = assetManager.CreateBlankAsset(textureAssetType);
+	Asset* textureAsset = assetManager.CreateBlankAsset<Texture>();
 
-	auto textureAssets = assetManager.FindAssets(textureAssetType);
+	auto textureAssets = assetManager.FindAssets<Texture>();
 
 	if (Texture* texture = dynamic_cast<Texture*>(textureAsset->GetObject()))
 	{
