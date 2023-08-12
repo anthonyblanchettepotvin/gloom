@@ -158,6 +158,8 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
+#include "engine/object/ObjectType.h"
+
 #include "engine/asset/Asset.h"
 #include "engine/asset/AssetManager.h"
 #include "engine/asset/AssetDescriptor.h"
@@ -185,8 +187,8 @@ int main()
 
 	// Register Texture Asset Type
 
-	AssetType textureAssetType(typeid(Texture));
-	AssetDescriptor textureAssetDescriptor(textureAssetType, "Texture");
+	ObjectType textureType(typeid(Texture));
+	AssetDescriptor textureAssetDescriptor(textureType, "Texture");
 
 	std::unique_ptr<AssetFactory> textureAssetFactory = std::make_unique<TextureAssetFactory>();
 

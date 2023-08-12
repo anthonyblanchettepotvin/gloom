@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\object\ObjectType.cpp" />
     <ClCompile Include="src\engine\asset\AssetManager.cpp" />
     <ClCompile Include="src\engine\asset\AssetRepository.cpp" />
     <ClCompile Include="src\engine\asset\AssetFactory.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\object\ObjectType.h" />
     <ClInclude Include="src\engine\asset\AssetManager.h" />
     <ClInclude Include="src\engine\asset\AssetRepository.h" />
     <ClInclude Include="src\engine\asset\AssetFactory.h" />

@@ -10,9 +10,9 @@ void AssetManager::RegisterAsset(const AssetDescriptor& assetDescriptor, std::un
 	m_AssetRegistry.RegisterAsset(assetDescriptor, assetFactory);
 }
 
-Asset* AssetManager::CreateBlankAsset(const AssetType& assetType)
+Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType)
 {
-	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(assetType);
+	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(objectType);
 
 	std::unique_ptr<Asset> blankAsset = assetRegistryEntry.GetFactory().CreateBlank(assetRegistryEntry.GetDescriptor());
 	Asset* blankAssetPtr = blankAsset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
@@ -22,7 +22,7 @@ Asset* AssetManager::CreateBlankAsset(const AssetType& assetType)
 	return blankAssetPtr;
 }
 
-std::vector<Asset*> AssetManager::FindAssets(const AssetType& assetType)
+std::vector<Asset*> AssetManager::FindAssets(const ObjectType& objectType)
 {
-	return m_AssetRepository.FindAssetsByType(assetType);
+	return m_AssetRepository.FindAssetsByObjectType(objectType);
 }

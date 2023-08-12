@@ -5,16 +5,17 @@
 AssetRegistryEntry::AssetRegistryEntry(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
 	: m_AssetDescriptor(assetDescriptor), m_AssetFactory(std::move(assetFactory))
 {
+	// TODO: Verify that assetFactory isn't empty
 }
 
 void AssetRegistry::RegisterAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
 {
-	AssetType assetType = assetDescriptor.GetAssetType();
+	ObjectType objectType = assetDescriptor.GetObjectType();
 
-	auto it = m_Entries.find(assetType);
+	auto it = m_Entries.find(objectType);
 	if (it == m_Entries.end())
 	{
-		m_Entries.emplace(assetType, AssetRegistryEntry(assetDescriptor, assetFactory));
+		m_Entries.emplace(objectType, AssetRegistryEntry(assetDescriptor, assetFactory));
 	}
 	else
 	{
@@ -22,12 +23,12 @@ void AssetRegistry::RegisterAsset(const AssetDescriptor& assetDescriptor, std::u
 	}
 }
 
-const AssetRegistryEntry& AssetRegistry::FindEntry(const AssetType& assetType) const
+const AssetRegistryEntry& AssetRegistry::FindEntry(const ObjectType& objectType) const
 {
-	auto it = m_Entries.find(assetType);
+	auto it = m_Entries.find(objectType);
 	if (it != m_Entries.end())
 	{
-		return m_Entries.at(assetType);
+		return m_Entries.at(objectType);
 	}
 	else
 	{

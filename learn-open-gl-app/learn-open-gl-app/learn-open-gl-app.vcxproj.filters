@@ -234,6 +234,9 @@
     <ClCompile Include="src\engine\asset\AssetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\object\ObjectType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -456,6 +459,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\asset\AssetManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\object\ObjectType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

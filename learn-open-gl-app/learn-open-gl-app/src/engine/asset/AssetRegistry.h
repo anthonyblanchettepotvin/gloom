@@ -3,6 +3,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include "../object/ObjectType.h"
+
 #include "AssetDescriptor.h"
 #include "AssetFactory.h"
 
@@ -26,8 +28,8 @@ class AssetRegistry
 public:
 	void RegisterAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
 
-	const AssetRegistryEntry& FindEntry(const AssetType& assetType) const;
+	const AssetRegistryEntry& FindEntry(const ObjectType& objectType) const;
 
 private:
-	std::unordered_map<AssetType, AssetRegistryEntry> m_Entries;
+	std::unordered_map<ObjectType, AssetRegistryEntry> m_Entries;
 };

@@ -13,13 +13,13 @@ void AssetRepository::Insert(std::unique_ptr<Asset>& asset)
 	}
 }
 
-std::vector<Asset*> AssetRepository::FindAssetsByType(const AssetType& assetType) const
+std::vector<Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& objectType) const
 {
 	std::vector<Asset*> result;
 
 	for (const auto& asset : m_Assets)
 	{
-		if (asset && asset->GetAssetDescriptor().GetAssetType() == assetType)
+		if (asset && asset->GetAssetDescriptor().GetObjectType() == objectType)
 		{
 			result.push_back(asset.get());
 		}

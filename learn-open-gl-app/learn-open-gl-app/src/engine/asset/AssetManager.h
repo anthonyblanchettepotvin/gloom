@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../object/ObjectType.h"
+
 #include "AssetRegistry.h"
 #include "AssetRepository.h"
 
@@ -12,11 +14,11 @@ public:
 
 	template<class T>
 	Asset* CreateBlankAsset();
-	Asset* CreateBlankAsset(const AssetType& assetType);
+	Asset* CreateBlankAsset(const ObjectType& objectType);
 
 	template<class T>
 	std::vector<Asset*> FindAssets();
-	std::vector<Asset*> FindAssets(const AssetType& assetType);
+	std::vector<Asset*> FindAssets(const ObjectType& objectType);
 
 private:
 	AssetRegistry& m_AssetRegistry;
@@ -26,15 +28,15 @@ private:
 template<class T>
 inline Asset* AssetManager::CreateBlankAsset()
 {
-	AssetType assetType(typeid(T));
+	ObjectType objectType(typeid(T));
 
-	return CreateBlankAsset(assetType);
+	return CreateBlankAsset(objectType);
 }
 
 template<class T>
 inline std::vector<Asset*> AssetManager::FindAssets()
 {
-	AssetType assetType(typeid(T));
+	ObjectType objectType(typeid(T));
 
-	return FindAssets(assetType);
+	return FindAssets(objectType);
 }
