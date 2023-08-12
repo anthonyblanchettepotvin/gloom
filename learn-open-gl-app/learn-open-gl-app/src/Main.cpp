@@ -158,8 +158,51 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
+#include "engine/asset/Asset.h"
+#include "engine/asset/AssetManager.h"
+#include "engine/asset/AssetDescriptor.h"
+#include "engine/asset/AssetFactory.h"
+#include "engine/asset/AssetRegistry.h"
+#include "engine/asset/AssetRepository.h"
+
+class TextureAssetFactory : public AssetFactory
+{
+protected:
+	std::unique_ptr<Object> CreateBlankObject() const override
+	{
+		return std::make_unique<Texture>();
+	}
+};
+
 int main()
 {
+	// Create Asset Manager
+
+	AssetRegistry assetRegistry;
+	AssetRepository assetRepository;
+
+	AssetManager assetManager(assetRegistry, assetRepository);
+
+	// Register Texture Asset Type
+
+	AssetType textureAssetType(typeid(Texture));
+	AssetDescriptor textureAssetDescriptor(textureAssetType, "Texture");
+
+	std::unique_ptr<AssetFactory> textureAssetFactory = std::make_unique<TextureAssetFactory>();
+
+	assetManager.RegisterAsset(textureAssetDescriptor, textureAssetFactory);
+
+	// Quick test
+
+	Asset* textureAsset = assetManager.CreateBlankAsset(textureAssetType);
+
+	auto textureAssets = assetManager.FindAssets(textureAssetType);
+
+	if (Texture* texture = dynamic_cast<Texture*>(textureAsset->GetObject()))
+	{
+		texture->SetName("test");
+	}
+
 	return 0;
 }
 

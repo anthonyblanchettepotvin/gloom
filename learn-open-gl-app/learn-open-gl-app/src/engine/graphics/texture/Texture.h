@@ -7,6 +7,7 @@
 class Texture : public Object
 {
 public:
+	Texture() = default;
 	Texture(size_t width, size_t height, size_t channelCount, unsigned char* data);
 
 	size_t GetWidth() const { return m_Width; }

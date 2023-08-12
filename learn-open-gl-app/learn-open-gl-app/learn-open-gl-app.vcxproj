@@ -145,6 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\asset\AssetManager.cpp" />
+    <ClCompile Include="src\engine\asset\AssetRepository.cpp" />
+    <ClCompile Include="src\engine\asset\AssetFactory.cpp" />
+    <ClCompile Include="src\engine\asset\AssetRegistry.cpp" />
+    <ClCompile Include="src\engine\asset\AssetDescriptor.cpp" />
+    <ClCompile Include="src\engine\asset\Asset.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp" />
     <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
@@ -214,6 +220,12 @@
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\asset\AssetManager.h" />
+    <ClInclude Include="src\engine\asset\AssetRepository.h" />
+    <ClInclude Include="src\engine\asset\AssetFactory.h" />
+    <ClInclude Include="src\engine\asset\AssetRegistry.h" />
+    <ClInclude Include="src\engine\asset\AssetDescriptor.h" />
+    <ClInclude Include="src\engine\asset\Asset.h" />
     <ClInclude Include="src\game\asset\shader\ShaderLoader.h" />
     <ClInclude Include="src\game\asset\shader\ShaderRegistry.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />
