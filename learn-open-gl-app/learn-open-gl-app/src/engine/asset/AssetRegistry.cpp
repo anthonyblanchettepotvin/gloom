@@ -2,22 +2,11 @@
 
 #include <stdexcept>
 
+#include "AssetDescriptor.h"
 #include "AssetFactory.h"
 
-#define NULL_ASSET_FACTORY_ERROR "Asset factory is null."
 #define ASSET_ALREADY_REGISTERED "Asset information matching object type already registered."
 #define ASSET_NOT_REGISTERED "Asset information matching object type not registered."
-
-AssetRegistryEntry::AssetRegistryEntry(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
-	: m_AssetDescriptor(assetDescriptor)
-{
-	if (!assetFactory)
-	{
-		throw std::invalid_argument(NULL_ASSET_FACTORY_ERROR);
-	}
-
-	m_AssetFactory = std::move(assetFactory);
-}
 
 void AssetRegistry::RegisterAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
 {
