@@ -2,38 +2,45 @@
 
 #include <functional>
 #include <string>
+#include <typeindex>
 
 #include "ObjectID.h"
+#include "ObjectType.h"
 
-class Object
+class ObjectBase
 {
 public:
-	Object();
-	virtual ~Object() = default;
+	ObjectBase();
+	virtual ~ObjectBase() = default;
 
-	inline bool operator==(const Object& other) const noexcept
-	{
-		return this == &other || m_Id == other.m_Id;
-	}
+	ObjectID GetId() const { return m_Id; }
 
-	const ObjectID GetId() const { return m_Id; }
-
-	void SetName(const std::string& name) { m_Name = name; }
-	std::string GetName() const { return m_Name; }
+	ObjectType GetObjectType() const { return ObjectType(typeid(*this)); }
 
 private:
 	const ObjectID m_Id;
 
-	std::string m_Name;
+public:
+	inline bool operator==(const ObjectBase& other) const noexcept
+	{
+		return this == &other || m_Id == other.m_Id;
+	}
 
-	friend std::hash<Object>;
+	friend std::hash<ObjectBase>;
 };
 
 template<>
-struct std::hash<Object>
+struct std::hash<ObjectBase>
 {
-	size_t operator()(Object const& obj) const noexcept
+	size_t operator()(ObjectBase const& obj) const noexcept
 	{
 		return std::hash<ObjectID>{}(obj.m_Id);
 	}
+};
+
+template<class T>
+class Object : public ObjectBase
+{
+public:
+	static ObjectType GetObjectType() { return ObjectType(typeid(T)); }
 };

@@ -7,7 +7,7 @@
 
 #include "../texture/Texture.h"
 
-class Cubemap : public Object
+class Cubemap : public Object<Cubemap>
 {
 public:
 	Cubemap(const std::vector<Texture*>& textures);

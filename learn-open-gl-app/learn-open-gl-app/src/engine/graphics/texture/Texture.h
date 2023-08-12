@@ -4,7 +4,7 @@
 
 #include "../../object/Object.h"
 
-class Texture : public Object
+class Texture : public Object<Texture>
 {
 public:
 	Texture() = default;
@@ -19,9 +19,9 @@ public:
 	unsigned char* GetData() const { return m_Data; }
 
 protected:
-	size_t m_Width;
-	size_t m_Height;
-	size_t m_ChannelCount;
+	size_t m_Width = 0;
+	size_t m_Height = 0;
+	size_t m_ChannelCount = 0;
 
-	unsigned char* m_Data;
+	unsigned char* m_Data = nullptr;
 };

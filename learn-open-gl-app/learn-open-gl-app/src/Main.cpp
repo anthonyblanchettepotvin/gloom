@@ -170,7 +170,7 @@ void processInput(GLFWwindow* window)
 class TextureAssetFactory : public AssetFactory
 {
 protected:
-	std::unique_ptr<Object> CreateBlankObject() const override
+	std::unique_ptr<ObjectBase> CreateBlankObject() const override
 	{
 		return std::make_unique<Texture>();
 	}
@@ -187,8 +187,7 @@ int main()
 
 	// Register Texture Asset Type
 
-	ObjectType textureType(typeid(Texture));
-	AssetDescriptor textureAssetDescriptor(textureType, "Texture");
+	AssetDescriptor textureAssetDescriptor(Texture::GetObjectType(), "Texture");
 
 	std::unique_ptr<AssetFactory> textureAssetFactory = std::make_unique<TextureAssetFactory>();
 
@@ -202,7 +201,9 @@ int main()
 
 	if (Texture* texture = dynamic_cast<Texture*>(textureAsset->GetObject()))
 	{
-		texture->SetName("test");
+		auto textureChannelCount = texture->GetChannelCount();
+
+		std::cout << textureChannelCount << std::endl;
 	}
 
 	return 0;

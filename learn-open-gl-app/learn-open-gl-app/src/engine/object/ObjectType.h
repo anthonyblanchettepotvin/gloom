@@ -7,13 +7,19 @@ class ObjectType final
 public:
 	ObjectType(const std::type_index& typeIndex);
 
+private:
+	const std::type_index m_TypeIndex;
+
+public:
 	inline bool operator==(const ObjectType& other) const noexcept
 	{
 		return this == &other || m_TypeIndex == other.m_TypeIndex;
 	}
 
-private:
-	std::type_index m_TypeIndex;
+	inline bool operator!=(const ObjectType& other) const noexcept
+	{
+		return !(*this == other);
+	}
 
 	friend std::hash<ObjectType>;
 };

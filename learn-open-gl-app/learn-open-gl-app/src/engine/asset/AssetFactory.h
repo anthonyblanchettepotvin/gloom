@@ -10,9 +10,12 @@
 class AssetFactory
 {
 public:
-	std::unique_ptr<Asset> Create(const AssetDescriptor& assetDescriptor, std::unique_ptr<Object>& object) const;
+	std::unique_ptr<Asset> Create(const AssetDescriptor& assetDescriptor, std::unique_ptr<ObjectBase>& object) const;
 	std::unique_ptr<Asset> CreateBlank(const AssetDescriptor& assetDescriptor) const;
 
 protected:
-	virtual std::unique_ptr<Object> CreateBlankObject() const = 0;
+	virtual std::unique_ptr<ObjectBase> CreateBlankObject() const = 0;
+
+private:
+	void Validate(const AssetDescriptor& assetDescriptor, ObjectBase* object) const;
 };

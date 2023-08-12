@@ -1,5 +1,9 @@
 #include "AssetRepository.h"
 
+#include <stdexcept>
+
+#define ASSET_ALREADY_IN_REPOSITORY "Asset is already in the repository."
+
 void AssetRepository::Insert(std::unique_ptr<Asset>& asset)
 {
 	auto it = std::find(m_Assets.begin(), m_Assets.end(), asset);
@@ -9,7 +13,7 @@ void AssetRepository::Insert(std::unique_ptr<Asset>& asset)
 	}
 	else
 	{
-		// TODO: Throw exception
+		throw std::runtime_error(ASSET_ALREADY_IN_REPOSITORY);
 	}
 }
 

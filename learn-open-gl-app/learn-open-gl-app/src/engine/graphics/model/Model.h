@@ -8,7 +8,7 @@
 
 #include "../mesh/Mesh.h"
 
-class Model : public Object
+class Model : public Object<Model>
 {
 public:
 	Model(const std::vector<Mesh*>& meshes);

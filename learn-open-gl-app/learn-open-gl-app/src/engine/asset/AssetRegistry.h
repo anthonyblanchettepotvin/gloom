@@ -20,7 +20,7 @@ public:
 private:
 	AssetDescriptor m_AssetDescriptor;
 
-	std::unique_ptr<AssetFactory> m_AssetFactory = nullptr;
+	std::unique_ptr<AssetFactory> m_AssetFactory;
 };
 
 class AssetRegistry

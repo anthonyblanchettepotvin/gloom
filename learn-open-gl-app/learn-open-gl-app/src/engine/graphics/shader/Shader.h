@@ -9,7 +9,7 @@
 #include "../globaldata/GlobalData.h"
 #include "../material/MaterialTemplate.h"
 
-class Shader : public Object
+class Shader : public Object<Shader>
 {
 public:
 	Shader();

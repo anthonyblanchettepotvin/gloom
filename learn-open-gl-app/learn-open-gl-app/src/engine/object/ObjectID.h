@@ -10,13 +10,14 @@ private:
 public:
 	static ObjectID Generate();
 
+private:
+	const unsigned int m_Value;
+
+public:
 	inline bool operator==(const ObjectID& other) const noexcept
 	{
 		return this == &other || m_Value == other.m_Value;
 	}
-
-private:
-	unsigned int m_Value;
 
 	friend std::hash<ObjectID>;
 };

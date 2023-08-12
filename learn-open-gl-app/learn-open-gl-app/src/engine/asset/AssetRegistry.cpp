@@ -2,10 +2,19 @@
 
 #include <stdexcept>
 
+#define NULL_ASSET_FACTORY_ERROR "Asset factory is null."
+#define ASSET_ALREADY_REGISTERED "Asset information matching object type already registered."
+#define ASSET_NOT_REGISTERED "Asset information matching object type not registered."
+
 AssetRegistryEntry::AssetRegistryEntry(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
-	: m_AssetDescriptor(assetDescriptor), m_AssetFactory(std::move(assetFactory))
+	: m_AssetDescriptor(assetDescriptor)
 {
-	// TODO: Verify that assetFactory isn't empty
+	if (!assetFactory)
+	{
+		throw std::invalid_argument(NULL_ASSET_FACTORY_ERROR);
+	}
+
+	m_AssetFactory = std::move(assetFactory);
 }
 
 void AssetRegistry::RegisterAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
@@ -19,7 +28,7 @@ void AssetRegistry::RegisterAsset(const AssetDescriptor& assetDescriptor, std::u
 	}
 	else
 	{
-		// TODO: Throw exception
+		throw std::runtime_error(ASSET_ALREADY_REGISTERED);
 	}
 }
 
@@ -32,6 +41,6 @@ const AssetRegistryEntry& AssetRegistry::FindEntry(const ObjectType& objectType)
 	}
 	else
 	{
-		// TODO: Throw exception
+		throw std::runtime_error(ASSET_NOT_REGISTERED);
 	}
 }
