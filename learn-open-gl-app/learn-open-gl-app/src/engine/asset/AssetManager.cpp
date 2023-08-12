@@ -1,5 +1,12 @@
 #include "AssetManager.h"
 
+#include "../object/ObjectType.h"
+
+#include "AssetDescriptor.h"
+#include "AssetFactory.h"
+#include "AssetRegistry.h"
+#include "AssetRepository.h"
+
 AssetManager::AssetManager(AssetRegistry& assetRegistry, AssetRepository& assetRepository)
 	: m_AssetRegistry(assetRegistry), m_AssetRepository(assetRepository)
 {

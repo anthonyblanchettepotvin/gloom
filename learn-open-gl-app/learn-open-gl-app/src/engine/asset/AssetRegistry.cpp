@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "AssetFactory.h"
+
 #define NULL_ASSET_FACTORY_ERROR "Asset factory is null."
 #define ASSET_ALREADY_REGISTERED "Asset information matching object type already registered."
 #define ASSET_NOT_REGISTERED "Asset information matching object type not registered."

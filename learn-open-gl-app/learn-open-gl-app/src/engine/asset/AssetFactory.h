@@ -2,10 +2,9 @@
 
 #include <memory>
 
-#include "../object/Object.h"
-
-#include "Asset.h"
-#include "AssetDescriptor.h"
+class Asset;
+class AssetDescriptor;
+class ObjectBase;
 
 class AssetFactory
 {

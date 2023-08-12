@@ -3,9 +3,9 @@
 #include <memory>
 #include <vector>
 
-#include "../object/ObjectType.h"
-
 #include "Asset.h"
+
+class ObjectType;
 
 class AssetRepository
 {

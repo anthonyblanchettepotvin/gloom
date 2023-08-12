@@ -1,9 +1,14 @@
 #pragma once
 
-#include "../object/ObjectType.h"
+#include <memory>
+#include <vector>
 
-#include "AssetRegistry.h"
-#include "AssetRepository.h"
+class Asset;
+class AssetDescriptor;
+class AssetFactory;
+class AssetRegistry;
+class AssetRepository;
+class ObjectType;
 
 class AssetManager
 {

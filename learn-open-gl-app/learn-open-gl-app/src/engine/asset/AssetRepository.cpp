@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "../object/ObjectType.h"
+
 #define ASSET_ALREADY_IN_REPOSITORY "Asset is already in the repository."
 
 void AssetRepository::Insert(std::unique_ptr<Asset>& asset)

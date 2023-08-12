@@ -2,6 +2,11 @@
 
 #include <stdexcept>
 
+#include "../object/Object.h"
+
+#include "Asset.h"
+#include "AssetDescriptor.h"
+
 #define NULL_OBJECT_ERROR "Object is null."
 #define OBJECT_TYPES_MISMATCH_ERROR "Object's type doesn't match the asset descriptor's object type."
 

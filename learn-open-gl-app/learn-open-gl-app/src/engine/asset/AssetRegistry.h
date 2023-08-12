@@ -3,10 +3,10 @@
 #include <memory>
 #include <unordered_map>
 
-#include "../object/ObjectType.h"
-
 #include "AssetDescriptor.h"
-#include "AssetFactory.h"
+
+class AssetFactory;
+class ObjectType;
 
 class AssetRegistryEntry
 {
