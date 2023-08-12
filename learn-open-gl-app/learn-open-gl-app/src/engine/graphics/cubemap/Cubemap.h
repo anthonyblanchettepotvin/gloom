@@ -10,6 +10,7 @@
 class Cubemap : public Object<Cubemap>
 {
 public:
+	Cubemap() = default;
 	Cubemap(const std::vector<Texture*>& textures);
 	
 	std::vector<Texture*> GetTextures() const { return textures; }

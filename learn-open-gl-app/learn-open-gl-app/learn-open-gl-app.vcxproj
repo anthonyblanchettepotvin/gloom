@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\asset\cubemap\CubemapAssetFactory.cpp" />
+    <ClCompile Include="src\game\asset\model\ModelAssetFactory.cpp" />
     <ClCompile Include="src\engine\asset\AssetRegistryEntry.cpp" />
     <ClCompile Include="src\engine\asset\AssetID.cpp" />
     <ClCompile Include="src\engine\object\ObjectType.cpp" />
@@ -224,8 +226,11 @@
     <ClCompile Include="src\game\component\TransformComponent.cpp" />
     <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
+    <ClCompile Include="src\game\asset\texture\TextureAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\asset\cubemap\CubemapAssetFactory.h" />
+    <ClInclude Include="src\game\asset\model\ModelAssetFactory.h" />
     <ClInclude Include="src\engine\asset\AssetRegistryEntry.h" />
     <ClInclude Include="src\engine\asset\AssetID.h" />
     <ClInclude Include="src\engine\object\ObjectType.h" />
@@ -306,6 +311,7 @@
     <ClInclude Include="src\game\component\TransformComponent.h" />
     <ClInclude Include="src\ui\UiComponentAdapter.h" />
     <ClInclude Include="src\ui\UiAdapterFactory.h" />
+    <ClInclude Include="src\game\asset\texture\TextureAssetFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll">

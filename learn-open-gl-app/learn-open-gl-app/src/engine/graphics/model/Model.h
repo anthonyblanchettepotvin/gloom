@@ -11,6 +11,7 @@
 class Model : public Object<Model>
 {
 public:
+	Model() = default;
 	Model(const std::vector<Mesh*>& meshes);
 
 	void SetTransform(const glm::mat4& transform);
