@@ -1,4 +1,4 @@
-#include "CubemapLoader.h"
+#include "CubemapImporter.h"
 
 #include <iostream>
 
@@ -6,7 +6,7 @@
 
 #include "../../../engine/graphics/cubemap/Cubemap.h"
 
-Cubemap* CubemapLoader::Load(const std::vector<std::string>& facesFilePath)
+Cubemap* CubemapImporter::Load(const std::vector<std::string>& facesFilePath)
 {
 	stbi_set_flip_vertically_on_load(false);
 

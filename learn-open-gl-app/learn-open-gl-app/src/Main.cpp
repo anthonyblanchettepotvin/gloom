@@ -16,13 +16,13 @@
 #include "engine/graphics/texture/Texture.h"
 #include "game/actor/Actor.h"
 #include "game/asset/cubemap/CubemapAssetFactory.h"
-#include "game/asset/cubemap/CubemapLoader.h"
+#include "game/asset/cubemap/CubemapImporter.h"
 #include "game/asset/model/ModelAssetFactory.h"
-#include "game/asset/model/ModelLoader.h"
-#include "game/asset/shader/ShaderLoader.h"
+#include "game/asset/model/ModelImporter.h"
+#include "game/asset/shader/ShaderImporter.h"
 #include "game/asset/shader/ShaderRegistry.h"
 #include "game/asset/texture/TextureAssetFactory.h"
-#include "game/asset/texture/TextureLoader.h"
+#include "game/asset/texture/TextureImporter.h"
 #include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
 #include "game/component/ModelRendererComponent.h"
@@ -32,7 +32,7 @@
 #include "game/component/DirectionalLightComponent.h"
 #include "game/world/World.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
-#include "infrastructure/graphics/shader/GlShaderLoader.h"
+#include "infrastructure/graphics/shader/GlShaderImporter.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
 
 /* UI library. */
@@ -217,11 +217,11 @@ int main()
 
 	// --- Loaders ---
 
-	CubemapLoader cubemapLoader;
-	TextureLoader textureLoader;
-	GlShaderLoader shaderLoader;
+	CubemapImporter cubemapImporter;
+	TextureImporter textureImporter;
+	GlShaderImporter shaderImporter;
 	ShaderRegistry shaderRegistry;
-	ModelLoader modelLoader(textureLoader, shaderRegistry);
+	ModelImporter modelImporter(textureImporter, shaderRegistry);
 
 	// --- Asset Descriptors ---
 
@@ -252,26 +252,26 @@ int main()
 
 	// --- Shaders ---
 
-	Shader* phongShader = shaderLoader.Load(PHONG_SHADER_PATH);
-	Shader* reflectionShader = shaderLoader.Load(REFLECTION_SHADER_PATH);
-	Shader* refractionShader = shaderLoader.Load(REFRACTION_SHADER_PATH);
-	Shader* spriteShader = shaderLoader.Load(SPRITE_SHADER_PATH);
-	Shader* renderShader = shaderLoader.Load(RENDER_SHADER_PATH);
-	Shader* skyboxShader = shaderLoader.Load(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = shaderLoader.Load(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* phongShader = shaderImporter.Load(PHONG_SHADER_PATH);
+	Shader* reflectionShader = shaderImporter.Load(REFLECTION_SHADER_PATH);
+	Shader* refractionShader = shaderImporter.Load(REFRACTION_SHADER_PATH);
+	Shader* spriteShader = shaderImporter.Load(SPRITE_SHADER_PATH);
+	Shader* renderShader = shaderImporter.Load(RENDER_SHADER_PATH);
+	Shader* skyboxShader = shaderImporter.Load(SKYBOX_SHADER_PATH);
+	Shader* chromaticAberrationShader = shaderImporter.Load(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	shaderRegistry.Register(ShadingModel::Phong, *phongShader);
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = textureLoader.Load(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = textureImporter.Load(AWESOME_EMOJI_TEXTURE_PATH);
 
 	// --- Models ---
 
-	Model* backpackModel = modelLoader.Load(BACKPACK_MODEL_PATH);
-	Model* testModel = modelLoader.Load(CUBE_MODEL_PATH);
-	Model* cubeModel = modelLoader.Load(CUBE_MODEL_PATH);
-	Model* suzanneModel = modelLoader.Load(SUZANNE_MODEL_PATH);
+	Model* backpackModel = modelImporter.Load(BACKPACK_MODEL_PATH);
+	Model* testModel = modelImporter.Load(CUBE_MODEL_PATH);
+	Model* cubeModel = modelImporter.Load(CUBE_MODEL_PATH);
+	Model* suzanneModel = modelImporter.Load(SUZANNE_MODEL_PATH);
 
 	Material* testModelMaterial = phongShader->CreateMaterialInstance();
 
@@ -303,7 +303,7 @@ int main()
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = cubemapLoader.Load(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = cubemapImporter.Load(CUBEMAP_FACES_PATH);
 
 	// --- Skyboxes ---
 

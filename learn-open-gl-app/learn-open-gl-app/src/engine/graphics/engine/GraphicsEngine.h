@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../game/asset/shader/ShaderLoader.h"
+#include "../../../game/asset/shader/ShaderImporter.h"
 
 #include "../globaldata/GlobalData.h"
 #include "../lighting/DirectionalLight.h"
@@ -17,7 +17,7 @@ public:
 	virtual void StartFrame() = 0;
 	virtual void EndFrame() = 0;
 
-	virtual ShaderLoader* CreateShaderLoader() const = 0;
+	virtual ShaderImporter* CreateShaderImporter() const = 0;
 
 	virtual GlobalData* CreateGlobalData(const std::string& name) const = 0;
 

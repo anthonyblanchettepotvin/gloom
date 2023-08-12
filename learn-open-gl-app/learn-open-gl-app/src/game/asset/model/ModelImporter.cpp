@@ -1,4 +1,4 @@
-#include "ModelLoader.h"
+#include "ModelImporter.h"
 
 #include <iostream>
 #include <string>
@@ -17,14 +17,14 @@
 #include "../../../engine/graphics/texture/Texture.h"
 
 #include "../shader/ShaderRegistry.h"
-#include "../texture/TextureLoader.h"
+#include "../texture/TextureImporter.h"
 
-ModelLoader::ModelLoader(TextureLoader& textureLoader, ShaderRegistry& shaderRegistry)
+ModelImporter::ModelImporter(TextureImporter& textureLoader, ShaderRegistry& shaderRegistry)
 	: m_TextureLoader(textureLoader), m_ShaderRegistry(shaderRegistry)
 {
 }
 
-Model* ModelLoader::Load(const std::string& path)
+Model* ModelImporter::Load(const std::string& path)
 {
 	Assimp::Importer importer;
 
@@ -53,7 +53,7 @@ Model* ModelLoader::Load(const std::string& path)
 	return new Model(meshes);
 }
 
-void ModelLoader::ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes)
+void ModelImporter::ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes)
 {
 	// Process all the node's meshes (if any)
 	for (size_t i = 0; i < node->mNumMeshes; i++)
@@ -74,7 +74,7 @@ void ModelLoader::ProcessNode(aiNode* node, const aiScene* scene, std::vector<Me
 	}
 }
 
-Mesh* ModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+Mesh* ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -137,7 +137,7 @@ Mesh* ModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	return new Mesh(vertices, indices, material);
 }
 
-Material* ModelLoader::LoadMaterial(aiMaterial* material)
+Material* ModelImporter::LoadMaterial(aiMaterial* material)
 {
 	std::string materialName = material->GetName().C_Str();
 
@@ -189,7 +189,7 @@ Material* ModelLoader::LoadMaterial(aiMaterial* material)
 	return nullptr;
 }
 
-std::vector<Texture*> ModelLoader::LoadMaterialTextures(aiMaterial* material, aiTextureType type)
+std::vector<Texture*> ModelImporter::LoadMaterialTextures(aiMaterial* material, aiTextureType type)
 {
 	std::vector<Texture*> textures;
 

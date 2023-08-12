@@ -1,4 +1,4 @@
-#include "GlShaderLoader.h"
+#include "GlShaderImporter.h"
 
 #include <iostream>
 #include <sstream>
@@ -13,7 +13,7 @@ const std::string END_VERTEX_SHADER_TOKEN = "END_VERTEX_SHADER";
 const std::string START_FRAGMENT_SHADER_TOKEN = "START_FRAGMENT_SHADER";
 const std::string END_FRAGMENT_SHADER_TOKEN = "END_FRAGMENT_SHADER";
 
-Shader* GlShaderLoader::Load(const std::string& path)
+Shader* GlShaderImporter::Load(const std::string& path)
 {
 	std::ifstream shaderFile;
 
@@ -48,7 +48,7 @@ Shader* GlShaderLoader::Load(const std::string& path)
 	return new GlShader(programId);
 }
 
-std::string GlShaderLoader::ParseVersion(std::ifstream& file)
+std::string GlShaderImporter::ParseVersion(std::ifstream& file)
 {
 	std::string version;
 
@@ -57,7 +57,7 @@ std::string GlShaderLoader::ParseVersion(std::ifstream& file)
 	return version;
 }
 
-std::string GlShaderLoader::ParseVertexShader(std::ifstream& file)
+std::string GlShaderImporter::ParseVertexShader(std::ifstream& file)
 {
 	std::stringstream vertexShader;
 
@@ -86,7 +86,7 @@ std::string GlShaderLoader::ParseVertexShader(std::ifstream& file)
 	return vertexShader.str();
 }
 
-std::string GlShaderLoader::ParseFragmentShader(std::ifstream& file)
+std::string GlShaderImporter::ParseFragmentShader(std::ifstream& file)
 {
 	std::stringstream fragmentShader;
 
@@ -115,7 +115,7 @@ std::string GlShaderLoader::ParseFragmentShader(std::ifstream& file)
 	return fragmentShader.str();
 }
 
-std::string GlShaderLoader::AssembleShader(const std::vector<std::string>& parts)
+std::string GlShaderImporter::AssembleShader(const std::vector<std::string>& parts)
 {
 	std::stringstream shader;
 
@@ -127,7 +127,7 @@ std::string GlShaderLoader::AssembleShader(const std::vector<std::string>& parts
 	return shader.str();
 }
 
-unsigned int GlShaderLoader::CompileVertexShader(const std::string& vertexShader)
+unsigned int GlShaderImporter::CompileVertexShader(const std::string& vertexShader)
 {
 	const char* cVertexShader = vertexShader.c_str();
 
@@ -148,7 +148,7 @@ unsigned int GlShaderLoader::CompileVertexShader(const std::string& vertexShader
 	return vertexShaderId;
 }
 
-unsigned int GlShaderLoader::CompileFragmentShader(const std::string& fragmentShader)
+unsigned int GlShaderImporter::CompileFragmentShader(const std::string& fragmentShader)
 {
 	const char* cFragmentShader = fragmentShader.c_str();
 
@@ -169,7 +169,7 @@ unsigned int GlShaderLoader::CompileFragmentShader(const std::string& fragmentSh
 	return fragmentShaderId;
 }
 
-unsigned int GlShaderLoader::LinkShaders(unsigned int vertexShaderId, unsigned int fragmentShaderId)
+unsigned int GlShaderImporter::LinkShaders(unsigned int vertexShaderId, unsigned int fragmentShaderId)
 {
 	unsigned int programId = glCreateProgram();
 	glAttachShader(programId, vertexShaderId);

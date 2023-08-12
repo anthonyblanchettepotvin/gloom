@@ -4,7 +4,7 @@
 
 class Texture;
 
-class TextureLoader
+class TextureImporter
 {
 public:
 	Texture* Load(const std::string& filePath);

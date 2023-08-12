@@ -14,17 +14,17 @@ class Mesh;
 class Model;
 class ShaderRegistry;
 class Texture;
-class TextureLoader;
+class TextureImporter;
 
-class ModelLoader
+class ModelImporter
 {
 public:
-	ModelLoader(TextureLoader& textureLoader, ShaderRegistry& shaderRegistry);
+	ModelImporter(TextureImporter& textureLoader, ShaderRegistry& shaderRegistry);
 
 	Model* Load(const std::string& path);
 
 private:
-	TextureLoader& m_TextureLoader;
+	TextureImporter& m_TextureLoader;
 	ShaderRegistry& m_ShaderRegistry;
 
 	std::string m_Directory;

@@ -3,9 +3,9 @@
 #include <fstream>
 #include <vector>
 
-#include "../../../game/asset/shader/ShaderLoader.h"
+#include "../../../game/asset/shader/ShaderImporter.h"
 
-class GlShaderLoader : public ShaderLoader
+class GlShaderImporter : public ShaderImporter
 {
 public:
 	Shader* Load(const std::string& path) override;

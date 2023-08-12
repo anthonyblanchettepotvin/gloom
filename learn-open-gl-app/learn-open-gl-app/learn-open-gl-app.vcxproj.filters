@@ -114,7 +114,7 @@
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp">
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp">
@@ -213,7 +213,7 @@
     <ClCompile Include="src\engine\graphics\mesh\Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp">
+    <ClCompile Include="src\game\asset\shader\ShaderImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\asset\Asset.cpp">
@@ -243,13 +243,13 @@
     <ClCompile Include="src\engine\asset\AssetRegistryEntry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\cubemap\CubemapLoader.cpp">
+    <ClCompile Include="src\game\asset\cubemap\CubemapImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\model\ModelLoader.cpp">
+    <ClCompile Include="src\game\asset\model\ModelImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\texture\TextureLoader.cpp">
+    <ClCompile Include="src\game\asset\texture\TextureImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\asset\texture\TextureAssetFactory.cpp">
@@ -365,7 +365,7 @@
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h">
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h">
@@ -464,7 +464,7 @@
     <ClInclude Include="src\engine\graphics\mesh\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\shader\ShaderLoader.h">
+    <ClInclude Include="src\game\asset\shader\ShaderImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\asset\Asset.h">
@@ -494,13 +494,13 @@
     <ClInclude Include="src\engine\asset\AssetRegistryEntry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\cubemap\CubemapLoader.h">
+    <ClInclude Include="src\game\asset\cubemap\CubemapImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\model\ModelLoader.h">
+    <ClInclude Include="src\game\asset\model\ModelImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\texture\TextureLoader.h">
+    <ClInclude Include="src\game\asset\texture\TextureImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\asset\texture\TextureAssetFactory.h">

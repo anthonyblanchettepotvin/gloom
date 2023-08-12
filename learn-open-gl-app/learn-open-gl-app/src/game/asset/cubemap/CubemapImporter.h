@@ -5,7 +5,7 @@
 
 class Cubemap;
 
-class CubemapLoader
+class CubemapImporter
 {
 public:
 	Cubemap* Load(const std::vector<std::string>& facesFilePath);

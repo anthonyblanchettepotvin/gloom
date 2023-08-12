@@ -11,7 +11,7 @@
 #include "../cubemap/GlCubemap.h"
 #include "../mesh/GlMesh.h"
 #include "../shader/GlShader.h"
-#include "../shader/GlShaderLoader.h"
+#include "../shader/GlShaderImporter.h"
 #include "../skybox/GlSkybox.h"
 #include "../sprite/GlSprite.h"
 #include "../texture/GlTexture.h"
@@ -28,7 +28,7 @@ public:
 	void StartFrame() override;
 	void EndFrame() override;
 
-	ShaderLoader* CreateShaderLoader() const override;
+	ShaderImporter* CreateShaderImporter() const override;
 
 	GlobalData* CreateGlobalData(const std::string& name) const override;
 
