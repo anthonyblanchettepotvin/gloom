@@ -23,7 +23,7 @@ std::vector<Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& ob
 
 	for (const auto& asset : m_Assets)
 	{
-		if (asset && asset->GetAssetDescriptor().GetObjectType() == objectType)
+		if (asset && asset->GetDescriptor().GetObjectType() == objectType)
 		{
 			result.push_back(asset.get());
 		}

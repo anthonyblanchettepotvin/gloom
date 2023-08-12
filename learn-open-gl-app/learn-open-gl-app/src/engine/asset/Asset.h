@@ -5,13 +5,16 @@
 #include "../object/Object.h"
 
 #include "AssetDescriptor.h"
+#include "AssetID.h"
 
 class Asset
 {
 public:
 	Asset(const AssetDescriptor& assetDescriptor, std::unique_ptr<ObjectBase>& object);
 
-	AssetDescriptor GetAssetDescriptor() const { return m_AssetDescriptor; }
+	AssetID GetId() const { return m_Id; }
+
+	AssetDescriptor GetDescriptor() const { return m_AssetDescriptor; }
 
 	ObjectBase* GetObject() const { return m_Object.get(); }
 
@@ -19,7 +22,9 @@ public:
 	std::string GetName() const { return m_Name; }
 
 private:
-	AssetDescriptor m_AssetDescriptor;
+	const AssetID m_Id;
+
+	const AssetDescriptor m_AssetDescriptor;
 
 	std::unique_ptr<ObjectBase> m_Object = nullptr;
 

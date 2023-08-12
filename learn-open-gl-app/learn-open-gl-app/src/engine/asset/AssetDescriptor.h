@@ -11,6 +11,8 @@ public:
 
 	ObjectType GetObjectType() const { return m_ObjectType; }
 
+	std::string GetDisplayName() const { return m_DisplayName; }
+
 private:
 	ObjectType m_ObjectType;
 
