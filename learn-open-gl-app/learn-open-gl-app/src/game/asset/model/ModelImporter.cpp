@@ -10,6 +10,7 @@
 #include <assimp/scene.h>
 #include <assimp/texture.h>
 
+#include "../../../engine/asset/Asset.h"
 #include "../../../engine/graphics/material/Material.h"
 #include "../../../engine/graphics/material/MaterialAttributes.h"
 #include "../../../engine/graphics/model/Model.h"
@@ -19,17 +20,17 @@
 #include "../shader/ShaderRegistry.h"
 #include "../texture/TextureImporter.h"
 
-ModelImporter::ModelImporter(TextureImporter& textureImporter, ShaderRegistry& shaderRegistry)
-	: m_TextureImporter(textureImporter), m_ShaderRegistry(shaderRegistry)
+ModelImporter::ModelImporter(AssetManager& assetManager, TextureImporter& textureImporter, ShaderRegistry& shaderRegistry)
+	: AssetImporter(assetManager), m_TextureImporter(textureImporter), m_ShaderRegistry(shaderRegistry)
 {
 }
 
-Model* ModelImporter::Import(const std::string& path)
+std::unique_ptr<ObjectBase> ModelImporter::ImportObject(const std::string& filePath)
 {
 	Assimp::Importer importer;
 
 	// See https://learnopengl.com/Model-Loading/Assimp for overview of Assimp's scene structure.
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
 	{
@@ -38,7 +39,7 @@ Model* ModelImporter::Import(const std::string& path)
 		return nullptr;
 	}
 
-	m_Directory = path.substr(0, path.find_last_of('\\'));
+	m_Directory = filePath.substr(0, filePath.find_last_of('\\'));
 
 	std::vector<Mesh*> meshes;
 
@@ -50,7 +51,7 @@ Model* ModelImporter::Import(const std::string& path)
 	defines a parent-child relation between meshes. */
 	ProcessNode(scene->mRootNode, scene, meshes);
 
-	return new Model(meshes);
+	return std::make_unique<Model>(meshes);
 }
 
 void ModelImporter::ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes)
@@ -211,11 +212,20 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material
 		}
 		else
 		{
-			Texture* texture = m_TextureImporter.Import(textureAbsolutePath);
+			Asset* textureAsset = m_TextureImporter.Import(textureAbsolutePath);
+			if (!textureAsset)
+				continue;
 
-			textures.push_back(texture);
+			if (Texture* texture = static_cast<Texture*>(textureAsset->GetObject()))
+			{
+				textures.push_back(texture);
 
-			m_ImportedTextures[textureAbsolutePath] = texture;
+				m_ImportedTextures[textureAbsolutePath] = texture;
+			}
+			else
+			{
+				// TODO: Log error
+			}
 		}
 	}
 

@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\asset\AssetImporter.cpp" />
     <ClCompile Include="src\game\asset\cubemap\CubemapAssetFactory.cpp" />
     <ClCompile Include="src\game\asset\model\ModelAssetFactory.cpp" />
     <ClCompile Include="src\engine\asset\AssetRegistryEntry.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="src\game\asset\texture\TextureAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\asset\AssetImporter.h" />
     <ClInclude Include="src\game\asset\cubemap\CubemapAssetFactory.h" />
     <ClInclude Include="src\game\asset\model\ModelAssetFactory.h" />
     <ClInclude Include="src\engine\asset\AssetRegistryEntry.h" />

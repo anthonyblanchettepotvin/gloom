@@ -6,7 +6,12 @@
 
 #include "../../../engine/graphics/cubemap/Cubemap.h"
 
-Cubemap* CubemapImporter::Import(const std::vector<std::string>& facesFilePath)
+CubemapImporter::CubemapImporter(AssetManager& assetManager)
+	: AssetImporter(assetManager)
+{
+}
+
+std::unique_ptr<ObjectBase> CubemapImporter::ImportObject(const std::vector<std::string>& facesFilePath)
 {
 	stbi_set_flip_vertically_on_load(false);
 
@@ -26,9 +31,9 @@ Cubemap* CubemapImporter::Import(const std::vector<std::string>& facesFilePath)
 		}
 		else
 		{
-			std::cout << "ERROR::CUBEMAP::IMPORTING::" << facePath << std::endl;
+			// TODO: Log error
 		}
 	}
 
-	return new Cubemap(textures);
+	return std::make_unique<Cubemap>(textures);
 }

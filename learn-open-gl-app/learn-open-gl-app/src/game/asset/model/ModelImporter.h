@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "../../../engine/asset/AssetImporter.h"
+
 struct aiMaterial;
 struct aiMesh;
 struct aiNode;
@@ -17,12 +19,13 @@ class ShaderRegistry;
 class Texture;
 class TextureImporter;
 
-class ModelImporter
+class ModelImporter : public AssetImporter<const std::string&>
 {
 public:
-	ModelImporter(TextureImporter& textureLoader, ShaderRegistry& shaderRegistry);
+	ModelImporter(AssetManager& assetManager, TextureImporter& textureLoader, ShaderRegistry& shaderRegistry);
 
-	Model* Import(const std::string& path);
+protected:
+	std::unique_ptr<ObjectBase> ImportObject(const std::string& filePath) override;
 
 private:
 	TextureImporter& m_TextureImporter;

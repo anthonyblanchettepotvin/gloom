@@ -215,20 +215,22 @@ int main()
 
 	initImGui(window);
 
-	// --- Importers ---
-
-	CubemapImporter cubemapImporter;
-	TextureImporter textureImporter;
-	GlShaderImporter shaderImporter;
-	ShaderRegistry shaderRegistry;
-	ModelImporter modelImporter(textureImporter, shaderRegistry);
-
-	// --- Asset Descriptors ---
+	// --- Asset Manager ---
 
 	AssetRegistry assetRegistry;
 	AssetRepository assetRepository;
 
 	AssetManager assetManager(assetRegistry, assetRepository);
+
+	// --- Importers ---
+
+	CubemapImporter cubemapImporter(assetManager);
+	TextureImporter textureImporter(assetManager);
+	GlShaderImporter shaderImporter;
+	ShaderRegistry shaderRegistry;
+	ModelImporter modelImporter(assetManager, textureImporter, shaderRegistry);
+
+	// --- Asset Descriptors ---
 
 	// Texture
 	AssetDescriptor textureAssetDescriptor(Texture::GetObjectType(), "Texture");
@@ -264,14 +266,22 @@ int main()
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = textureImporter.Import(AWESOME_EMOJI_TEXTURE_PATH);
+	Asset* pointLightTextureAsset = textureImporter.Import(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = (Texture*)pointLightTextureAsset->GetObject(); // TODO: Use dynamic_cast here
 
 	// --- Models ---
 
-	Model* backpackModel = modelImporter.Import(BACKPACK_MODEL_PATH);
-	Model* testModel = modelImporter.Import(CUBE_MODEL_PATH);
-	Model* cubeModel = modelImporter.Import(CUBE_MODEL_PATH);
-	Model* suzanneModel = modelImporter.Import(SUZANNE_MODEL_PATH);
+	Asset* backpackModelAsset = modelImporter.Import(BACKPACK_MODEL_PATH);
+	Model* backpackModel = (Model*)backpackModelAsset->GetObject(); // TODO: Use dynamic_cast here
+
+	Asset* testModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
+	Model* testModel = (Model*)testModelAsset->GetObject(); // TODO: Use dynamic_cast here
+
+	Asset* cubeModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
+	Model* cubeModel = (Model*)cubeModelAsset->GetObject(); // TODO: Use dynamic_cast here
+
+	Asset* suzanneModelAsset = modelImporter.Import(SUZANNE_MODEL_PATH);
+	Model* suzanneModel = (Model*)suzanneModelAsset->GetObject(); // TODO: Use dynamic_cast here
 
 	Material* testModelMaterial = phongShader->CreateMaterialInstance();
 
@@ -303,7 +313,8 @@ int main()
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = cubemapImporter.Import(CUBEMAP_FACES_PATH);
+	Asset* cubemapAsset = cubemapImporter.Import(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = (Cubemap*)cubemapAsset->GetObject();
 
 	// --- Skyboxes ---
 

@@ -3,10 +3,15 @@
 #include <string>
 #include <vector>
 
+#include "../../../engine/asset/AssetImporter.h"
+
 class Cubemap;
 
-class CubemapImporter
+class CubemapImporter : public AssetImporter<const std::vector<std::string>&>
 {
 public:
-	Cubemap* Import(const std::vector<std::string>& facesFilePath);
+	CubemapImporter(AssetManager& assetManager);
+
+protected:
+	std::unique_ptr<ObjectBase> ImportObject(const std::vector<std::string>& facesFilePath) override;
 };
