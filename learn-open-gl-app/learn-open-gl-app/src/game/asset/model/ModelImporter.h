@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <unordered_map>
 
 struct aiMaterial;
@@ -21,19 +22,19 @@ class ModelImporter
 public:
 	ModelImporter(TextureImporter& textureLoader, ShaderRegistry& shaderRegistry);
 
-	Model* Load(const std::string& path);
+	Model* Import(const std::string& path);
 
 private:
-	TextureImporter& m_TextureLoader;
+	TextureImporter& m_TextureImporter;
 	ShaderRegistry& m_ShaderRegistry;
 
 	std::string m_Directory;
-	std::unordered_map<std::string, Texture*> m_LoadedTextures;
-	std::unordered_map<std::string, Material*> m_LoadedMaterial;
+	std::unordered_map<std::string, Texture*> m_ImportedTextures;
+	std::unordered_map<std::string, Material*> m_ImportedMaterial;
 
 	void ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes);
 	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-	Material* LoadMaterial(aiMaterial* material);
-	std::vector<Texture*> LoadMaterialTextures(aiMaterial* material, aiTextureType type);
+	Material* ImportMaterial(aiMaterial* material);
+	std::vector<Texture*> ImportMaterialTextures(aiMaterial* material, aiTextureType type);
 };

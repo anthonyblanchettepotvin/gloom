@@ -8,6 +8,7 @@ class AssetDescriptor;
 class AssetFactory;
 class AssetRegistry;
 class AssetRepository;
+class ObjectBase;
 class ObjectType;
 
 class AssetManager
@@ -15,15 +16,17 @@ class AssetManager
 public:
 	AssetManager(AssetRegistry& assetRegistry, AssetRepository& assetRepository);
 
-	void RegisterAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
+	void DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
+
+	Asset* CreateAssetWithObject(std::unique_ptr<ObjectBase>& object);
 
 	template<class T>
 	Asset* CreateBlankAsset();
 	Asset* CreateBlankAsset(const ObjectType& objectType);
 
 	template<class T>
-	std::vector<Asset*> FindAssets();
-	std::vector<Asset*> FindAssets(const ObjectType& objectType);
+	std::vector<Asset*> FindAssetsByObjectType();
+	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType);
 
 private:
 	AssetRegistry& m_AssetRegistry;
@@ -39,9 +42,9 @@ inline Asset* AssetManager::CreateBlankAsset()
 }
 
 template<class T>
-inline std::vector<Asset*> AssetManager::FindAssets()
+inline std::vector<Asset*> AssetManager::FindAssetsByObjectType()
 {
 	ObjectType objectType(typeid(T));
 
-	return FindAssets(objectType);
+	return FindAssetsByObjectType(objectType);
 }

@@ -2,7 +2,7 @@
 
 #include "../../../engine/graphics/cubemap/Cubemap.h"
 
-std::unique_ptr<ObjectBase> CubemapAssetFactory::CreateBlankObject() const
+std::unique_ptr<ObjectBase> CubemapAssetFactory::CreateBlankObject()
 {
     return std::make_unique<Cubemap>();
 }

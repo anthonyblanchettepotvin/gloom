@@ -215,7 +215,7 @@ int main()
 
 	initImGui(window);
 
-	// --- Loaders ---
+	// --- Importers ---
 
 	CubemapImporter cubemapImporter;
 	TextureImporter textureImporter;
@@ -233,17 +233,17 @@ int main()
 	// Texture
 	AssetDescriptor textureAssetDescriptor(Texture::GetObjectType(), "Texture");
 	std::unique_ptr<AssetFactory> textureAssetFactory = std::make_unique<TextureAssetFactory>();
-	assetRegistry.RegisterAsset(textureAssetDescriptor, textureAssetFactory);
+	assetRegistry.DefineAsset(textureAssetDescriptor, textureAssetFactory);
 
 	// Model
 	AssetDescriptor modelAssetDescriptor(Model::GetObjectType(), "Model");
 	std::unique_ptr<AssetFactory> modelAssetFactory = std::make_unique<ModelAssetFactory>();
-	assetRegistry.RegisterAsset(modelAssetDescriptor, modelAssetFactory);
+	assetRegistry.DefineAsset(modelAssetDescriptor, modelAssetFactory);
 
 	// Cubemap
 	AssetDescriptor cubemapAssetDescriptor(Cubemap::GetObjectType(), "Cubemap");
 	std::unique_ptr<AssetFactory> cubemapAssetFactory = std::make_unique<CubemapAssetFactory>();
-	assetRegistry.RegisterAsset(cubemapAssetDescriptor, cubemapAssetFactory);
+	assetRegistry.DefineAsset(cubemapAssetDescriptor, cubemapAssetFactory);
 
 	// --- Graphics ---
 
@@ -252,26 +252,26 @@ int main()
 
 	// --- Shaders ---
 
-	Shader* phongShader = shaderImporter.Load(PHONG_SHADER_PATH);
-	Shader* reflectionShader = shaderImporter.Load(REFLECTION_SHADER_PATH);
-	Shader* refractionShader = shaderImporter.Load(REFRACTION_SHADER_PATH);
-	Shader* spriteShader = shaderImporter.Load(SPRITE_SHADER_PATH);
-	Shader* renderShader = shaderImporter.Load(RENDER_SHADER_PATH);
-	Shader* skyboxShader = shaderImporter.Load(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = shaderImporter.Load(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* phongShader = shaderImporter.Import(PHONG_SHADER_PATH);
+	Shader* reflectionShader = shaderImporter.Import(REFLECTION_SHADER_PATH);
+	Shader* refractionShader = shaderImporter.Import(REFRACTION_SHADER_PATH);
+	Shader* spriteShader = shaderImporter.Import(SPRITE_SHADER_PATH);
+	Shader* renderShader = shaderImporter.Import(RENDER_SHADER_PATH);
+	Shader* skyboxShader = shaderImporter.Import(SKYBOX_SHADER_PATH);
+	Shader* chromaticAberrationShader = shaderImporter.Import(CHROMATIC_ABERRATION_SHADER_PATH);
 
 	shaderRegistry.Register(ShadingModel::Phong, *phongShader);
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = textureImporter.Load(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = textureImporter.Import(AWESOME_EMOJI_TEXTURE_PATH);
 
 	// --- Models ---
 
-	Model* backpackModel = modelImporter.Load(BACKPACK_MODEL_PATH);
-	Model* testModel = modelImporter.Load(CUBE_MODEL_PATH);
-	Model* cubeModel = modelImporter.Load(CUBE_MODEL_PATH);
-	Model* suzanneModel = modelImporter.Load(SUZANNE_MODEL_PATH);
+	Model* backpackModel = modelImporter.Import(BACKPACK_MODEL_PATH);
+	Model* testModel = modelImporter.Import(CUBE_MODEL_PATH);
+	Model* cubeModel = modelImporter.Import(CUBE_MODEL_PATH);
+	Model* suzanneModel = modelImporter.Import(SUZANNE_MODEL_PATH);
 
 	Material* testModelMaterial = phongShader->CreateMaterialInstance();
 
@@ -303,7 +303,7 @@ int main()
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = cubemapImporter.Load(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = cubemapImporter.Import(CUBEMAP_FACES_PATH);
 
 	// --- Skyboxes ---
 

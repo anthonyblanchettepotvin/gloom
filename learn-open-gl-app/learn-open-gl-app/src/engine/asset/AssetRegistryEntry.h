@@ -13,7 +13,7 @@ public:
 
 	AssetDescriptor GetDescriptor() const { return m_AssetDescriptor; }
 
-	const AssetFactory& GetFactory() const { return *m_AssetFactory; }
+	AssetFactory& GetFactory() const { return *m_AssetFactory; }
 
 private:
 	AssetDescriptor m_AssetDescriptor;

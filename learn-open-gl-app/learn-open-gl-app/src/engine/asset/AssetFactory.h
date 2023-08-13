@@ -9,12 +9,9 @@ class ObjectBase;
 class AssetFactory
 {
 public:
-	std::unique_ptr<Asset> Create(const AssetDescriptor& assetDescriptor, std::unique_ptr<ObjectBase>& object) const;
-	std::unique_ptr<Asset> CreateBlank(const AssetDescriptor& assetDescriptor) const;
+	std::unique_ptr<Asset> CreateWithObject(const AssetDescriptor& assetDescriptor, std::unique_ptr<ObjectBase>& object);
+	std::unique_ptr<Asset> CreateBlank(const AssetDescriptor& assetDescriptor);
 
 protected:
-	virtual std::unique_ptr<ObjectBase> CreateBlankObject() const = 0;
-
-private:
-	void Validate(const AssetDescriptor& assetDescriptor, ObjectBase* object) const;
+	virtual std::unique_ptr<ObjectBase> CreateBlankObject() = 0;
 };

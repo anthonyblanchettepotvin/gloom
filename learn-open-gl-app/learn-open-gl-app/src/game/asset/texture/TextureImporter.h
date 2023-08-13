@@ -7,5 +7,5 @@ class Texture;
 class TextureImporter
 {
 public:
-	Texture* Load(const std::string& filePath);
+	Texture* Import(const std::string& filePath);
 };

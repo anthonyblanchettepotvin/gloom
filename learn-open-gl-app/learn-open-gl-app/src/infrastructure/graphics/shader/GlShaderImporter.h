@@ -8,7 +8,7 @@
 class GlShaderImporter : public ShaderImporter
 {
 public:
-	Shader* Load(const std::string& path) override;
+	Shader* Import(const std::string& path) override;
 
 private:
 	std::string ParseVersion(std::ifstream& file);

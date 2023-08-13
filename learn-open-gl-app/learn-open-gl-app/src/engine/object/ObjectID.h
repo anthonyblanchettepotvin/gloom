@@ -25,8 +25,8 @@ public:
 template<>
 struct std::hash<ObjectID>
 {
-	size_t operator()(ObjectID const& objId) const noexcept
+	size_t operator()(ObjectID const& objectId) const noexcept
 	{
-		return std::hash<unsigned int>{}(objId.m_Value);
+		return std::hash<unsigned int>{}(objectId.m_Value);
 	}
 };

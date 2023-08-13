@@ -6,7 +6,7 @@
 
 #include "../../../engine/graphics/cubemap/Cubemap.h"
 
-Cubemap* CubemapImporter::Load(const std::vector<std::string>& facesFilePath)
+Cubemap* CubemapImporter::Import(const std::vector<std::string>& facesFilePath)
 {
 	stbi_set_flip_vertically_on_load(false);
 
@@ -26,7 +26,7 @@ Cubemap* CubemapImporter::Load(const std::vector<std::string>& facesFilePath)
 		}
 		else
 		{
-			std::cout << "ERROR::CUBEMAP::LOADING::" << facePath << std::endl;
+			std::cout << "ERROR::CUBEMAP::IMPORTING::" << facePath << std::endl;
 		}
 	}
 

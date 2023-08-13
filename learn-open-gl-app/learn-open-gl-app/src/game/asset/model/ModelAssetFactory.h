@@ -7,5 +7,5 @@
 class ModelAssetFactory : public AssetFactory
 {
 protected:
-	std::unique_ptr<ObjectBase> CreateBlankObject() const override;
+	std::unique_ptr<ObjectBase> CreateBlankObject() override;
 };

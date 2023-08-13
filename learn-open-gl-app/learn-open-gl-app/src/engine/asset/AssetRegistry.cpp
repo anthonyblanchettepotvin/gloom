@@ -8,7 +8,7 @@
 #define ASSET_ALREADY_REGISTERED "Asset information matching object type already registered."
 #define ASSET_NOT_REGISTERED "Asset information matching object type not registered."
 
-void AssetRegistry::RegisterAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
+void AssetRegistry::DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory)
 {
 	ObjectType objectType = assetDescriptor.GetObjectType();
 

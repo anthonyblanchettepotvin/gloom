@@ -12,7 +12,7 @@ class ObjectType;
 class AssetRegistry
 {
 public:
-	void RegisterAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
+	void DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
 
 	const AssetRegistryEntry& FindEntry(const ObjectType& objectType) const;
 

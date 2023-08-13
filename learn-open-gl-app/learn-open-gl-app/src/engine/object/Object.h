@@ -32,9 +32,9 @@ public:
 template<>
 struct std::hash<ObjectBase>
 {
-	size_t operator()(ObjectBase const& obj) const noexcept
+	size_t operator()(ObjectBase const& object) const noexcept
 	{
-		return std::hash<ObjectID>{}(obj.m_Id);
+		return std::hash<ObjectID>{}(object.m_Id);
 	}
 };
 

@@ -7,5 +7,5 @@ class Shader;
 class ShaderImporter
 {
 public:
-	virtual Shader* Load(const std::string& filePath) = 0;
+	virtual Shader* Import(const std::string& filePath) = 0;
 };

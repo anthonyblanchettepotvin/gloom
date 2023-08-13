@@ -29,7 +29,7 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 	}
 
 	std::unique_ptr<ShaderImporter> shaderImporter = std::unique_ptr<ShaderImporter>(CreateShaderImporter());
-	m_RenderShader = std::unique_ptr<GlShader>((GlShader*)shaderImporter->Load(".\\shaders\\render.shader")); // FIXME: Should not have to call std::make_unique later
+	m_RenderShader = std::unique_ptr<GlShader>((GlShader*)shaderImporter->Import(".\\shaders\\render.shader")); // FIXME: Should not have to call std::make_unique later
 	m_RenderSurface = std::make_unique<GlRenderSurface>();
 
 	// --- Options ---

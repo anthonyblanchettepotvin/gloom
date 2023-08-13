@@ -19,12 +19,12 @@
 #include "../shader/ShaderRegistry.h"
 #include "../texture/TextureImporter.h"
 
-ModelImporter::ModelImporter(TextureImporter& textureLoader, ShaderRegistry& shaderRegistry)
-	: m_TextureLoader(textureLoader), m_ShaderRegistry(shaderRegistry)
+ModelImporter::ModelImporter(TextureImporter& textureImporter, ShaderRegistry& shaderRegistry)
+	: m_TextureImporter(textureImporter), m_ShaderRegistry(shaderRegistry)
 {
 }
 
-Model* ModelImporter::Load(const std::string& path)
+Model* ModelImporter::Import(const std::string& path)
 {
 	Assimp::Importer importer;
 
@@ -127,22 +127,22 @@ Mesh* ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		/* A material object internally stores an array of texture locations for each texture type.
 		The different texture types are all prefixed with aiTextureType_.
-		We use a helper function called LoadMaterialTextures to retrieve, load, and initialize
+		We use a helper function called ImportMaterialTextures to retrieve, import, and initialize
 		the textures from the material. */
 		aiMaterial* assimpMaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-		material = LoadMaterial(assimpMaterial);
+		material = ImportMaterial(assimpMaterial);
 	}
 
 	return new Mesh(vertices, indices, material);
 }
 
-Material* ModelImporter::LoadMaterial(aiMaterial* material)
+Material* ModelImporter::ImportMaterial(aiMaterial* material)
 {
 	std::string materialName = material->GetName().C_Str();
 
-	if (m_LoadedMaterial.find(materialName) != m_LoadedMaterial.end())
-		return m_LoadedMaterial[materialName];
+	if (m_ImportedMaterial.find(materialName) != m_ImportedMaterial.end())
+		return m_ImportedMaterial[materialName];
 
 	int materialShadingModel;
 	material->Get(AI_MATKEY_SHADING_MODEL, materialShadingModel);
@@ -158,14 +158,14 @@ Material* ModelImporter::LoadMaterial(aiMaterial* material)
 			return nullptr;
 
 		TextureMaterialAttribute* diffuseTexture = phongMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_diffuse1");
-		std::vector<Texture*> diffuseTextures = LoadMaterialTextures(material, aiTextureType_DIFFUSE);
+		std::vector<Texture*> diffuseTextures = ImportMaterialTextures(material, aiTextureType_DIFFUSE);
 		if (!diffuseTextures.empty())
 		{
 			diffuseTexture->SetValue(diffuseTextures[0]);
 		}
 
 		TextureMaterialAttribute* specularTexture = phongMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_specular1");
-		std::vector<Texture*> specularTextures = LoadMaterialTextures(material, aiTextureType_SPECULAR);
+		std::vector<Texture*> specularTextures = ImportMaterialTextures(material, aiTextureType_SPECULAR);
 		if (!specularTextures.empty())
 		{
 			specularTexture->SetValue(specularTextures[0]);
@@ -177,7 +177,7 @@ Material* ModelImporter::LoadMaterial(aiMaterial* material)
 			shininess->SetValue(4.0f);
 		}
 
-		m_LoadedMaterial[materialName] = phongMaterial;
+		m_ImportedMaterial[materialName] = phongMaterial;
 
 		return phongMaterial;
 	}
@@ -189,7 +189,7 @@ Material* ModelImporter::LoadMaterial(aiMaterial* material)
 	return nullptr;
 }
 
-std::vector<Texture*> ModelImporter::LoadMaterialTextures(aiMaterial* material, aiTextureType type)
+std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material, aiTextureType type)
 {
 	std::vector<Texture*> textures;
 
@@ -205,17 +205,17 @@ std::vector<Texture*> ModelImporter::LoadMaterialTextures(aiMaterial* material, 
 		to use local paths for the textures (if possible). */
 		std::string textureAbsolutePath = m_Directory + "\\" + textureRelativePath.C_Str();
 
-		if (m_LoadedTextures.find(textureAbsolutePath) != m_LoadedTextures.end())
+		if (m_ImportedTextures.find(textureAbsolutePath) != m_ImportedTextures.end())
 		{
-			textures.push_back(m_LoadedTextures[textureAbsolutePath]);
+			textures.push_back(m_ImportedTextures[textureAbsolutePath]);
 		}
 		else
 		{
-			Texture* texture = m_TextureLoader.Load(textureAbsolutePath);
+			Texture* texture = m_TextureImporter.Import(textureAbsolutePath);
 
 			textures.push_back(texture);
 
-			m_LoadedTextures[textureAbsolutePath] = texture;
+			m_ImportedTextures[textureAbsolutePath] = texture;
 		}
 	}
 
