@@ -28,8 +28,6 @@ public:
 	void StartFrame() override;
 	void EndFrame() override;
 
-	ShaderImporter* CreateShaderImporter() const override;
-
 	GlobalData* CreateGlobalData(const std::string& name) const override;
 
 	void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference) override;

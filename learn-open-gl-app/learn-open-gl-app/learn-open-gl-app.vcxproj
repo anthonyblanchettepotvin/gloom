@@ -146,8 +146,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\asset\AssetImporter.cpp" />
-    <ClCompile Include="src\game\asset\cubemap\CubemapAssetFactory.cpp" />
-    <ClCompile Include="src\game\asset\model\ModelAssetFactory.cpp" />
+    <ClCompile Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.cpp" />
+    <ClCompile Include="src\infrastructure\asset\model\ModelAssetFactory.cpp" />
     <ClCompile Include="src\engine\asset\AssetRegistryEntry.cpp" />
     <ClCompile Include="src\engine\asset\AssetID.cpp" />
     <ClCompile Include="src\engine\object\ObjectType.cpp" />
@@ -157,16 +157,15 @@
     <ClCompile Include="src\engine\asset\AssetRegistry.cpp" />
     <ClCompile Include="src\engine\asset\AssetDescriptor.cpp" />
     <ClCompile Include="src\engine\asset\Asset.cpp" />
-    <ClCompile Include="src\game\asset\cubemap\CubemapImporter.cpp" />
-    <ClCompile Include="src\game\asset\model\ModelImporter.cpp" />
-    <ClCompile Include="src\game\asset\shader\ShaderImporter.cpp" />
-    <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp" />
+    <ClCompile Include="src\infrastructure\asset\cubemap\CubemapImporter.cpp" />
+    <ClCompile Include="src\infrastructure\asset\model\ModelImporter.cpp" />
+    <ClCompile Include="src\infrastructure\asset\shader\ShaderRegistry.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttribute.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialTemplate.cpp" />
     <ClCompile Include="src\engine\object\ObjectID.cpp" />
     <ClCompile Include="src\engine\object\Object.cpp" />
-    <ClCompile Include="src\game\asset\texture\TextureImporter.cpp" />
+    <ClCompile Include="src\infrastructure\asset\texture\TextureImporter.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp" />
@@ -227,12 +226,12 @@
     <ClCompile Include="src\game\component\TransformComponent.cpp" />
     <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
     <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
-    <ClCompile Include="src\game\asset\texture\TextureAssetFactory.cpp" />
+    <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\asset\AssetImporter.h" />
-    <ClInclude Include="src\game\asset\cubemap\CubemapAssetFactory.h" />
-    <ClInclude Include="src\game\asset\model\ModelAssetFactory.h" />
+    <ClInclude Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.h" />
+    <ClInclude Include="src\infrastructure\asset\model\ModelAssetFactory.h" />
     <ClInclude Include="src\engine\asset\AssetRegistryEntry.h" />
     <ClInclude Include="src\engine\asset\AssetID.h" />
     <ClInclude Include="src\engine\object\ObjectType.h" />
@@ -242,16 +241,15 @@
     <ClInclude Include="src\engine\asset\AssetRegistry.h" />
     <ClInclude Include="src\engine\asset\AssetDescriptor.h" />
     <ClInclude Include="src\engine\asset\Asset.h" />
-    <ClInclude Include="src\game\asset\cubemap\CubemapImporter.h" />
-    <ClInclude Include="src\game\asset\model\ModelImporter.h" />
-    <ClInclude Include="src\game\asset\shader\ShaderImporter.h" />
-    <ClInclude Include="src\game\asset\shader\ShaderRegistry.h" />
+    <ClInclude Include="src\infrastructure\asset\cubemap\CubemapImporter.h" />
+    <ClInclude Include="src\infrastructure\asset\model\ModelImporter.h" />
+    <ClInclude Include="src\infrastructure\asset\shader\ShaderRegistry.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttribute.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialTemplate.h" />
     <ClInclude Include="src\engine\object\ObjectID.h" />
     <ClInclude Include="src\engine\object\Object.h" />
-    <ClInclude Include="src\game\asset\texture\TextureImporter.h" />
+    <ClInclude Include="src\infrastructure\asset\texture\TextureImporter.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h" />
@@ -313,7 +311,7 @@
     <ClInclude Include="src\game\component\TransformComponent.h" />
     <ClInclude Include="src\ui\UiComponentAdapter.h" />
     <ClInclude Include="src\ui\UiAdapterFactory.h" />
-    <ClInclude Include="src\game\asset\texture\TextureAssetFactory.h" />
+    <ClInclude Include="src\infrastructure\asset\texture\TextureAssetFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="dlls\assimp-vc143-mt.dll">

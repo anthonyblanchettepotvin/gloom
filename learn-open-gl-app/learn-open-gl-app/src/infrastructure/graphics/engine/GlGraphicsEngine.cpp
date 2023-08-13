@@ -28,8 +28,8 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 		// TODO: Throw incomplete framebuffer
 	}
 
-	std::unique_ptr<ShaderImporter> shaderImporter = std::unique_ptr<ShaderImporter>(CreateShaderImporter());
-	m_RenderShader = std::unique_ptr<GlShader>((GlShader*)shaderImporter->Import(".\\shaders\\render.shader")); // FIXME: Should not have to call std::make_unique later
+	GlShaderImporter shaderImporter;
+	m_RenderShader = std::unique_ptr<GlShader>((GlShader*)shaderImporter.Import(".\\shaders\\render.shader")); // FIXME: Should not have to call std::make_unique later
 	m_RenderSurface = std::make_unique<GlRenderSurface>();
 
 	// --- Options ---
@@ -117,11 +117,6 @@ void GlGraphicsEngine::EndFrame()
 	glDisable(GL_DEPTH_TEST);
 
 	m_RenderSurface->RenderTexture(*m_RenderShader, *m_RenderTexture);
-}
-
-ShaderImporter* GlGraphicsEngine::CreateShaderImporter() const
-{
-	return new GlShaderImporter();
 }
 
 GlobalData* GlGraphicsEngine::CreateGlobalData(const std::string& name) const

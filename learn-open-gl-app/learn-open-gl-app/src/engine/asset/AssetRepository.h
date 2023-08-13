@@ -3,8 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "Asset.h"
-
+class Asset;
 class ObjectType;
 
 class AssetRepository

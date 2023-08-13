@@ -2,6 +2,7 @@
 
 #include "../object/ObjectType.h"
 
+#include "Asset.h"
 #include "AssetDescriptor.h"
 #include "AssetFactory.h"
 #include "AssetRegistry.h"

@@ -13,7 +13,7 @@ const std::string END_VERTEX_SHADER_TOKEN = "END_VERTEX_SHADER";
 const std::string START_FRAGMENT_SHADER_TOKEN = "START_FRAGMENT_SHADER";
 const std::string END_FRAGMENT_SHADER_TOKEN = "END_FRAGMENT_SHADER";
 
-Shader* GlShaderImporter::Import(const std::string& path)
+Shader* GlShaderImporter::Import(const std::string& filePath)
 {
 	std::ifstream shaderFile;
 
@@ -23,7 +23,7 @@ Shader* GlShaderImporter::Import(const std::string& path)
 
 	try
 	{
-		shaderFile.open(path);
+		shaderFile.open(filePath);
 
 		version = ParseVersion(shaderFile);
 		vertexShader = ParseVertexShader(shaderFile);

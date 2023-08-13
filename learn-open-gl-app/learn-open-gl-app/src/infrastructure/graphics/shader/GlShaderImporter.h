@@ -3,12 +3,12 @@
 #include <fstream>
 #include <vector>
 
-#include "../../../game/asset/shader/ShaderImporter.h"
+class Shader;
 
-class GlShaderImporter : public ShaderImporter
+class GlShaderImporter
 {
 public:
-	Shader* Import(const std::string& path) override;
+	Shader* Import(const std::string& filePath);
 
 private:
 	std::string ParseVersion(std::ifstream& file);
