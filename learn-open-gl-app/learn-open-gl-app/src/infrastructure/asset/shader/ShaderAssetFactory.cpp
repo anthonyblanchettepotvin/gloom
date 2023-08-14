@@ -8,7 +8,7 @@ ShaderAssetFactory::ShaderAssetFactory(GraphicsEngine& graphicsEngine)
 {
 }
 
-std::unique_ptr<ObjectBase> ShaderAssetFactory::CreateBlankObject()
+std::unique_ptr<Object> ShaderAssetFactory::CreateBlankObject()
 {
     return m_GraphicsEngine.get().CreateShader();
 }

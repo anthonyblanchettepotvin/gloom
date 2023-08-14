@@ -25,7 +25,7 @@ ModelImporter::ModelImporter(AssetManager& assetManager, TextureImporter& textur
 {
 }
 
-std::unique_ptr<ObjectBase> ModelImporter::ImportObject(const std::string& filePath)
+std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& filePath)
 {
 	Assimp::Importer importer;
 

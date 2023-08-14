@@ -10,13 +10,13 @@
 class Asset
 {
 public:
-	Asset(const AssetDescriptor& assetDescriptor, std::unique_ptr<ObjectBase>& object);
+	Asset(const AssetDescriptor& assetDescriptor, std::unique_ptr<Object>& object);
 
 	AssetID GetId() const { return m_Id; }
 
 	AssetDescriptor GetDescriptor() const { return m_AssetDescriptor; }
 
-	ObjectBase* GetObject() const { return m_Object.get(); }
+	Object* GetObject() const { return m_Object.get(); }
 
 	void SetName(const std::string& name) { m_Name = name; }
 	std::string GetName() const { return m_Name; }
@@ -26,7 +26,7 @@ private:
 
 	const AssetDescriptor m_AssetDescriptor;
 
-	std::unique_ptr<ObjectBase> m_Object = nullptr;
+	std::unique_ptr<Object> m_Object = nullptr;
 
 	std::string m_Name = "";
 };

@@ -12,7 +12,7 @@ public:
 	ShaderImporter(AssetManager& assetManager, GraphicsEngine& graphicsEngine);
 
 protected:
-	std::unique_ptr<ObjectBase> ImportObject(const std::string& filePath) override;
+	std::unique_ptr<Object> ImportObject(const std::string& filePath) override;
 
 private:
 	GraphicsEngine& m_GraphicsEngine;

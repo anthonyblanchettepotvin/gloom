@@ -7,7 +7,7 @@
 
 #include "../texture/Texture.h"
 
-class Cubemap : public ObjectBase
+class Cubemap : public Object
 {
 public:
 	Cubemap() = default;

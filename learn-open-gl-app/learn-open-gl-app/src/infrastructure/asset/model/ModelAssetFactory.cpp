@@ -2,7 +2,7 @@
 
 #include "../../../engine/graphics/model/Model.h"
 
-std::unique_ptr<ObjectBase> ModelAssetFactory::CreateBlankObject()
+std::unique_ptr<Object> ModelAssetFactory::CreateBlankObject()
 {
 	return std::make_unique<Model>();
 }

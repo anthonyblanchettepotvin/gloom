@@ -8,11 +8,11 @@
 
 class ObjectType;
 
-class ObjectBase
+class Object
 {
 public:
-	ObjectBase();
-	virtual ~ObjectBase() = default;
+	Object();
+	virtual ~Object() = default;
 
 	ObjectID GetId() const { return m_Id; }
 
@@ -22,10 +22,10 @@ private:
 	const ObjectID m_Id;
 
 public:
-	inline bool operator==(const ObjectBase& other) const noexcept
+	inline bool operator==(const Object& other) const noexcept
 	{
 		return this == &other || m_Id == other.m_Id;
 	}
 
-	friend std::hash<ObjectBase>;
+	friend std::hash<Object>;
 };

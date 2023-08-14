@@ -8,7 +8,7 @@
 
 #include "../mesh/Mesh.h"
 
-class Model : public ObjectBase
+class Model : public Object
 {
 public:
 	Model() = default;

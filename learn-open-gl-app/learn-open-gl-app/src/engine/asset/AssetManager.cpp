@@ -18,7 +18,7 @@ void AssetManager::DefineAsset(const AssetDescriptor& assetDescriptor, std::uniq
 	m_AssetRegistry.DefineAsset(assetDescriptor, assetFactory);
 }
 
-Asset* AssetManager::CreateAssetWithObject(std::unique_ptr<ObjectBase>& object)
+Asset* AssetManager::CreateAssetWithObject(std::unique_ptr<Object>& object)
 {
 	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(object->GetObjectType());
 

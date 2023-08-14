@@ -8,7 +8,7 @@ class AssetDescriptor;
 class AssetFactory;
 class AssetRegistry;
 class AssetRepository;
-class ObjectBase;
+class Object;
 class ObjectType;
 
 class AssetManager
@@ -18,7 +18,7 @@ public:
 
 	void DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
 
-	Asset* CreateAssetWithObject(std::unique_ptr<ObjectBase>& object);
+	Asset* CreateAssetWithObject(std::unique_ptr<Object>& object);
 	Asset* CreateBlankAsset(const ObjectType& objectType);
 
 	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType);

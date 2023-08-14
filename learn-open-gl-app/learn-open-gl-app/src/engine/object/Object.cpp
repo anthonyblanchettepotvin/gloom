@@ -2,12 +2,12 @@
 
 #include "ObjectType.h"
 
-ObjectBase::ObjectBase()
+Object::Object()
 	: m_Id(ObjectID::Generate())
 {
 }
 
-ObjectType ObjectBase::GetObjectType() const
+ObjectType Object::GetObjectType() const
 {
 	return ObjectType(typeid(*this));
 }

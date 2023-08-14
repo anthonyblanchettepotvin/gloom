@@ -7,5 +7,5 @@
 class TextureAssetFactory : public AssetFactory
 {
 protected:
-	std::unique_ptr<ObjectBase> CreateBlankObject() override;
+	std::unique_ptr<Object> CreateBlankObject() override;
 };

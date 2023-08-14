@@ -24,7 +24,7 @@ public:
 	ModelImporter(AssetManager& assetManager, TextureImporter& textureLoader, ShaderRegistry& shaderRegistry);
 
 protected:
-	std::unique_ptr<ObjectBase> ImportObject(const std::string& filePath) override;
+	std::unique_ptr<Object> ImportObject(const std::string& filePath) override;
 
 private:
 	TextureImporter& m_TextureImporter;

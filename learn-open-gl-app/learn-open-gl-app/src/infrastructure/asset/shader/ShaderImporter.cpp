@@ -8,7 +8,7 @@ ShaderImporter::ShaderImporter(AssetManager& assetManager, GraphicsEngine& graph
 {
 }
 
-std::unique_ptr<ObjectBase> ShaderImporter::ImportObject(const std::string& filePath)
+std::unique_ptr<Object> ShaderImporter::ImportObject(const std::string& filePath)
 {
 	return m_GraphicsEngine.ImportShader(filePath);
 }

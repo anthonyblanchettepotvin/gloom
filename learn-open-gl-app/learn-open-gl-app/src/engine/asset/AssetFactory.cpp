@@ -7,7 +7,7 @@
 #include "Asset.h"
 #include "AssetDescriptor.h"
 
-std::unique_ptr<Asset> AssetFactory::CreateWithObject(const AssetDescriptor& assetDescriptor, std::unique_ptr<ObjectBase>& object)
+std::unique_ptr<Asset> AssetFactory::CreateWithObject(const AssetDescriptor& assetDescriptor, std::unique_ptr<Object>& object)
 {
 	assert(object != nullptr);
 	assert(object->GetObjectType() == assetDescriptor.GetObjectType());
@@ -17,7 +17,7 @@ std::unique_ptr<Asset> AssetFactory::CreateWithObject(const AssetDescriptor& ass
 
 std::unique_ptr<Asset> AssetFactory::CreateBlank(const AssetDescriptor& assetDescriptor)
 {
-	std::unique_ptr<ObjectBase> blankObject = CreateBlankObject();
+	std::unique_ptr<Object> blankObject = CreateBlankObject();
 
 	assert(blankObject != nullptr);
 	assert(blankObject->GetObjectType() == assetDescriptor.GetObjectType());

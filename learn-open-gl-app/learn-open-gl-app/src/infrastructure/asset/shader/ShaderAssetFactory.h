@@ -12,7 +12,7 @@ public:
 	ShaderAssetFactory(GraphicsEngine& graphicsEngine);
 
 protected:
-	std::unique_ptr<ObjectBase> CreateBlankObject() override;
+	std::unique_ptr<Object> CreateBlankObject() override;
 
 private:
 	std::reference_wrapper<GraphicsEngine> m_GraphicsEngine;
