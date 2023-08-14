@@ -15,9 +15,9 @@
 #include "../../../engine/graphics/material/MaterialAttributes.h"
 #include "../../../engine/graphics/model/Model.h"
 #include "../../../engine/graphics/shader/Shader.h"
+#include "../../../engine/graphics/shader/ShaderRegistry.h"
 #include "../../../engine/graphics/texture/Texture.h"
 
-#include "../shader/ShaderRegistry.h"
 #include "../texture/TextureImporter.h"
 
 ModelImporter::ModelImporter(AssetManager& assetManager, TextureImporter& textureImporter, ShaderRegistry& shaderRegistry)

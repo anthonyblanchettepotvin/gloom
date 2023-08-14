@@ -4,8 +4,6 @@
 
 #include "../../../engine/asset/AssetImporter.h"
 
-class Texture;
-
 class TextureImporter : public AssetImporter<const std::string&>
 {
 public:

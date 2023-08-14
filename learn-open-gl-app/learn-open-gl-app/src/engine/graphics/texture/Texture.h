@@ -4,7 +4,7 @@
 
 #include "../../object/Object.h"
 
-class Texture : public Object<Texture>
+class Texture : public ObjectBase
 {
 public:
 	Texture() = default;

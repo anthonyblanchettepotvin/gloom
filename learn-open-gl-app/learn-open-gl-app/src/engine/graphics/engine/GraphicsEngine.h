@@ -1,11 +1,17 @@
 #pragma once
 
-#include "../globaldata/GlobalData.h"
-#include "../lighting/DirectionalLight.h"
-#include "../lighting/PointLight.h"
-#include "../mesh/Mesh.h"
-#include "../skybox/Skybox.h"
-#include "../sprite/Sprite.h"
+#include <memory>
+#include <string>
+
+#include <glm/glm.hpp>
+
+class DirectionalLight;
+class GlobalData;
+class Mesh;
+class PointLight;
+class Shader;
+class Skybox;
+class Sprite;
 
 class GraphicsEngine
 {
@@ -14,6 +20,9 @@ public:
 
 	virtual void StartFrame() = 0;
 	virtual void EndFrame() = 0;
+
+	virtual std::unique_ptr<Shader> CreateShader() = 0;
+	virtual std::unique_ptr<Shader> ImportShader(const std::string& filePath) = 0;
 
 	virtual GlobalData* CreateGlobalData(const std::string& name) const = 0;
 

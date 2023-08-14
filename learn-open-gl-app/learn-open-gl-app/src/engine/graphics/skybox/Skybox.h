@@ -4,7 +4,7 @@
 
 #include "../material/Material.h"
 
-class Skybox : public Object<Skybox>
+class Skybox : public ObjectBase
 {
 public:
 	Skybox(Material* material);

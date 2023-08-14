@@ -5,8 +5,6 @@
 
 #include "../../../engine/asset/AssetImporter.h"
 
-class Cubemap;
-
 class CubemapImporter : public AssetImporter<const std::vector<std::string>&>
 {
 public:

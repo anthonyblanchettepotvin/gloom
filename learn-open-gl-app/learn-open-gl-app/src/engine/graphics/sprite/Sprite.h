@@ -6,7 +6,7 @@
 
 #include "../material/Material.h"
 
-class Sprite : public Object<Sprite>
+class Sprite : public ObjectBase
 {
 public:
 	Sprite(Material* material);

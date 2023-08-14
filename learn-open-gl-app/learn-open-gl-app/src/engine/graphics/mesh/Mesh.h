@@ -10,7 +10,7 @@
 
 #include "Vertex.h"
 
-class Mesh : public Object<Mesh>
+class Mesh : public ObjectBase
 {
 public:
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, Material* material);

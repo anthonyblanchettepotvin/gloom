@@ -5,7 +5,8 @@
 #include <typeindex>
 
 #include "ObjectID.h"
-#include "ObjectType.h"
+
+class ObjectType;
 
 class ObjectBase
 {
@@ -15,7 +16,7 @@ public:
 
 	ObjectID GetId() const { return m_Id; }
 
-	ObjectType GetObjectType() const { return ObjectType(typeid(*this)); }
+	ObjectType GetObjectType() const;
 
 private:
 	const ObjectID m_Id;
@@ -27,20 +28,4 @@ public:
 	}
 
 	friend std::hash<ObjectBase>;
-};
-
-template<>
-struct std::hash<ObjectBase>
-{
-	size_t operator()(ObjectBase const& object) const noexcept
-	{
-		return std::hash<ObjectID>{}(object.m_Id);
-	}
-};
-
-template<class T>
-class Object : public ObjectBase
-{
-public:
-	static ObjectType GetObjectType() { return ObjectType(typeid(T)); }
 };

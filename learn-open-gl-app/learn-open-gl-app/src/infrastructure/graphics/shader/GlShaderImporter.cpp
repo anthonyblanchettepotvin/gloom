@@ -13,7 +13,7 @@ const std::string END_VERTEX_SHADER_TOKEN = "END_VERTEX_SHADER";
 const std::string START_FRAGMENT_SHADER_TOKEN = "START_FRAGMENT_SHADER";
 const std::string END_FRAGMENT_SHADER_TOKEN = "END_FRAGMENT_SHADER";
 
-Shader* GlShaderImporter::Import(const std::string& filePath)
+std::unique_ptr<GlShader> GlShaderImporter::Import(const std::string& filePath)
 {
 	std::ifstream shaderFile;
 
@@ -37,15 +37,7 @@ Shader* GlShaderImporter::Import(const std::string& filePath)
 	vertexShader = AssembleShader({ version, vertexShader });
 	fragmentShader = AssembleShader({ version, fragmentShader });
 
-	unsigned int vertexShaderId = CompileVertexShader(vertexShader);
-	unsigned int fragmentShaderId = CompileFragmentShader(fragmentShader);
-
-	unsigned int programId = LinkShaders(vertexShaderId, fragmentShaderId);
-
-	glDeleteShader(vertexShaderId);
-	glDeleteShader(fragmentShaderId);
-
-	return new GlShader(programId);
+	return std::make_unique<GlShader>(vertexShader, fragmentShader);
 }
 
 std::string GlShaderImporter::ParseVersion(std::ifstream& file)
@@ -125,66 +117,4 @@ std::string GlShaderImporter::AssembleShader(const std::vector<std::string>& par
 	}
 
 	return shader.str();
-}
-
-unsigned int GlShaderImporter::CompileVertexShader(const std::string& vertexShader)
-{
-	const char* cVertexShader = vertexShader.c_str();
-
-	unsigned int vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShaderId, 1, &cVertexShader, NULL);
-	glCompileShader(vertexShaderId);
-
-	int success;
-	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		char infoLog[512];
-		glGetShaderInfoLog(vertexShaderId, 512, NULL, infoLog);
-
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	return vertexShaderId;
-}
-
-unsigned int GlShaderImporter::CompileFragmentShader(const std::string& fragmentShader)
-{
-	const char* cFragmentShader = fragmentShader.c_str();
-
-	unsigned int fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShaderId, 1, &cFragmentShader, NULL);
-	glCompileShader(fragmentShaderId);
-
-	int success;
-	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		char infoLog[512];
-		glGetShaderInfoLog(fragmentShaderId, 512, NULL, infoLog);
-
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	return fragmentShaderId;
-}
-
-unsigned int GlShaderImporter::LinkShaders(unsigned int vertexShaderId, unsigned int fragmentShaderId)
-{
-	unsigned int programId = glCreateProgram();
-	glAttachShader(programId, vertexShaderId);
-	glAttachShader(programId, fragmentShaderId);
-	glLinkProgram(programId);
-
-	int success;
-	glGetProgramiv(programId, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		char infoLog[512];
-		glGetProgramInfoLog(programId, 512, NULL, infoLog);
-
-		std::cout << "ERROR::SHADER::PROGRAM::LIKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	return programId;
 }

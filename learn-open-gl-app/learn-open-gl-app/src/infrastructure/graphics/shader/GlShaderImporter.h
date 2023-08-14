@@ -1,14 +1,15 @@
 #pragma once
 
 #include <fstream>
+#include <memory>
 #include <vector>
 
-class Shader;
+class GlShader;
 
 class GlShaderImporter
 {
 public:
-	Shader* Import(const std::string& filePath);
+	std::unique_ptr<GlShader> Import(const std::string& filePath);
 
 private:
 	std::string ParseVersion(std::ifstream& file);
@@ -16,9 +17,4 @@ private:
 	std::string ParseFragmentShader(std::ifstream& file);
 
 	std::string AssembleShader(const std::vector<std::string>& parts);
-
-	unsigned int CompileVertexShader(const std::string& vertexShader);
-	unsigned int CompileFragmentShader(const std::string& fragmentShader);
-
-	unsigned int LinkShaders(unsigned int vertexShaderId, unsigned int fragmentShaderId);
 };

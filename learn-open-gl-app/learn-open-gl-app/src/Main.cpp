@@ -11,6 +11,7 @@
 #include "engine/graphics/material/MaterialAttributes.h"
 #include "engine/graphics/model/Model.h"
 #include "engine/graphics/shader/Shader.h"
+#include "engine/graphics/shader/ShaderRegistry.h"
 #include "engine/graphics/skybox/Skybox.h"
 #include "engine/graphics/sprite/Sprite.h"
 #include "engine/graphics/texture/Texture.h"
@@ -27,7 +28,8 @@
 #include "infrastructure/asset/cubemap/CubemapImporter.h"
 #include "infrastructure/asset/model/ModelAssetFactory.h"
 #include "infrastructure/asset/model/ModelImporter.h"
-#include "infrastructure/asset/shader/ShaderRegistry.h"
+#include "infrastructure/asset/shader/ShaderAssetFactory.h"
+#include "infrastructure/asset/shader/ShaderImporter.h"
 #include "infrastructure/asset/texture/TextureAssetFactory.h"
 #include "infrastructure/asset/texture/TextureImporter.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
@@ -214,6 +216,11 @@ int main()
 
 	initImGui(window);
 
+	// --- Graphics Engine ---
+
+	GlGraphicsEngine graphicsEngine;
+	graphicsEngine.Initialize(SCR_WIDTH, SCR_HEIGHT);
+
 	// --- Asset Manager ---
 
 	AssetRegistry assetRegistry;
@@ -225,41 +232,54 @@ int main()
 
 	CubemapImporter cubemapImporter(assetManager);
 	TextureImporter textureImporter(assetManager);
-	GlShaderImporter shaderImporter;
+	ShaderImporter shaderImporter(assetManager, graphicsEngine);
 	ShaderRegistry shaderRegistry;
 	ModelImporter modelImporter(assetManager, textureImporter, shaderRegistry);
 
 	// --- Asset Descriptors ---
 
 	// Texture
-	AssetDescriptor textureAssetDescriptor(Texture::GetObjectType(), "Texture");
+	AssetDescriptor textureAssetDescriptor(ObjectType(typeid(Texture)), "Texture");
 	std::unique_ptr<AssetFactory> textureAssetFactory = std::make_unique<TextureAssetFactory>();
 	assetRegistry.DefineAsset(textureAssetDescriptor, textureAssetFactory);
 
 	// Model
-	AssetDescriptor modelAssetDescriptor(Model::GetObjectType(), "Model");
+	AssetDescriptor modelAssetDescriptor(ObjectType(typeid(Model)), "Model");
 	std::unique_ptr<AssetFactory> modelAssetFactory = std::make_unique<ModelAssetFactory>();
 	assetRegistry.DefineAsset(modelAssetDescriptor, modelAssetFactory);
 
 	// Cubemap
-	AssetDescriptor cubemapAssetDescriptor(Cubemap::GetObjectType(), "Cubemap");
+	AssetDescriptor cubemapAssetDescriptor(ObjectType(typeid(Cubemap)), "Cubemap");
 	std::unique_ptr<AssetFactory> cubemapAssetFactory = std::make_unique<CubemapAssetFactory>();
 	assetRegistry.DefineAsset(cubemapAssetDescriptor, cubemapAssetFactory);
 
-	// --- Graphics ---
-
-	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
-	graphicsEngine->Initialize(SCR_WIDTH, SCR_HEIGHT);
+	// Shader
+	AssetDescriptor shaderAssetDescriptor(ObjectType(typeid(GlShader)), "Shader");
+	std::unique_ptr<AssetFactory> shaderAssetFactory = std::make_unique<ShaderAssetFactory>(graphicsEngine);
+	assetRegistry.DefineAsset(shaderAssetDescriptor, shaderAssetFactory);
 
 	// --- Shaders ---
 
-	Shader* phongShader = shaderImporter.Import(PHONG_SHADER_PATH);
-	Shader* reflectionShader = shaderImporter.Import(REFLECTION_SHADER_PATH);
-	Shader* refractionShader = shaderImporter.Import(REFRACTION_SHADER_PATH);
-	Shader* spriteShader = shaderImporter.Import(SPRITE_SHADER_PATH);
-	Shader* renderShader = shaderImporter.Import(RENDER_SHADER_PATH);
-	Shader* skyboxShader = shaderImporter.Import(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = shaderImporter.Import(CHROMATIC_ABERRATION_SHADER_PATH);
+	Asset* phongShaderAsset = shaderImporter.Import(PHONG_SHADER_PATH);
+	Shader* phongShader = (Shader*)phongShaderAsset->GetObject();
+
+	Asset* reflectionShaderAsset = shaderImporter.Import(REFLECTION_SHADER_PATH);
+	Shader* reflectionShader = (Shader*)reflectionShaderAsset->GetObject();
+	
+	Asset* refractionShaderAsset = shaderImporter.Import(REFRACTION_SHADER_PATH);
+	Shader* refractionShader = (Shader*)refractionShaderAsset->GetObject();
+	
+	Asset* spriteShaderAsset = shaderImporter.Import(SPRITE_SHADER_PATH);
+	Shader* spriteShader = (Shader*)spriteShaderAsset->GetObject();
+	
+	Asset* renderShaderAsset = shaderImporter.Import(RENDER_SHADER_PATH);
+	Shader* renderShader = (Shader*)renderShaderAsset->GetObject();
+	
+	Asset* skyboxShaderAsset = shaderImporter.Import(SKYBOX_SHADER_PATH);
+	Shader* skyboxShader = (Shader*)skyboxShaderAsset->GetObject();
+	
+	Asset* chromaticAberrationShaderAsset = shaderImporter.Import(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* chromaticAberrationShader = (Shader*)chromaticAberrationShaderAsset->GetObject();
 
 	shaderRegistry.Register(ShadingModel::Phong, *phongShader);
 
@@ -343,35 +363,35 @@ int main()
 
 	Actor skyboxActor("Skybox");
 
-	SkyboxRendererComponent skyboxRendererComponent(*graphicsEngine, skybox);
+	SkyboxRendererComponent skyboxRendererComponent(graphicsEngine, skybox);
 	skyboxActor.AddComponent(&skyboxRendererComponent);
 
 	Actor backpackActor("Backpack");
 
 	TransformComponent backpackTransformComponent;
 	backpackActor.AddComponent(&backpackTransformComponent);
-	ModelRendererComponent backpackRendererComponent(*graphicsEngine, backpackModel);
+	ModelRendererComponent backpackRendererComponent(graphicsEngine, backpackModel);
 	backpackActor.AddComponent(&backpackRendererComponent);
 
 	Actor testActor("Test");
 
 	TransformComponent testTransformComponent(glm::vec3(4.0f, 0.0f, 0.0f));
 	testActor.AddComponent(&testTransformComponent);
-	ModelRendererComponent testRendererComponent(*graphicsEngine, testModel);
+	ModelRendererComponent testRendererComponent(graphicsEngine, testModel);
 	testActor.AddComponent(&testRendererComponent);
 
 	Actor cubeActor("Cube");
 
 	TransformComponent cubeTransformComponent(glm::vec3(-4.0f, 0.0f, 0.0f));
 	cubeActor.AddComponent(&cubeTransformComponent);
-	ModelRendererComponent cubeRendererComponent(*graphicsEngine, cubeModel);
+	ModelRendererComponent cubeRendererComponent(graphicsEngine, cubeModel);
 	cubeActor.AddComponent(&cubeRendererComponent);
 
 	Actor suzanneActor("Suzanne");
 
 	TransformComponent suzanneTransformComponent(glm::vec3(0.0f, 0.0f, 2.0f));
 	suzanneActor.AddComponent(&suzanneTransformComponent);
-	ModelRendererComponent suzanneRendererComponent(*graphicsEngine, suzanneModel);
+	ModelRendererComponent suzanneRendererComponent(graphicsEngine, suzanneModel);
 	suzanneActor.AddComponent(&suzanneRendererComponent);
 
 	// --- Lights ---
@@ -384,7 +404,7 @@ int main()
 	pointLightActor.AddComponent(&pointLightTransformComponent);
 	PointLightComponent pointLightComponent(&pointLight);
 	pointLightActor.AddComponent(&pointLightComponent);
-	SpriteRendererComponent pointLightRendererComponent(*graphicsEngine, pointLightSprite);
+	SpriteRendererComponent pointLightRendererComponent(graphicsEngine, pointLightSprite);
 	pointLightActor.AddComponent(&pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");
@@ -428,10 +448,10 @@ int main()
 	glm::mat4 viewTransform;
 	glm::mat4 skyboxTransform;
 	glm::mat4 projectionTransform;
-	std::unique_ptr<GlobalData> matricesGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_matrices"));
-	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
-	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
-	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
+	std::unique_ptr<GlobalData> matricesGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_matrices"));
+	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
+	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
+	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
 
 	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO. */
 	phongShader->BindToGlobalData(*matricesGlobalData);
@@ -470,10 +490,10 @@ int main()
 	diffuse		vec3	16				32				12
 	specular	vec3	16				48				12
 	*/
-	std::unique_ptr<GlobalData> directionalLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_directionalLights"));
-	graphicsEngine->AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
-	std::unique_ptr<GlobalData> pointLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_pointLights"));
-	graphicsEngine->AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
+	std::unique_ptr<GlobalData> directionalLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_directionalLights"));
+	graphicsEngine.AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
+	std::unique_ptr<GlobalData> pointLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_pointLights"));
+	graphicsEngine.AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
 
 	phongShader->BindToGlobalData(*directionalLightsGlobalData);
 	phongShader->BindToGlobalData(*pointLightsGlobalData);
@@ -490,8 +510,8 @@ int main()
 	position	vec3	16				0				12
 	*/
 	glm::vec3 cameraPosition;
-	std::unique_ptr<GlobalData> cameraGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_camera"));
-	graphicsEngine->AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
+	std::unique_ptr<GlobalData> cameraGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_camera"));
+	graphicsEngine.AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
 
 	phongShader->BindToGlobalData(*cameraGlobalData);
 	reflectionShader->BindToGlobalData(*cameraGlobalData);
@@ -524,7 +544,7 @@ int main()
 		newImGuiFrame();
 		setupImGuiFrame();
 
-		graphicsEngine->StartFrame();
+		graphicsEngine.StartFrame();
 
 		// --- View and projection transformation matrices ---
 
@@ -557,7 +577,7 @@ int main()
 		/* We need to render the actors with transparency last. */
 		pointLightActor.Render();
 
-		graphicsEngine->EndFrame();
+		graphicsEngine.EndFrame();
 
 		// --- Post-frame stuff ---
 

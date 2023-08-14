@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\asset\shader\ShaderAssetFactory.cpp" />
+    <ClCompile Include="src\infrastructure\asset\shader\ShaderImporter.cpp" />
     <ClCompile Include="src\engine\asset\AssetImporter.cpp" />
     <ClCompile Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.cpp" />
     <ClCompile Include="src\infrastructure\asset\model\ModelAssetFactory.cpp" />
@@ -159,7 +161,7 @@
     <ClCompile Include="src\engine\asset\Asset.cpp" />
     <ClCompile Include="src\infrastructure\asset\cubemap\CubemapImporter.cpp" />
     <ClCompile Include="src\infrastructure\asset\model\ModelImporter.cpp" />
-    <ClCompile Include="src\infrastructure\asset\shader\ShaderRegistry.cpp" />
+    <ClCompile Include="src\engine\graphics\shader\ShaderRegistry.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttribute.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialTemplate.cpp" />
@@ -229,6 +231,8 @@
     <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\asset\shader\ShaderAssetFactory.h" />
+    <ClInclude Include="src\infrastructure\asset\shader\ShaderImporter.h" />
     <ClInclude Include="src\engine\asset\AssetImporter.h" />
     <ClInclude Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.h" />
     <ClInclude Include="src\infrastructure\asset\model\ModelAssetFactory.h" />
@@ -243,7 +247,7 @@
     <ClInclude Include="src\engine\asset\Asset.h" />
     <ClInclude Include="src\infrastructure\asset\cubemap\CubemapImporter.h" />
     <ClInclude Include="src\infrastructure\asset\model\ModelImporter.h" />
-    <ClInclude Include="src\infrastructure\asset\shader\ShaderRegistry.h" />
+    <ClInclude Include="src\engine\graphics\shader\ShaderRegistry.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttribute.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialTemplate.h" />

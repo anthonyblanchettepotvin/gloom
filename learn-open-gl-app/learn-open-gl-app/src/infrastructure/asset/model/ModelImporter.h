@@ -14,7 +14,6 @@ enum aiTextureType;
 
 class Material;
 class Mesh;
-class Model;
 class ShaderRegistry;
 class Texture;
 class TextureImporter;
