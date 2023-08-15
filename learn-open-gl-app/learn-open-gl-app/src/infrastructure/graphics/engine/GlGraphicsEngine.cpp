@@ -205,6 +205,9 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 
 void GlGraphicsEngine::Render(const Mesh& mesh)
 {
+	if (!mesh.GetMaterial() || !mesh.GetMaterial()->GetShader())
+		return;
+
 	ObjectID meshId = mesh.GetId();
 
 	auto it = m_GlMeshes.find(meshId);
@@ -217,7 +220,7 @@ void GlGraphicsEngine::Render(const Mesh& mesh)
 
 	ApplyMaterial(*mesh.GetMaterial());
 
-	mesh.GetMaterial()->GetShader().SetFloatMat4("modelXform", mesh.GetTransform());
+	mesh.GetMaterial()->GetShader()->SetFloatMat4("modelXform", mesh.GetTransform());
 
 	glMesh.Render();
 
@@ -226,6 +229,9 @@ void GlGraphicsEngine::Render(const Mesh& mesh)
 
 void GlGraphicsEngine::Render(const Skybox& skybox)
 {
+	if (!skybox.GetMaterial() || !skybox.GetMaterial()->GetShader())
+		return;
+
 	ObjectID skyboxId = skybox.GetId();
 
 	auto it = m_GlSkyboxes.find(skyboxId);
@@ -245,17 +251,22 @@ void GlGraphicsEngine::Render(const Skybox& skybox)
 
 void GlGraphicsEngine::Render(const Sprite& sprite)
 {
-	auto it = m_GlSprites.find(sprite.GetId());
+	if (!sprite.GetMaterial() || !sprite.GetMaterial()->GetShader())
+		return;
+
+	ObjectID spriteId = sprite.GetId();
+
+	auto it = m_GlSprites.find(spriteId);
 	if (it == m_GlSprites.end())
 	{
-		m_GlSprites[sprite.GetId()] = std::make_unique<GlSprite>(sprite);
+		m_GlSprites[spriteId] = std::make_unique<GlSprite>(sprite);
 	}
 	
-	GlSprite& glSprite = *m_GlSprites[sprite.GetId()];
+	GlSprite& glSprite = *m_GlSprites[spriteId];
 
 	ApplyMaterial(*sprite.GetMaterial());
 
-	sprite.GetMaterial()->GetShader().SetFloatMat4("modelXform", sprite.GetTransform());
+	sprite.GetMaterial()->GetShader()->SetFloatMat4("modelXform", sprite.GetTransform());
 
 	glSprite.Render();
 
@@ -264,11 +275,11 @@ void GlGraphicsEngine::Render(const Sprite& sprite)
 
 void GlGraphicsEngine::ApplyMaterial(const Material& material)
 {
-	material.GetShader().Use();
+	material.GetShader()->Use();
 
 	for (const auto& attribute : material.GetAttributes())
 	{
-		ApplyMaterialAttributeToShader(material.GetShader(), attribute);
+		ApplyMaterialAttributeToShader(*material.GetShader(), attribute);
 	}
 }
 

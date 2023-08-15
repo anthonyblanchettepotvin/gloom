@@ -165,9 +165,6 @@
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\object\ObjectID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -213,9 +210,6 @@
     <ClCompile Include="src\engine\graphics\mesh\Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\shader\ShaderImporter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\asset\Asset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -243,22 +237,37 @@
     <ClCompile Include="src\engine\asset\AssetRegistryEntry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\cubemap\CubemapImporter.cpp">
+    <ClCompile Include="src\infrastructure\asset\shader\ShaderAssetFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\model\ModelImporter.cpp">
+    <ClCompile Include="src\infrastructure\asset\shader\ShaderImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\texture\TextureImporter.cpp">
+    <ClCompile Include="src\engine\asset\AssetImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\texture\TextureAssetFactory.cpp">
+    <ClCompile Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\model\ModelAssetFactory.cpp">
+    <ClCompile Include="src\infrastructure\asset\model\ModelAssetFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\cubemap\CubemapAssetFactory.cpp">
+    <ClCompile Include="src\infrastructure\asset\cubemap\CubemapImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\model\ModelImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\graphics\shader\ShaderRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\texture\TextureImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\material\MaterialAssetFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,9 +425,6 @@
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\shader\ShaderRegistry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\object\ObjectID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -464,9 +470,6 @@
     <ClInclude Include="src\engine\graphics\mesh\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\shader\ShaderImporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\asset\Asset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -494,22 +497,37 @@
     <ClInclude Include="src\engine\asset\AssetRegistryEntry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\cubemap\CubemapImporter.h">
+    <ClInclude Include="src\infrastructure\asset\shader\ShaderAssetFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\model\ModelImporter.h">
+    <ClInclude Include="src\infrastructure\asset\shader\ShaderImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\texture\TextureImporter.h">
+    <ClInclude Include="src\engine\asset\AssetImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\texture\TextureAssetFactory.h">
+    <ClInclude Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\model\ModelAssetFactory.h">
+    <ClInclude Include="src\infrastructure\asset\model\ModelAssetFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\cubemap\CubemapAssetFactory.h">
+    <ClInclude Include="src\infrastructure\asset\cubemap\CubemapImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\model\ModelImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\graphics\shader\ShaderRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\texture\TextureImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\texture\TextureAssetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\material\MaterialAssetFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

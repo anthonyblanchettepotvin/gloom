@@ -7,6 +7,7 @@
 
 class DirectionalLight;
 class GlobalData;
+class Material;
 class Mesh;
 class PointLight;
 class Shader;

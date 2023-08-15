@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\asset\material\MaterialAssetFactory.cpp" />
     <ClCompile Include="src\infrastructure\asset\shader\ShaderAssetFactory.cpp" />
     <ClCompile Include="src\infrastructure\asset\shader\ShaderImporter.cpp" />
     <ClCompile Include="src\engine\asset\AssetImporter.cpp" />
@@ -231,6 +232,7 @@
     <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\asset\material\MaterialAssetFactory.h" />
     <ClInclude Include="src\infrastructure\asset\shader\ShaderAssetFactory.h" />
     <ClInclude Include="src\infrastructure\asset\shader\ShaderImporter.h" />
     <ClInclude Include="src\engine\asset\AssetImporter.h" />

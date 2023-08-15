@@ -9,7 +9,6 @@
 
 class Asset;
 class AssetDescriptor;
-class AssetManager;
 class Object;
 class ObjectType;
 

@@ -26,6 +26,7 @@
 #include "game/world/World.h"
 #include "infrastructure/asset/cubemap/CubemapAssetFactory.h"
 #include "infrastructure/asset/cubemap/CubemapImporter.h"
+#include "infrastructure/asset/material/MaterialAssetFactory.h"
 #include "infrastructure/asset/model/ModelAssetFactory.h"
 #include "infrastructure/asset/model/ModelImporter.h"
 #include "infrastructure/asset/shader/ShaderAssetFactory.h"
@@ -243,6 +244,11 @@ int main()
 	std::unique_ptr<AssetFactory> textureAssetFactory = std::make_unique<TextureAssetFactory>();
 	assetRegistry.DefineAsset(textureAssetDescriptor, textureAssetFactory);
 
+	// Material
+	AssetDescriptor materialAssetDescriptor(ObjectType(typeid(Material)), "Material");
+	std::unique_ptr<AssetFactory> materialAssetFactory = std::make_unique<MaterialAssetFactory>();
+	assetRegistry.DefineAsset(materialAssetDescriptor, materialAssetFactory);
+
 	// Model
 	AssetDescriptor modelAssetDescriptor(ObjectType(typeid(Model)), "Model");
 	std::unique_ptr<AssetFactory> modelAssetFactory = std::make_unique<ModelAssetFactory>();
@@ -286,21 +292,21 @@ int main()
 	// --- Textures ---
 
 	Asset* pointLightTextureAsset = textureImporter.Import(AWESOME_EMOJI_TEXTURE_PATH);
-	Texture* pointLightTexture = (Texture*)pointLightTextureAsset->GetObject(); // TODO: Use dynamic_cast here
+	Texture* pointLightTexture = (Texture*)pointLightTextureAsset->GetObject();
 
 	// --- Models ---
 
 	Asset* backpackModelAsset = modelImporter.Import(BACKPACK_MODEL_PATH);
-	Model* backpackModel = (Model*)backpackModelAsset->GetObject(); // TODO: Use dynamic_cast here
+	Model* backpackModel = (Model*)backpackModelAsset->GetObject();
 
 	Asset* testModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
-	Model* testModel = (Model*)testModelAsset->GetObject(); // TODO: Use dynamic_cast here
+	Model* testModel = (Model*)testModelAsset->GetObject();
 
 	Asset* cubeModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
-	Model* cubeModel = (Model*)cubeModelAsset->GetObject(); // TODO: Use dynamic_cast here
+	Model* cubeModel = (Model*)cubeModelAsset->GetObject();
 
 	Asset* suzanneModelAsset = modelImporter.Import(SUZANNE_MODEL_PATH);
-	Model* suzanneModel = (Model*)suzanneModelAsset->GetObject(); // TODO: Use dynamic_cast here
+	Model* suzanneModel = (Model*)suzanneModelAsset->GetObject();
 
 	Material* testModelMaterial = phongShader->CreateMaterialInstance();
 
