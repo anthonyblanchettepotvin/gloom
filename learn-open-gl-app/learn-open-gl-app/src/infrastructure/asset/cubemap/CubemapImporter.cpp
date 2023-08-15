@@ -1,7 +1,5 @@
 #include "CubemapImporter.h"
 
-#include <iostream>
-
 #include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
 
 #include "../../../engine/graphics/cubemap/Cubemap.h"

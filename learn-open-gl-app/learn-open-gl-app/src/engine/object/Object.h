@@ -1,8 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <string>
-#include <typeindex>
 
 #include "ObjectID.h"
 
@@ -28,4 +26,13 @@ public:
 	}
 
 	friend std::hash<Object>;
+};
+
+template<>
+struct std::hash<Object>
+{
+	size_t operator()(Object const& object) const noexcept
+	{
+		return std::hash<ObjectID>{}(object.m_Id);
+	}
 };

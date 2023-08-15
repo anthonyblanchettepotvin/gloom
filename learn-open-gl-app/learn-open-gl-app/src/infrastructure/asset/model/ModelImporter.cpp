@@ -1,6 +1,5 @@
 #include "ModelImporter.h"
 
-#include <iostream>
 #include <string>
 
 #include <assimp/Importer.hpp>
@@ -34,7 +33,7 @@ std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& filePath)
 
 	if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
 	{
-		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+		// TODO: Log error
 
 		return nullptr;
 	}
@@ -184,7 +183,7 @@ Material* ModelImporter::ImportMaterial(aiMaterial* material)
 	}
 	else
 	{
-		std::cerr << "Unsupported shading model" << std::endl;
+		// TODO: Log error
 	}
 
 	return nullptr;

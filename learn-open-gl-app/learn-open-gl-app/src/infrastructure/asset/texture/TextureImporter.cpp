@@ -1,7 +1,5 @@
 #include "TextureImporter.h"
 
-#include <iostream>
-
 #include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
 
 #include "../../../engine/graphics/texture/Texture.h"
