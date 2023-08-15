@@ -22,5 +22,5 @@ Material* MaterialTemplate::CreateMaterialInstance() const
 		attributes.push_back(std::unique_ptr<MaterialAttribute>(attribute->CreateAttributeInstance()));
 	}
 
-	return new Material(m_Shader, attributes);
+	return new Material(&m_Shader, attributes);
 }

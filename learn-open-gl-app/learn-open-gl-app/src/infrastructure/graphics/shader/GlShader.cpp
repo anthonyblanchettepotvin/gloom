@@ -10,13 +10,17 @@
 
 #include "../globaldata/GlGlobalData.h"
 
-GlShader::GlShader(unsigned int id)
-	: m_Id(id)
+GlShader::GlShader(const std::string& vertexShader, const std::string& fragmentShader)
+	: m_VertexShader(vertexShader), m_FragmentShader(fragmentShader)
 {
+	Initialize();
 }
 
 void GlShader::InitializeMaterialTemplate()
 {
+	if (m_Id == 0)
+		return;
+
 	GLint nbUniforms;
 	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORMS, &nbUniforms);
 
@@ -111,4 +115,77 @@ void GlShader::BindToGlobalData(GlobalData& globalData)
 	{
 		// TODO: Display error
 	}
+}
+
+void GlShader::Initialize()
+{
+	unsigned int vertexShaderId = CompileVertexShader();
+	unsigned int fragmentShaderId = CompileFragmentShader();
+
+	m_Id = LinkShaders(vertexShaderId, fragmentShaderId);
+
+	glDeleteShader(vertexShaderId);
+	glDeleteShader(fragmentShaderId);
+}
+
+unsigned int GlShader::CompileVertexShader()
+{
+	const char* cVertexShader = m_VertexShader.c_str();
+
+	unsigned int vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShaderId, 1, &cVertexShader, NULL);
+	glCompileShader(vertexShaderId);
+
+	int success;
+	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		char infoLog[512];
+		glGetShaderInfoLog(vertexShaderId, 512, NULL, infoLog);
+
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	return vertexShaderId;
+}
+
+unsigned int GlShader::CompileFragmentShader()
+{
+	const char* cFragmentShader = m_FragmentShader.c_str();
+
+	unsigned int fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderId, 1, &cFragmentShader, NULL);
+	glCompileShader(fragmentShaderId);
+
+	int success;
+	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		char infoLog[512];
+		glGetShaderInfoLog(fragmentShaderId, 512, NULL, infoLog);
+
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	return fragmentShaderId;
+}
+
+unsigned int GlShader::LinkShaders(unsigned int vertexShaderId, unsigned int fragmentShaderId)
+{
+	unsigned int programId = glCreateProgram();
+	glAttachShader(programId, vertexShaderId);
+	glAttachShader(programId, fragmentShaderId);
+	glLinkProgram(programId);
+
+	int success;
+	glGetProgramiv(programId, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		char infoLog[512];
+		glGetProgramInfoLog(programId, 512, NULL, infoLog);
+
+		std::cout << "ERROR::SHADER::PROGRAM::LIKING_FAILED\n" << infoLog << std::endl;
+	}
+
+	return programId;
 }

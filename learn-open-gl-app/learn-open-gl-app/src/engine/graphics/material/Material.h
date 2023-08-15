@@ -3,24 +3,27 @@
 #include <memory>
 #include <vector>
 
+#include "../../object/Object.h"
+
 #include "MaterialAttribute.h"
 
 class Shader;
 
-class Material
+class Material : public Object
 {
 public:
-	Material(Shader& shader, std::vector<std::unique_ptr<MaterialAttribute>>& attributes);
+	Material() = default;
+	Material(Shader* shader, std::vector<std::unique_ptr<MaterialAttribute>>& attributes);
 
 	std::vector<MaterialAttribute*> GetAttributes() const;
 
-	Shader& GetShader() const { return m_Shader; }
+	Shader* GetShader() const { return m_Shader; }
 
 	template<class T>
 	T* FindAttribute(const std::string& name) const;
 	
 private:
-	Shader& m_Shader;
+	Shader* m_Shader = nullptr;
 
 	std::vector<std::unique_ptr<MaterialAttribute>> m_Attributes;
 };

@@ -1,26 +1,21 @@
 #include <iostream>
 
+#include "engine/asset/Asset.h"
+#include "engine/asset/AssetDescriptor.h"
+#include "engine/asset/AssetFactory.h"
+#include "engine/asset/AssetManager.h"
+#include "engine/asset/AssetRegistry.h"
+#include "engine/asset/AssetRepository.h"
 #include "engine/graphics/cubemap/Cubemap.h"
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/material/MaterialAttributes.h"
 #include "engine/graphics/model/Model.h"
 #include "engine/graphics/shader/Shader.h"
+#include "engine/graphics/shader/ShaderRegistry.h"
 #include "engine/graphics/skybox/Skybox.h"
 #include "engine/graphics/sprite/Sprite.h"
 #include "engine/graphics/texture/Texture.h"
 #include "game/actor/Actor.h"
-#include "game/asset/AssetController.h"
-#include "game/asset/AssetDescriptor.h"
-#include "game/asset/AssetDescriptorRegistry.h"
-#include "game/asset/texture/TextureLoader.h"
-#include "game/asset/texture/TextureRepository.h"
-#include "game/asset/model/ModelLoader.h"
-#include "game/asset/model/ModelRepository.h"
-#include "game/asset/shader/ShaderLoader.h"
-#include "game/asset/shader/ShaderRegistry.h"
-#include "game/asset/shader/ShaderRepository.h" 
-#include "game/asset/cubemap/CubemapLoader.h"
-#include "game/asset/cubemap/CubemapRepository.h"
 #include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
 #include "game/component/ModelRendererComponent.h"
@@ -29,8 +24,17 @@
 #include "game/component/PointLightComponent.h"
 #include "game/component/DirectionalLightComponent.h"
 #include "game/world/World.h"
+#include "infrastructure/asset/cubemap/CubemapAssetFactory.h"
+#include "infrastructure/asset/cubemap/CubemapImporter.h"
+#include "infrastructure/asset/material/MaterialAssetFactory.h"
+#include "infrastructure/asset/model/ModelAssetFactory.h"
+#include "infrastructure/asset/model/ModelImporter.h"
+#include "infrastructure/asset/shader/ShaderAssetFactory.h"
+#include "infrastructure/asset/shader/ShaderImporter.h"
+#include "infrastructure/asset/texture/TextureAssetFactory.h"
+#include "infrastructure/asset/texture/TextureImporter.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
-#include "infrastructure/graphics/shader/GlShaderLoader.h"
+#include "infrastructure/graphics/shader/GlShaderImporter.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
 
 /* UI library. */
@@ -73,7 +77,14 @@ const std::string SUZANNE_MODEL_PATH = ".\\models\\suzanne\\suzanne.obj";
 
 const std::string AWESOME_EMOJI_TEXTURE_PATH = ".\\images\\awesomeface.png";
 
-const std::string CUBEMAP_FACES_PATH = ".\\images\\nightCubemap";
+const std::vector<std::string> CUBEMAP_FACES_PATH = {
+	".\\images\\nightCubemap\\1.jpg",
+	".\\images\\nightCubemap\\2.jpg",
+	".\\images\\nightCubemap\\3.jpg",
+	".\\images\\nightCubemap\\4.jpg",
+	".\\images\\nightCubemap\\5.jpg",
+	".\\images\\nightCubemap\\6.jpg"
+};
 
 // Settings
 const unsigned int SCR_WIDTH = 1600;
@@ -206,67 +217,97 @@ int main()
 
 	initImGui(window);
 
+	// --- Graphics Engine ---
+
+	GlGraphicsEngine graphicsEngine;
+	graphicsEngine.Initialize(SCR_WIDTH, SCR_HEIGHT);
+
+	// --- Asset Manager ---
+
+	AssetRegistry assetRegistry;
+	AssetRepository assetRepository;
+
+	AssetManager assetManager(assetRegistry, assetRepository);
+
+	// --- Importers ---
+
+	CubemapImporter cubemapImporter(assetManager);
+	TextureImporter textureImporter(assetManager);
+	ShaderImporter shaderImporter(assetManager, graphicsEngine);
+	ShaderRegistry shaderRegistry;
+	ModelImporter modelImporter(assetManager, textureImporter, shaderRegistry);
+
 	// --- Asset Descriptors ---
 
-	AssetDescriptorRegistry assetDescriptorRegistry;
-
 	// Texture
-	TextureLoader textureLoader;
-	TextureRepository textureRepository;
-	AssetDescriptor<Texture> textureAssetDescriptor(textureLoader, textureRepository, { ".jpg", ".jpeg", ".png" });
-	assetDescriptorRegistry.Register(&textureAssetDescriptor);
+	AssetDescriptor textureAssetDescriptor(ObjectType(typeid(Texture)), "Texture");
+	std::unique_ptr<AssetFactory> textureAssetFactory = std::make_unique<TextureAssetFactory>();
+	assetRegistry.DefineAsset(textureAssetDescriptor, textureAssetFactory);
 
-	// Shader
-	GlShaderLoader shaderLoader;
-	ShaderRegistry shaderRegistry;
-	ShaderRepository shaderRepository;
-	AssetDescriptor<Shader> shaderAssetDescriptor(shaderLoader, shaderRepository, { ".shader" });
-	assetDescriptorRegistry.Register(&shaderAssetDescriptor);
+	// Material
+	AssetDescriptor materialAssetDescriptor(ObjectType(typeid(Material)), "Material");
+	std::unique_ptr<AssetFactory> materialAssetFactory = std::make_unique<MaterialAssetFactory>();
+	assetRegistry.DefineAsset(materialAssetDescriptor, materialAssetFactory);
 
 	// Model
-	ModelLoader modelLoader(textureLoader, shaderRegistry);
-	ModelRepository modelRepository;
-	AssetDescriptor<Model> modelAssetDescriptor(modelLoader, modelRepository, { ".obj" });
-	assetDescriptorRegistry.Register(&modelAssetDescriptor);
+	AssetDescriptor modelAssetDescriptor(ObjectType(typeid(Model)), "Model");
+	std::unique_ptr<AssetFactory> modelAssetFactory = std::make_unique<ModelAssetFactory>();
+	assetRegistry.DefineAsset(modelAssetDescriptor, modelAssetFactory);
 
 	// Cubemap
-	CubemapLoader cubemapLoader;
-	CubemapRepository cubemapRepository;
-	AssetDescriptor<Cubemap> cubemapAssetDescriptor(cubemapLoader, cubemapRepository, {});
-	assetDescriptorRegistry.Register(&cubemapAssetDescriptor);
+	AssetDescriptor cubemapAssetDescriptor(ObjectType(typeid(Cubemap)), "Cubemap");
+	std::unique_ptr<AssetFactory> cubemapAssetFactory = std::make_unique<CubemapAssetFactory>();
+	assetRegistry.DefineAsset(cubemapAssetDescriptor, cubemapAssetFactory);
 
-	// --- Asset Controller ---
-
-	AssetController assetController(assetDescriptorRegistry);
-
-	// --- Graphics ---
-
-	GraphicsEngine* graphicsEngine = new GlGraphicsEngine();
-	graphicsEngine->Initialize(SCR_WIDTH, SCR_HEIGHT);
+	// Shader
+	AssetDescriptor shaderAssetDescriptor(ObjectType(typeid(GlShader)), "Shader");
+	std::unique_ptr<AssetFactory> shaderAssetFactory = std::make_unique<ShaderAssetFactory>(graphicsEngine);
+	assetRegistry.DefineAsset(shaderAssetDescriptor, shaderAssetFactory);
 
 	// --- Shaders ---
 
-	Shader* phongShader = assetController.LoadAsset<Shader>(PHONG_SHADER_PATH);
-	Shader* reflectionShader = assetController.LoadAsset<Shader>(REFLECTION_SHADER_PATH);
-	Shader* refractionShader = assetController.LoadAsset<Shader>(REFRACTION_SHADER_PATH);
-	Shader* spriteShader = assetController.LoadAsset<Shader>(SPRITE_SHADER_PATH);
-	Shader* renderShader = assetController.LoadAsset<Shader>(RENDER_SHADER_PATH);
-	Shader* skyboxShader = assetController.LoadAsset<Shader>(SKYBOX_SHADER_PATH);
-	Shader* chromaticAberrationShader = assetController.LoadAsset<Shader>(CHROMATIC_ABERRATION_SHADER_PATH);
+	Asset* phongShaderAsset = shaderImporter.Import(PHONG_SHADER_PATH);
+	Shader* phongShader = (Shader*)phongShaderAsset->GetObject();
+
+	Asset* reflectionShaderAsset = shaderImporter.Import(REFLECTION_SHADER_PATH);
+	Shader* reflectionShader = (Shader*)reflectionShaderAsset->GetObject();
 	
+	Asset* refractionShaderAsset = shaderImporter.Import(REFRACTION_SHADER_PATH);
+	Shader* refractionShader = (Shader*)refractionShaderAsset->GetObject();
+	
+	Asset* spriteShaderAsset = shaderImporter.Import(SPRITE_SHADER_PATH);
+	Shader* spriteShader = (Shader*)spriteShaderAsset->GetObject();
+	
+	Asset* renderShaderAsset = shaderImporter.Import(RENDER_SHADER_PATH);
+	Shader* renderShader = (Shader*)renderShaderAsset->GetObject();
+	
+	Asset* skyboxShaderAsset = shaderImporter.Import(SKYBOX_SHADER_PATH);
+	Shader* skyboxShader = (Shader*)skyboxShaderAsset->GetObject();
+	
+	Asset* chromaticAberrationShaderAsset = shaderImporter.Import(CHROMATIC_ABERRATION_SHADER_PATH);
+	Shader* chromaticAberrationShader = (Shader*)chromaticAberrationShaderAsset->GetObject();
+
 	shaderRegistry.Register(ShadingModel::Phong, *phongShader);
 
 	// --- Textures ---
 
-	Texture* pointLightTexture = assetController.LoadAsset<Texture>(AWESOME_EMOJI_TEXTURE_PATH);
+	Asset* pointLightTextureAsset = textureImporter.Import(AWESOME_EMOJI_TEXTURE_PATH);
+	Texture* pointLightTexture = (Texture*)pointLightTextureAsset->GetObject();
 
 	// --- Models ---
 
-	Model* backpackModel = assetController.LoadAsset<Model>(BACKPACK_MODEL_PATH);
-	Model* testModel = assetController.LoadAsset<Model>(CUBE_MODEL_PATH);
-	Model* cubeModel = assetController.LoadAsset<Model>(CUBE_MODEL_PATH);
-	Model* suzanneModel = assetController.LoadAsset<Model>(SUZANNE_MODEL_PATH);
-	
+	Asset* backpackModelAsset = modelImporter.Import(BACKPACK_MODEL_PATH);
+	Model* backpackModel = (Model*)backpackModelAsset->GetObject();
+
+	Asset* testModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
+	Model* testModel = (Model*)testModelAsset->GetObject();
+
+	Asset* cubeModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
+	Model* cubeModel = (Model*)cubeModelAsset->GetObject();
+
+	Asset* suzanneModelAsset = modelImporter.Import(SUZANNE_MODEL_PATH);
+	Model* suzanneModel = (Model*)suzanneModelAsset->GetObject();
+
 	Material* testModelMaterial = phongShader->CreateMaterialInstance();
 
 	TextureMaterialAttribute* testDiffuseAttribute = testModelMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_diffuse1");
@@ -297,7 +338,8 @@ int main()
 
 	// --- Cubemaps ---
 
-	Cubemap* cubemap = assetController.LoadAsset<Cubemap>(CUBEMAP_FACES_PATH);
+	Asset* cubemapAsset = cubemapImporter.Import(CUBEMAP_FACES_PATH);
+	Cubemap* cubemap = (Cubemap*)cubemapAsset->GetObject();
 
 	// --- Skyboxes ---
 
@@ -314,7 +356,7 @@ int main()
 	// --- Sprite ---
 
 	Material* pointLightSpriteMaterial = spriteShader->CreateMaterialInstance();
-	
+
 	TextureMaterialAttribute* pointLightTextureAttribute = pointLightSpriteMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_sprite");
 	if (pointLightTextureAttribute)
 	{
@@ -327,48 +369,48 @@ int main()
 
 	Actor skyboxActor("Skybox");
 
-	SkyboxRendererComponent skyboxRendererComponent(*graphicsEngine, skybox);
+	SkyboxRendererComponent skyboxRendererComponent(graphicsEngine, skybox);
 	skyboxActor.AddComponent(&skyboxRendererComponent);
 
 	Actor backpackActor("Backpack");
 
 	TransformComponent backpackTransformComponent;
 	backpackActor.AddComponent(&backpackTransformComponent);
-	ModelRendererComponent backpackRendererComponent(*graphicsEngine, backpackModel);
+	ModelRendererComponent backpackRendererComponent(graphicsEngine, backpackModel);
 	backpackActor.AddComponent(&backpackRendererComponent);
 
 	Actor testActor("Test");
 
 	TransformComponent testTransformComponent(glm::vec3(4.0f, 0.0f, 0.0f));
 	testActor.AddComponent(&testTransformComponent);
-	ModelRendererComponent testRendererComponent(*graphicsEngine, testModel);
+	ModelRendererComponent testRendererComponent(graphicsEngine, testModel);
 	testActor.AddComponent(&testRendererComponent);
 
 	Actor cubeActor("Cube");
 
 	TransformComponent cubeTransformComponent(glm::vec3(-4.0f, 0.0f, 0.0f));
 	cubeActor.AddComponent(&cubeTransformComponent);
-	ModelRendererComponent cubeRendererComponent(*graphicsEngine, cubeModel);
+	ModelRendererComponent cubeRendererComponent(graphicsEngine, cubeModel);
 	cubeActor.AddComponent(&cubeRendererComponent);
 
 	Actor suzanneActor("Suzanne");
 
 	TransformComponent suzanneTransformComponent(glm::vec3(0.0f, 0.0f, 2.0f));
 	suzanneActor.AddComponent(&suzanneTransformComponent);
-	ModelRendererComponent suzanneRendererComponent(*graphicsEngine, suzanneModel);
+	ModelRendererComponent suzanneRendererComponent(graphicsEngine, suzanneModel);
 	suzanneActor.AddComponent(&suzanneRendererComponent);
 
 	// --- Lights ---
 
 	Actor pointLightActor("Point light");
 
-	PointLight pointLight(glm::vec3(0.2f), glm::vec3(0.5f), glm::vec3(1.0f), {1.0f, 0.14f, 0.07f});
+	PointLight pointLight(glm::vec3(0.2f), glm::vec3(0.5f), glm::vec3(1.0f), { 1.0f, 0.14f, 0.07f });
 
 	TransformComponent pointLightTransformComponent(glm::vec3(2.0f));
 	pointLightActor.AddComponent(&pointLightTransformComponent);
 	PointLightComponent pointLightComponent(&pointLight);
 	pointLightActor.AddComponent(&pointLightComponent);
-	SpriteRendererComponent pointLightRendererComponent(*graphicsEngine, pointLightSprite);
+	SpriteRendererComponent pointLightRendererComponent(graphicsEngine, pointLightSprite);
 	pointLightActor.AddComponent(&pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");
@@ -412,10 +454,10 @@ int main()
 	glm::mat4 viewTransform;
 	glm::mat4 skyboxTransform;
 	glm::mat4 projectionTransform;
-	std::unique_ptr<GlobalData> matricesGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_matrices"));
-	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
-	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
-	graphicsEngine->AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
+	std::unique_ptr<GlobalData> matricesGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_matrices"));
+	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
+	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
+	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
 
 	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO. */
 	phongShader->BindToGlobalData(*matricesGlobalData);
@@ -454,10 +496,10 @@ int main()
 	diffuse		vec3	16				32				12
 	specular	vec3	16				48				12
 	*/
-	std::unique_ptr<GlobalData> directionalLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_directionalLights"));
-	graphicsEngine->AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
-	std::unique_ptr<GlobalData> pointLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_pointLights"));
-	graphicsEngine->AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
+	std::unique_ptr<GlobalData> directionalLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_directionalLights"));
+	graphicsEngine.AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
+	std::unique_ptr<GlobalData> pointLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_pointLights"));
+	graphicsEngine.AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
 
 	phongShader->BindToGlobalData(*directionalLightsGlobalData);
 	phongShader->BindToGlobalData(*pointLightsGlobalData);
@@ -474,8 +516,8 @@ int main()
 	position	vec3	16				0				12
 	*/
 	glm::vec3 cameraPosition;
-	std::unique_ptr<GlobalData> cameraGlobalData = std::unique_ptr<GlobalData>(graphicsEngine->CreateGlobalData("ubo_camera"));
-	graphicsEngine->AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
+	std::unique_ptr<GlobalData> cameraGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_camera"));
+	graphicsEngine.AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
 
 	phongShader->BindToGlobalData(*cameraGlobalData);
 	reflectionShader->BindToGlobalData(*cameraGlobalData);
@@ -485,7 +527,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// --- Pre-frame stuff ---
-		
+
 		// Update deltaTime and lastFrame.
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
@@ -508,7 +550,7 @@ int main()
 		newImGuiFrame();
 		setupImGuiFrame();
 
-		graphicsEngine->StartFrame();
+		graphicsEngine.StartFrame();
 
 		// --- View and projection transformation matrices ---
 
@@ -541,7 +583,7 @@ int main()
 		/* We need to render the actors with transparency last. */
 		pointLightActor.Render();
 
-		graphicsEngine->EndFrame();
+		graphicsEngine.EndFrame();
 
 		// --- Post-frame stuff ---
 

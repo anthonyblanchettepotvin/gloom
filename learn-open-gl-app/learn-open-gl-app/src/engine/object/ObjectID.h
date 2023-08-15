@@ -10,13 +10,14 @@ private:
 public:
 	static ObjectID Generate();
 
+private:
+	const unsigned int m_Value;
+
+public:
 	inline bool operator==(const ObjectID& other) const noexcept
 	{
 		return this == &other || m_Value == other.m_Value;
 	}
-
-private:
-	unsigned int m_Value;
 
 	friend std::hash<ObjectID>;
 };
@@ -24,8 +25,8 @@ private:
 template<>
 struct std::hash<ObjectID>
 {
-	size_t operator()(ObjectID const& objId) const noexcept
+	size_t operator()(ObjectID const& objectId) const noexcept
 	{
-		return std::hash<unsigned int>{}(objId.m_Value);
+		return std::hash<unsigned int>{}(objectId.m_Value);
 	}
 };

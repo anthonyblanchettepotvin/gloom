@@ -21,19 +21,10 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\shader\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\vendor\stbi\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\camera\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\texture\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\model\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\actor\Actor.cpp">
@@ -117,22 +108,13 @@
     <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\cubemap\Cubemap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\model\ModelLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\graphics\material\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\shader\ShaderLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderLoader.cpp">
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp">
@@ -162,12 +144,6 @@
     <ClCompile Include="src\engine\graphics\lighting\DirectionalLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\texture\TextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\cubemap\CubemapLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\game\component\SkyboxRendererComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -180,42 +156,6 @@
     <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\AssetDescriptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\Asset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\AssetID.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\AssetLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\AssetRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\AssetDescriptorRegistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\AssetDescriptorBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\texture\TextureRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\model\ModelRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\shader\ShaderRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\cubemap\CubemapRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\asset\AssetController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\graphics\material\MaterialTemplate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -225,51 +165,117 @@
     <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\asset\shader\ShaderRegistry.cpp">
+    <ClCompile Include="src\engine\object\ObjectID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\rendering\GlSkybox.cpp">
+    <ClCompile Include="src\engine\object\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\rendering\Skybox.cpp">
+    <ClCompile Include="src\infrastructure\graphics\skybox\GlSkybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\rendering\GlCubemap.cpp">
+    <ClCompile Include="src\engine\graphics\skybox\Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\rendering\GlTexture.cpp">
+    <ClCompile Include="src\infrastructure\graphics\cubemap\GlCubemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\rendering\GlSprite.cpp">
+    <ClCompile Include="src\infrastructure\graphics\texture\GlTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\rendering\GlMesh.cpp">
+    <ClCompile Include="src\infrastructure\graphics\sprite\GlSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\rendering\Sprite.cpp">
+    <ClCompile Include="src\infrastructure\graphics\mesh\GlMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\rendering\Mesh.cpp">
+    <ClCompile Include="src\engine\graphics\cubemap\Cubemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\graphics\rendering\Vertex.cpp">
+    <ClCompile Include="src\engine\graphics\sprite\Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\graphics\mesh\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\graphics\model\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\graphics\shader\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\graphics\texture\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\graphics\mesh\Vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\Asset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetRepository.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\object\ObjectType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetRegistryEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\shader\ShaderAssetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\shader\ShaderImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\asset\AssetImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\model\ModelAssetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\cubemap\CubemapImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\model\ModelImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\graphics\shader\ShaderRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\texture\TextureImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\material\MaterialAssetFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\game\asset\shader\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\camera\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\texture\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\model\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\actor\Actor.h">
@@ -362,22 +368,13 @@
     <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\cubemap\Cubemap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\model\ModelLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\graphics\material\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\shader\ShaderLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderLoader.h">
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h">
@@ -407,12 +404,6 @@
     <ClInclude Include="src\engine\graphics\lighting\DirectionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\texture\TextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\cubemap\CubemapLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\game\component\SkyboxRendererComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -425,42 +416,6 @@
     <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\AssetDescriptor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\Asset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\AssetID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\AssetLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\AssetRepository.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\AssetDescriptorRegistry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\AssetDescriptorBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\texture\TextureRepository.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\model\ModelRepository.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\shader\ShaderRepository.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\cubemap\CubemapRepository.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\asset\AssetController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\graphics\material\MaterialTemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -470,34 +425,109 @@
     <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\asset\shader\ShaderRegistry.h">
+    <ClInclude Include="src\engine\object\ObjectID.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\rendering\GlSkybox.h">
+    <ClInclude Include="src\engine\object\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\rendering\Skybox.h">
+    <ClInclude Include="src\infrastructure\graphics\skybox\GlSkybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\rendering\GlCubemap.h">
+    <ClInclude Include="src\engine\graphics\skybox\Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\rendering\GlTexture.h">
+    <ClInclude Include="src\infrastructure\graphics\cubemap\GlCubemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\rendering\GlSprite.h">
+    <ClInclude Include="src\infrastructure\graphics\texture\GlTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\rendering\GlMesh.h">
+    <ClInclude Include="src\infrastructure\graphics\sprite\GlSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\rendering\Sprite.h">
+    <ClInclude Include="src\infrastructure\graphics\mesh\GlMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\rendering\Mesh.h">
+    <ClInclude Include="src\engine\graphics\cubemap\Cubemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\graphics\rendering\Vertex.h">
+    <ClInclude Include="src\engine\graphics\sprite\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\graphics\mesh\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\graphics\model\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\graphics\shader\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\graphics\texture\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\graphics\mesh\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\Asset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetDescriptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\object\ObjectType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetRegistryEntry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\shader\ShaderAssetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\shader\ShaderImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\asset\AssetImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\cubemap\CubemapAssetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\model\ModelAssetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\cubemap\CubemapImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\model\ModelImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\graphics\shader\ShaderRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\texture\TextureImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\texture\TextureAssetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\material\MaterialAssetFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

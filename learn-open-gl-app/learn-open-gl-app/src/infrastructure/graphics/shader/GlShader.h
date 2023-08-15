@@ -1,17 +1,18 @@
 #pragma once
 
-#define MAX_UNIFORM_NAME_LENGTH 32
-
-#define MATERIAL_STRUCT_NAME "material"
-
 #include <unordered_map>
 
 #include "../../../engine/graphics/shader/Shader.h"
 
+#define MAX_UNIFORM_NAME_LENGTH 32
+
+#define MATERIAL_STRUCT_NAME "material"
+
 class GlShader : public Shader
 {
 public:
-	GlShader(unsigned int id);
+	GlShader() = default;
+	GlShader(const std::string& vertexShader, const std::string& fragmentShader);
 
 	void InitializeMaterialTemplate() override;
 
@@ -27,5 +28,15 @@ public:
 	void BindToGlobalData(GlobalData& globalData) override;
 
 private:
-	unsigned int m_Id;
+	unsigned int m_Id = 0;
+
+	std::string m_VertexShader;
+	std::string m_FragmentShader;
+
+	void Initialize();
+
+	unsigned int CompileVertexShader();
+	unsigned int CompileFragmentShader();
+
+	unsigned int LinkShaders(unsigned int vertexShaderId, unsigned int fragmentShaderId);
 };

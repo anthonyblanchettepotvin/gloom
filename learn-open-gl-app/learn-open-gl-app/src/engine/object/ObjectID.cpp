@@ -7,7 +7,7 @@ ObjectID::ObjectID(unsigned int value)
 
 ObjectID ObjectID::Generate()
 {
-    static int nextValue = 0;
+    static unsigned int nextValue = 0;
 
     return ObjectID(nextValue++);
 }
