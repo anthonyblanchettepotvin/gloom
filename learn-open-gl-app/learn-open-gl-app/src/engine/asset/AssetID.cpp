@@ -11,3 +11,8 @@ AssetID AssetID::Generate()
 
     return AssetID(nextValue++);
 }
+
+std::string AssetID::ToString() const
+{
+    return std::to_string(m_Value);
+}

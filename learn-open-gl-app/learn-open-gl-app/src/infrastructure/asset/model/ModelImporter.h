@@ -24,11 +24,13 @@ public:
 	ModelImporter(AssetManager& assetManager, TextureImporter& textureLoader, ShaderRegistry& shaderRegistry);
 
 protected:
-	std::unique_ptr<Object> ImportObject(const std::string& filePath) override;
+	std::unique_ptr<Object> ImportObject(const std::string& assetName, const std::string& filePath) override;
 
 private:
 	TextureImporter& m_TextureImporter;
 	ShaderRegistry& m_ShaderRegistry;
+
+	std::string m_AssetName;
 
 	std::string m_Directory;
 	std::unordered_map<std::string, Texture*> m_ImportedTextures;
@@ -39,4 +41,9 @@ private:
 
 	Material* ImportMaterial(aiMaterial* material);
 	std::vector<Texture*> ImportMaterialTextures(aiMaterial* material, aiTextureType type);
+
+	std::string GenerateTextureName(const std::string& texturePath) const;
+
+	std::string ExtractFileNameFromFilePath(const std::string& filePath) const;
+	std::string EraseFileExtensionFromFileName(const std::string& fileName) const;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 
 class Asset;
@@ -18,10 +19,13 @@ public:
 
 	void DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
 
-	Asset* CreateAssetWithObject(std::unique_ptr<Object>& object);
-	Asset* CreateBlankAsset(const ObjectType& objectType);
+	Asset* CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object);
+	Asset* CreateBlankAsset(const ObjectType& objectType, const std::string& assetName);
 
-	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType);
+	std::vector<Asset*> GetAssets() const;
+	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType) const;
+
+	std::vector<AssetDescriptor> GetAssetDescriptors() const;
 
 private:
 	AssetRegistry& m_AssetRegistry;

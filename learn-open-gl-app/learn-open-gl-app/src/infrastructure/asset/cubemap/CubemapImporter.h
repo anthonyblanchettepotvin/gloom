@@ -11,5 +11,5 @@ public:
 	CubemapImporter(AssetManager& assetManager);
 
 protected:
-	std::unique_ptr<Object> ImportObject(const std::vector<std::string>& facesFilePath) override;
+	std::unique_ptr<Object> ImportObject(const std::string& assetName, const std::vector<std::string>& facesFilePath) override;
 };

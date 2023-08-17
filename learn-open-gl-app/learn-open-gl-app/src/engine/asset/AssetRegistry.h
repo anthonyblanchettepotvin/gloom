@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <memory>
 #include <unordered_map>
 
@@ -15,6 +16,8 @@ public:
 	void DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
 
 	const AssetRegistryEntry& FindEntry(const ObjectType& objectType) const;
+
+	std::vector<AssetDescriptor> GetAssetDescriptors() const;
 
 private:
 	std::unordered_map<ObjectType, AssetRegistryEntry> m_Entries;

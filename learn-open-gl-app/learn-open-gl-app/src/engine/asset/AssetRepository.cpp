@@ -24,6 +24,18 @@ void AssetRepository::Insert(std::unique_ptr<Asset>& asset)
 	}
 }
 
+std::vector<Asset*> AssetRepository::GetAssets() const
+{
+	std::vector<Asset*> result;
+
+	for (const auto& asset : m_Assets)
+	{
+		result.push_back(asset.get());
+	}
+
+	return result;
+}
+
 std::vector<Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& objectType) const
 {
 	std::vector<Asset*> result;

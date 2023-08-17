@@ -36,6 +36,7 @@
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/shader/GlShaderImporter.h"
 #include "ui/imgui/ImGuiAdapterFactory.h"
+#include "ui/imgui/tool/ImGuiAssetsTool.h"
 
 /* UI library. */
 #include "vendor/imgui/imgui.h"
@@ -266,46 +267,46 @@ int main()
 
 	// --- Shaders ---
 
-	Asset* phongShaderAsset = shaderImporter.Import(PHONG_SHADER_PATH);
+	Asset* phongShaderAsset = shaderImporter.Import("Phong", PHONG_SHADER_PATH);
 	Shader* phongShader = (Shader*)phongShaderAsset->GetObject();
 
-	Asset* reflectionShaderAsset = shaderImporter.Import(REFLECTION_SHADER_PATH);
+	Asset* reflectionShaderAsset = shaderImporter.Import("Reflection", REFLECTION_SHADER_PATH);
 	Shader* reflectionShader = (Shader*)reflectionShaderAsset->GetObject();
 	
-	Asset* refractionShaderAsset = shaderImporter.Import(REFRACTION_SHADER_PATH);
+	Asset* refractionShaderAsset = shaderImporter.Import("Refraction", REFRACTION_SHADER_PATH);
 	Shader* refractionShader = (Shader*)refractionShaderAsset->GetObject();
 	
-	Asset* spriteShaderAsset = shaderImporter.Import(SPRITE_SHADER_PATH);
+	Asset* spriteShaderAsset = shaderImporter.Import("Sprite", SPRITE_SHADER_PATH);
 	Shader* spriteShader = (Shader*)spriteShaderAsset->GetObject();
 	
-	Asset* renderShaderAsset = shaderImporter.Import(RENDER_SHADER_PATH);
+	Asset* renderShaderAsset = shaderImporter.Import("Render", RENDER_SHADER_PATH);
 	Shader* renderShader = (Shader*)renderShaderAsset->GetObject();
 	
-	Asset* skyboxShaderAsset = shaderImporter.Import(SKYBOX_SHADER_PATH);
+	Asset* skyboxShaderAsset = shaderImporter.Import("Skybox", SKYBOX_SHADER_PATH);
 	Shader* skyboxShader = (Shader*)skyboxShaderAsset->GetObject();
 	
-	Asset* chromaticAberrationShaderAsset = shaderImporter.Import(CHROMATIC_ABERRATION_SHADER_PATH);
+	Asset* chromaticAberrationShaderAsset = shaderImporter.Import("ChromaticAberration", CHROMATIC_ABERRATION_SHADER_PATH);
 	Shader* chromaticAberrationShader = (Shader*)chromaticAberrationShaderAsset->GetObject();
 
 	shaderRegistry.Register(ShadingModel::Phong, *phongShader);
 
 	// --- Textures ---
 
-	Asset* pointLightTextureAsset = textureImporter.Import(AWESOME_EMOJI_TEXTURE_PATH);
+	Asset* pointLightTextureAsset = textureImporter.Import("AwesomeEmoji", AWESOME_EMOJI_TEXTURE_PATH);
 	Texture* pointLightTexture = (Texture*)pointLightTextureAsset->GetObject();
 
 	// --- Models ---
 
-	Asset* backpackModelAsset = modelImporter.Import(BACKPACK_MODEL_PATH);
+	Asset* backpackModelAsset = modelImporter.Import("Backpack", BACKPACK_MODEL_PATH);
 	Model* backpackModel = (Model*)backpackModelAsset->GetObject();
 
-	Asset* testModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
+	Asset* testModelAsset = modelImporter.Import("Cube", CUBE_MODEL_PATH);
 	Model* testModel = (Model*)testModelAsset->GetObject();
 
-	Asset* cubeModelAsset = modelImporter.Import(CUBE_MODEL_PATH);
+	Asset* cubeModelAsset = modelImporter.Import("Cube", CUBE_MODEL_PATH);
 	Model* cubeModel = (Model*)cubeModelAsset->GetObject();
 
-	Asset* suzanneModelAsset = modelImporter.Import(SUZANNE_MODEL_PATH);
+	Asset* suzanneModelAsset = modelImporter.Import("Suzanne", SUZANNE_MODEL_PATH);
 	Model* suzanneModel = (Model*)suzanneModelAsset->GetObject();
 
 	Material* testModelMaterial = phongShader->CreateMaterialInstance();
@@ -338,7 +339,7 @@ int main()
 
 	// --- Cubemaps ---
 
-	Asset* cubemapAsset = cubemapImporter.Import(CUBEMAP_FACES_PATH);
+	Asset* cubemapAsset = cubemapImporter.Import("Cubemap", CUBEMAP_FACES_PATH);
 	Cubemap* cubemap = (Cubemap*)cubemapAsset->GetObject();
 
 	// --- Skyboxes ---
@@ -523,6 +524,8 @@ int main()
 	reflectionShader->BindToGlobalData(*cameraGlobalData);
 	refractionShader->BindToGlobalData(*cameraGlobalData);
 
+	ImGuiAssetsTool assetsTool(assetManager);
+
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
 	{
@@ -585,6 +588,10 @@ int main()
 
 		graphicsEngine.EndFrame();
 
+		ImGui::ShowDemoWindow(); // TODO: Remove this when done with assets-tool branch.
+
+		assetsTool.RenderUi(); // TODO: Before merging assets-tool branch, find a proper UI entry point.
+
 		// --- Post-frame stuff ---
 
 		renderImGuiFrame();
@@ -600,8 +607,6 @@ int main()
 	shutdownImGui();
 
 	glfwTerminate();
-
-	// TODO: Delete models, textures, etc.
 
 	return 0;
 }

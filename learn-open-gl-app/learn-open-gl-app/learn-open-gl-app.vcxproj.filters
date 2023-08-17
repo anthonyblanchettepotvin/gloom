@@ -270,6 +270,9 @@
     <ClCompile Include="src\infrastructure\asset\material\MaterialAssetFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\imgui\tool\ImGuiAssetsTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -528,6 +531,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\asset\material\MaterialAssetFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\tool\ImGuiAssetsTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\ImGuiUtils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

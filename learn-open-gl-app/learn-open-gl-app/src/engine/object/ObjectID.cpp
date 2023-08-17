@@ -11,3 +11,8 @@ ObjectID ObjectID::Generate()
 
     return ObjectID(nextValue++);
 }
+
+std::string ObjectID::ToString() const
+{
+    return std::to_string(m_Value);
+}
