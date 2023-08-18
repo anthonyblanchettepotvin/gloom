@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ApplicationManager.cpp" />
     <ClCompile Include="src\ui\imgui\tool\ImGuiAssetsTool.cpp" />
     <ClCompile Include="src\infrastructure\asset\material\MaterialAssetFactory.cpp" />
     <ClCompile Include="src\infrastructure\asset\shader\ShaderAssetFactory.cpp" />
@@ -233,6 +234,7 @@
     <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ApplicationManager.h" />
     <ClInclude Include="src\ui\imgui\ImGuiUtils.hpp" />
     <ClInclude Include="src\ui\imgui\tool\ImGuiAssetsTool.h" />
     <ClInclude Include="src\infrastructure\asset\material\MaterialAssetFactory.h" />

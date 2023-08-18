@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "ApplicationManager.h"
 #include "engine/asset/Asset.h"
 #include "engine/asset/AssetDescriptor.h"
 #include "engine/asset/AssetFactory.h"
@@ -222,6 +223,10 @@ int main()
 
 	GlGraphicsEngine graphicsEngine;
 	graphicsEngine.Initialize(SCR_WIDTH, SCR_HEIGHT);
+
+	// --- Application Manager ---
+
+	ApplicationManager applicationManager;
 
 	// --- Asset Manager ---
 
@@ -524,7 +529,7 @@ int main()
 	reflectionShader->BindToGlobalData(*cameraGlobalData);
 	refractionShader->BindToGlobalData(*cameraGlobalData);
 
-	ImGuiAssetsTool assetsTool(assetManager);
+	ImGuiAssetsTool assetsTool(applicationManager, assetManager);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))

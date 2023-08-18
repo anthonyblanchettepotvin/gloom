@@ -30,6 +30,8 @@ std::vector<Asset*> AssetRepository::GetAssets() const
 
 	for (const auto& asset : m_Assets)
 	{
+		assert(asset != nullptr);
+
 		result.push_back(asset.get());
 	}
 

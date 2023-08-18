@@ -4,6 +4,8 @@
 
 #include "../../../vendor/imgui/imgui.h"
 
+#include "../../../ApplicationManager.h" // FIXME: Bad dependency
+
 #include "../../../engine/asset/Asset.h"
 #include "../../../engine/asset/AssetManager.h"
 #include "../../../engine/asset/AssetDescriptor.h"
@@ -29,18 +31,20 @@
 #define CREATE_ASSET_POPUP_CANCEL_BUTTON_LABEL "Cancel"
 #define CREATE_ASSET_POPUP_ASSET_NAME_INPUT_LABEL_SUFFIX " Name"
 
-ImGuiAssetsTool::ImGuiAssetsTool(AssetManager& assetManager)
-	: m_AssetManager(assetManager)
+ImGuiAssetsTool::ImGuiAssetsTool(ApplicationManager& applicationManager, AssetManager& assetManager)
+	: m_ApplicationManager(applicationManager), m_AssetManager(assetManager)
 {
 }
 
 ImGuiAssetsTool::~ImGuiAssetsTool()
 {
-    if (m_NewAssetAssetDescriptor)
-    {
-        delete m_NewAssetAssetDescriptor;
-        m_NewAssetAssetDescriptor = nullptr;
-    }
+    // TODO: Should I delete m_NewAssetNameBuffer ?
+
+    if (!m_NewAssetAssetDescriptor)
+        return;
+
+    delete m_NewAssetAssetDescriptor;
+    m_NewAssetAssetDescriptor = nullptr;
 }
 
 void ImGuiAssetsTool::RenderUi()
@@ -73,14 +77,12 @@ void ImGuiAssetsTool::RenderAssetsTabs()
 void ImGuiAssetsTool::RenderAllAssetsTab()
 {
     auto assets = m_AssetManager.GetAssets();
-
     RenderAssetsTab(ASSETS_TAB_ALL_LABEL, assets);
 }
 
 void ImGuiAssetsTool::RenderAssetsTab(const AssetDescriptor& assetDescriptor)
 {
     auto assets = m_AssetManager.FindAssetsByObjectType(assetDescriptor.GetObjectType());
-
     RenderAssetsTab(assetDescriptor.GetDisplayName(), assets);
 }
 
@@ -114,20 +116,9 @@ void ImGuiAssetsTool::RenderAssetsTab(const std::string& label, const std::vecto
                 {
                     auto asset = assets[row];
 
-                    ImGui::PushID(asset->GetId().ToString().c_str());
-
-                    ImGui::TableNextRow();
-
-                    ImGui::TableNextColumn();
-                    ImGui::TextUnformatted(asset->GetId().ToString().c_str());
-
-                    ImGui::TableNextColumn();
-                    ImGui::TextUnformatted(asset->GetName().c_str());
-
-                    ImGui::TableNextColumn();
-                    ImGui::TextUnformatted(asset->GetDescriptor().GetDisplayName().c_str());
-
-                    ImGui::PopID();
+                    assert(asset != nullptr);
+                    
+                    RenderAssetsTabRow(*asset);
                 }
             }
 
@@ -136,6 +127,36 @@ void ImGuiAssetsTool::RenderAssetsTab(const std::string& label, const std::vecto
 
         ImGui::EndTabItem();
     }
+}
+
+void ImGuiAssetsTool::RenderAssetsTabRow(const Asset& asset)
+{
+    ImGui::PushID(asset.GetId().ToString().c_str());
+
+    ImGui::TableGetRowIndex();
+    ImGui::TableNextColumn();
+    if (ImGui::Selectable(asset.GetId().ToString().c_str(), IsAssetSelected(asset), ImGuiSelectableFlags_SpanAllColumns))
+    {
+        assert(asset.GetObject() != nullptr);
+
+        m_ApplicationManager.SelectObject(*asset.GetObject());
+    }
+
+    ImGui::TableNextColumn();
+    ImGui::TextUnformatted(asset.GetName().c_str());
+
+    ImGui::TableNextColumn();
+    ImGui::TextUnformatted(asset.GetDescriptor().GetDisplayName().c_str());
+
+    ImGui::PopID();
+}
+
+bool ImGuiAssetsTool::IsAssetSelected(const Asset& asset) const
+{
+    if (m_ApplicationManager.GetSelectedObject() == nullptr || asset.GetObject() == nullptr)
+        return false;
+
+    return m_ApplicationManager.GetSelectedObject() == asset.GetObject();
 }
 
 void ImGuiAssetsTool::RenderCreateAssetButton()
@@ -174,6 +195,11 @@ void ImGuiAssetsTool::RenderCreateAssetOption(const AssetDescriptor& assetDescri
     }
 }
 
+void ImGuiAssetsTool::SetupCreateAssetModal(const AssetDescriptor& assetDescriptor)
+{
+    m_NewAssetAssetDescriptor = new AssetDescriptor(assetDescriptor);
+}
+
 void ImGuiAssetsTool::RenderCreateAssetModal()
 {
     if (!ShouldRenderCreateAssetModal())
@@ -193,8 +219,7 @@ void ImGuiAssetsTool::RenderCreateAssetModal()
 
         if (ImGui::Button(CREATE_ASSET_POPUP_CONFIRM_BUTTON_LABEL))
         {
-            std::string newAssetName(m_NewAssetNameBuffer);
-            m_AssetManager.CreateBlankAsset(m_NewAssetAssetDescriptor->GetObjectType(), newAssetName);
+            CreateAndSelectAsset();
 
             ClearCreateAssetModal();
         }
@@ -219,18 +244,23 @@ bool ImGuiAssetsTool::ShouldRenderCreateAssetModal()
     return m_NewAssetAssetDescriptor != nullptr;
 }
 
-void ImGuiAssetsTool::SetupCreateAssetModal(const AssetDescriptor& assetDescriptor)
+void ImGuiAssetsTool::CreateAndSelectAsset()
 {
-    m_NewAssetAssetDescriptor = new AssetDescriptor(assetDescriptor);
+    std::string newAssetName(m_NewAssetNameBuffer);
+    Asset* newAsset = m_AssetManager.CreateBlankAsset(m_NewAssetAssetDescriptor->GetObjectType(), newAssetName);
+    if (!newAsset)
+        return;
+    
+    m_ApplicationManager.SelectObject(*newAsset->GetObject());
 }
 
 void ImGuiAssetsTool::ClearCreateAssetModal()
 {
     memset(m_NewAssetNameBuffer, NULL, NEW_ASSET_NAME_MAXIMUM_SIZE);
 
-    if (m_NewAssetAssetDescriptor)
-    {
-        delete m_NewAssetAssetDescriptor;
-        m_NewAssetAssetDescriptor = nullptr;
-    }
+    if (!m_NewAssetAssetDescriptor)
+        return;
+
+    delete m_NewAssetAssetDescriptor;
+    m_NewAssetAssetDescriptor = nullptr;
 }

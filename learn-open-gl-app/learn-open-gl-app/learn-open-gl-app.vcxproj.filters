@@ -273,6 +273,9 @@
     <ClCompile Include="src\ui\imgui\tool\ImGuiAssetsTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ApplicationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -537,6 +540,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\imgui\ImGuiUtils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ApplicationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
