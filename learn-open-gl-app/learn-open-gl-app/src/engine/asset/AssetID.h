@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <string>
 
 class AssetID
 {
@@ -9,6 +10,8 @@ private:
 
 public:
 	static AssetID Generate();
+
+	std::string ToString() const;
 
 private:
 	const unsigned int m_Value;

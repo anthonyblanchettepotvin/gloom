@@ -24,8 +24,10 @@ ModelImporter::ModelImporter(AssetManager& assetManager, TextureImporter& textur
 {
 }
 
-std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& filePath)
+std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& assetName, const std::string& filePath)
 {
+	m_AssetName = assetName;
+
 	Assimp::Importer importer;
 
 	// See https://learnopengl.com/Model-Loading/Assimp for overview of Assimp's scene structure.
@@ -211,7 +213,9 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material
 		}
 		else
 		{
-			Asset* textureAsset = m_TextureImporter.Import(textureAbsolutePath);
+			std::string textureName = GenerateTextureName(textureAbsolutePath);
+
+			Asset* textureAsset = m_TextureImporter.Import(textureName, textureAbsolutePath);
 			if (!textureAsset)
 				continue;
 
@@ -229,4 +233,39 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material
 	}
 
 	return textures;
+}
+
+std::string ModelImporter::GenerateTextureName(const std::string& texturePath) const
+{
+	std::string textureFileName = ExtractFileNameFromFilePath(texturePath);
+	std::string textureNameWithoutExtension = EraseFileExtensionFromFileName(textureFileName);
+	std::string textureName = m_AssetName + "_" + textureNameWithoutExtension;
+
+	return textureName;
+}
+
+std::string ModelImporter::ExtractFileNameFromFilePath(const std::string& filePath) const
+{
+	size_t lastSeparatorPosition = filePath.find_last_of('/\\');
+	if (lastSeparatorPosition != std::string::npos)
+	{
+		std::string fileName = filePath.substr(lastSeparatorPosition + 1);
+
+		return fileName;
+	}
+
+	return filePath;
+}
+
+std::string ModelImporter::EraseFileExtensionFromFileName(const std::string& fileName) const
+{
+	size_t lastDotPosition = fileName.find_last_of('.');
+	if (lastDotPosition != std::string::npos)
+	{
+		std::string fileNameWithoutFileExtension = fileName.substr(0, lastDotPosition);
+
+		return fileNameWithoutFileExtension;
+	}
+
+	return fileName;
 }

@@ -10,5 +10,5 @@ public:
 	TextureImporter(AssetManager& assetManager);
 
 protected:
-	std::unique_ptr<Object> ImportObject(const std::string& filePath) override;
+	std::unique_ptr<Object> ImportObject(const std::string& assetName, const std::string& filePath) override;
 };

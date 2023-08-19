@@ -18,11 +18,11 @@ void AssetManager::DefineAsset(const AssetDescriptor& assetDescriptor, std::uniq
 	m_AssetRegistry.DefineAsset(assetDescriptor, assetFactory);
 }
 
-Asset* AssetManager::CreateAssetWithObject(std::unique_ptr<Object>& object)
+Asset* AssetManager::CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object)
 {
 	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(object->GetObjectType());
 
-	std::unique_ptr<Asset> asset = assetRegistryEntry.GetFactory().CreateWithObject(assetRegistryEntry.GetDescriptor(), object);
+	std::unique_ptr<Asset> asset = assetRegistryEntry.GetFactory().CreateWithObject(assetRegistryEntry.GetDescriptor(), assetName, object);
 	Asset* assetPr = asset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
 
 	m_AssetRepository.Insert(asset);
@@ -30,11 +30,11 @@ Asset* AssetManager::CreateAssetWithObject(std::unique_ptr<Object>& object)
 	return assetPr;
 }
 
-Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType)
+Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType, const std::string& assetName)
 {
 	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(objectType);
 
-	std::unique_ptr<Asset> blankAsset = assetRegistryEntry.GetFactory().CreateBlank(assetRegistryEntry.GetDescriptor());
+	std::unique_ptr<Asset> blankAsset = assetRegistryEntry.GetFactory().CreateBlank(assetRegistryEntry.GetDescriptor(), assetName);
 	Asset* blankAssetPtr = blankAsset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
 
 	m_AssetRepository.Insert(blankAsset);
@@ -42,7 +42,17 @@ Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType)
 	return blankAssetPtr;
 }
 
-std::vector<Asset*> AssetManager::FindAssetsByObjectType(const ObjectType& objectType)
+std::vector<Asset*> AssetManager::GetAssets() const
+{
+	return m_AssetRepository.GetAssets();
+}
+
+std::vector<Asset*> AssetManager::FindAssetsByObjectType(const ObjectType& objectType) const
 {
 	return m_AssetRepository.FindAssetsByObjectType(objectType);
+}
+
+std::vector<AssetDescriptor> AssetManager::GetAssetDescriptors() const
+{
+	return m_AssetRegistry.GetAssetDescriptors();
 }

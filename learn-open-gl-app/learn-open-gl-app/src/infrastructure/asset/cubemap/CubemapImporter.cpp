@@ -9,7 +9,7 @@ CubemapImporter::CubemapImporter(AssetManager& assetManager)
 {
 }
 
-std::unique_ptr<Object> CubemapImporter::ImportObject(const std::vector<std::string>& facesFilePath)
+std::unique_ptr<Object> CubemapImporter::ImportObject(const std::string& assetName, const std::vector<std::string>& facesFilePath)
 {
 	stbi_set_flip_vertically_on_load(false);
 

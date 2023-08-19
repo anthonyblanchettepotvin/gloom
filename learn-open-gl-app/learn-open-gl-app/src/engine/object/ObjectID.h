@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <string>
 
 class ObjectID
 {
@@ -9,6 +10,8 @@ private:
 
 public:
 	static ObjectID Generate();
+
+	std::string ToString() const;
 
 private:
 	const unsigned int m_Value;

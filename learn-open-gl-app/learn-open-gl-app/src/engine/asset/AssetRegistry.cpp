@@ -35,3 +35,15 @@ const AssetRegistryEntry& AssetRegistry::FindEntry(const ObjectType& objectType)
 		throw std::runtime_error(ASSET_NOT_REGISTERED);
 	}
 }
+
+std::vector<AssetDescriptor> AssetRegistry::GetAssetDescriptors() const
+{
+	std::vector<AssetDescriptor> assetDescriptors;
+
+	for (const auto& entry : m_Entries)
+	{
+		assetDescriptors.push_back(entry.second.GetDescriptor());
+	}
+
+	return assetDescriptors;
+}

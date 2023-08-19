@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <memory>
+#include <string>
 
 #include "../object/Object.h"
 
@@ -18,10 +19,10 @@ class AssetImporter
 public:
 	AssetImporter(AssetManager& assetManager);
 
-	Asset* Import(Args... args);
+	Asset* Import(const std::string& assetName, Args... args);
 
 protected:
-	virtual std::unique_ptr<Object> ImportObject(Args... args) = 0;
+	virtual std::unique_ptr<Object> ImportObject(const std::string& assetName, Args... args) = 0;
 
 	AssetManager& m_AssetManager;
 };
@@ -33,9 +34,9 @@ inline AssetImporter<Args...>::AssetImporter(AssetManager& assetManager)
 }
 
 template<class ...Args>
-inline Asset* AssetImporter<Args...>::Import(Args... args)
+inline Asset* AssetImporter<Args...>::Import(const std::string& assetName, Args... args)
 {
-	std::unique_ptr<Object> importedObject = ImportObject(args...);
+	std::unique_ptr<Object> importedObject = ImportObject(assetName, args...);
 
-	return m_AssetManager.CreateAssetWithObject(importedObject);
+	return m_AssetManager.CreateAssetWithObject(assetName, importedObject);
 }
