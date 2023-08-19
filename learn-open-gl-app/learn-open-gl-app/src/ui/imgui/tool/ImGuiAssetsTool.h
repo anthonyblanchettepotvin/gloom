@@ -16,7 +16,7 @@ public:
     ImGuiAssetsTool(ApplicationManager& applicationManager, AssetManager& assetManager);
     ~ImGuiAssetsTool();
 
-    void RenderUi();
+    void Render();
 
 private:
     ApplicationManager& m_ApplicationManager;

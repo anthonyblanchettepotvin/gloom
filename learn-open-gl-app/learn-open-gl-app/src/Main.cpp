@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "ApplicationManager.h"
+#include "application/ApplicationManager.h"
 #include "engine/asset/Asset.h"
 #include "engine/asset/AssetDescriptor.h"
 #include "engine/asset/AssetFactory.h"
@@ -593,9 +593,7 @@ int main()
 
 		graphicsEngine.EndFrame();
 
-		ImGui::ShowDemoWindow(); // TODO: Remove this when done with assets-tool branch.
-
-		assetsTool.RenderUi(); // TODO: Before merging assets-tool branch, find a proper UI entry point.
+		assetsTool.Render();
 
 		// --- Post-frame stuff ---
 

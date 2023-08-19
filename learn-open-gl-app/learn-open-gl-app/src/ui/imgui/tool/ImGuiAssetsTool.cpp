@@ -4,8 +4,7 @@
 
 #include "../../../vendor/imgui/imgui.h"
 
-#include "../../../ApplicationManager.h" // FIXME: Bad dependency
-
+#include "../../../application/ApplicationManager.h"
 #include "../../../engine/asset/Asset.h"
 #include "../../../engine/asset/AssetManager.h"
 #include "../../../engine/asset/AssetDescriptor.h"
@@ -38,8 +37,6 @@ ImGuiAssetsTool::ImGuiAssetsTool(ApplicationManager& applicationManager, AssetMa
 
 ImGuiAssetsTool::~ImGuiAssetsTool()
 {
-    // TODO: Should I delete m_NewAssetNameBuffer ?
-
     if (!m_NewAssetAssetDescriptor)
         return;
 
@@ -47,7 +44,7 @@ ImGuiAssetsTool::~ImGuiAssetsTool()
     m_NewAssetAssetDescriptor = nullptr;
 }
 
-void ImGuiAssetsTool::RenderUi()
+void ImGuiAssetsTool::Render()
 {
     ImGui::Begin(ASSETS_TOOL_NAME);
 
