@@ -64,6 +64,8 @@ graphics programming with OpenGL. */
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+const std::string LOGO_IMAGE_PATH = ".\\images\\gloom_logo_g_64.png";
+
 const std::string PHONG_SHADER_PATH = ".\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = ".\\shaders\\reflection.shader";
 const std::string REFRACTION_SHADER_PATH = ".\\shaders\\refraction.shader";
@@ -198,6 +200,11 @@ int main()
 
 		return -1;
 	}
+
+	GLFWimage windowIcons[1];
+	windowIcons[0].pixels = stbi_load(LOGO_IMAGE_PATH.c_str(), &windowIcons[0].width, &windowIcons[0].height, NULL, 4);
+	glfwSetWindowIcon(window, 1, windowIcons);
+	stbi_image_free(windowIcons[0].pixels);
 
 	glfwMakeContextCurrent(window);
 
