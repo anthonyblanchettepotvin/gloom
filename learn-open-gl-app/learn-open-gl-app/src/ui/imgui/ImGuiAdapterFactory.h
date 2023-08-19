@@ -1,10 +1,16 @@
 #pragma once
 
-#include "../UiAdapterFactory.h"
+class GraphicsEngine;
+class ImGuiAdapter;
+class Object;
 
-class ImGuiAdapterFactory : public UiAdapterFactory
+class ImGuiAdapterFactory
 {
 public:
-	UiActorAdapter* CreateActorAdapter(Actor* actor) const override;
-	UiComponentAdapter* CreateComponentAdapter(ActorComponent* component) const override;
+	ImGuiAdapterFactory(GraphicsEngine& graphicsEngine);
+
+	ImGuiAdapter* CreateAdapter(Object* object) const;
+
+private:
+	GraphicsEngine& m_GraphicsEngine;
 };

@@ -1,21 +1,23 @@
 #include "ImGuiDirectionalLightComponentAdapter.h"
 
-#include "../../vendor/imgui/imgui.h"
-
 #include <glm/gtc/type_ptr.hpp>
 
-ImGuiDirectionalLightComponentAdapter::ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent* component)
-	: UiComponentAdapter(component)
+#include "../../vendor/imgui/imgui.h"
+
+#include "../../game/component/DirectionalLightComponent.h"
+
+ImGuiDirectionalLightComponentAdapter::ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent* directionalLightComponent)
+	: m_DirectionalLightComponent(directionalLightComponent)
 {
 }
 
-void ImGuiDirectionalLightComponentAdapter::RenderUi() const
+void ImGuiDirectionalLightComponentAdapter::Render() const
 {
-	if (DirectionalLightComponent* castedComponent = dynamic_cast<DirectionalLightComponent*>(component))
+	if (m_DirectionalLightComponent)
 	{
-		ImGui::InputFloat3("Direction", glm::value_ptr(castedComponent->GetDirectionalLight()->GetDirectionReference()));
-		ImGui::SliderFloat3("Ambient Color", glm::value_ptr(castedComponent->GetDirectionalLight()->GetAmbientColorReference()), 0.0f, 1.0f);
-		ImGui::SliderFloat3("Diffuse Color", glm::value_ptr(castedComponent->GetDirectionalLight()->GetDiffuseColorReference()), 0.0f, 1.0f);
-		ImGui::SliderFloat3("Specular Color", glm::value_ptr(castedComponent->GetDirectionalLight()->GetSpecularColorReference()), 0.0f, 1.0f);
+		ImGui::InputFloat3("Direction", glm::value_ptr(m_DirectionalLightComponent->GetDirectionalLight()->GetDirectionReference()));
+		ImGui::SliderFloat3("Ambient Color", glm::value_ptr(m_DirectionalLightComponent->GetDirectionalLight()->GetAmbientColorReference()), 0.0f, 1.0f);
+		ImGui::SliderFloat3("Diffuse Color", glm::value_ptr(m_DirectionalLightComponent->GetDirectionalLight()->GetDiffuseColorReference()), 0.0f, 1.0f);
+		ImGui::SliderFloat3("Specular Color", glm::value_ptr(m_DirectionalLightComponent->GetDirectionalLight()->GetSpecularColorReference()), 0.0f, 1.0f);
 	}
 }

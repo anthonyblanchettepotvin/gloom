@@ -12,6 +12,8 @@ public:
 	void Use(unsigned int index);
 	void Free();
 
+	unsigned int GetId() const { return m_Id; }
+
 private:
 	const Cubemap& m_Cubemap;
 

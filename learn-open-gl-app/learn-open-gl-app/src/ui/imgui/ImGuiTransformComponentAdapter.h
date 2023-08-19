@@ -1,13 +1,16 @@
 #pragma once
 
-#include "../UiComponentAdapter.h"
+#include "ImGuiAdapter.h"
 
-#include "../../game/component/TransformComponent.h"
+class TransformComponent;
 
-class ImGuiTransformComponentAdapter : public UiComponentAdapter
+class ImGuiTransformComponentAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiTransformComponentAdapter(TransformComponent* component);
+	ImGuiTransformComponentAdapter(TransformComponent* transformComponent);
 
-	void RenderUi() const override;
+	void Render() const override;
+
+private:
+	TransformComponent* m_TransformComponent;
 };

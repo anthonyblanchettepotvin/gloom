@@ -1,20 +1,22 @@
 #include "ImGuiTransformComponentAdapter.h"
 
-#include "../../vendor/imgui/imgui.h"
-
 #include <glm/gtc/type_ptr.hpp>
 
-ImGuiTransformComponentAdapter::ImGuiTransformComponentAdapter(TransformComponent* component)
-	: UiComponentAdapter(component)
+#include "../../vendor/imgui/imgui.h"
+
+#include "../../game/component/TransformComponent.h"
+
+ImGuiTransformComponentAdapter::ImGuiTransformComponentAdapter(TransformComponent* transformComponent)
+	: m_TransformComponent(transformComponent)
 {
 }
 
-void ImGuiTransformComponentAdapter::RenderUi() const
+void ImGuiTransformComponentAdapter::Render() const
 {
-	if (TransformComponent* castedComponent = dynamic_cast<TransformComponent*>(component))
+	if (m_TransformComponent)
 	{
-		ImGui::InputFloat3("Position", glm::value_ptr(castedComponent->GetPositionReference()));
-		ImGui::InputFloat3("Scale", glm::value_ptr(castedComponent->GetScaleReference()));
-		ImGui::InputFloat3("Rotation", glm::value_ptr(castedComponent->GetRotationReference()));
+		ImGui::InputFloat3("Position", glm::value_ptr(m_TransformComponent->GetPositionReference()));
+		ImGui::InputFloat3("Scale", glm::value_ptr(m_TransformComponent->GetScaleReference()));
+		ImGui::InputFloat3("Rotation", glm::value_ptr(m_TransformComponent->GetRotationReference()));
 	}
 }

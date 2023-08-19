@@ -1,13 +1,16 @@
 #pragma once
 
-#include "../UiComponentAdapter.h"
+#include "ImGuiAdapter.h"
 
-#include "../../game/component/DirectionalLightComponent.h"
+class DirectionalLightComponent;
 
-class ImGuiDirectionalLightComponentAdapter : public UiComponentAdapter
+class ImGuiDirectionalLightComponentAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent* component);
+	ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent* directionalLightComponent);
 
-	void RenderUi() const override;
+	void Render() const override;
+
+private:
+	DirectionalLightComponent* m_DirectionalLightComponent;
 };

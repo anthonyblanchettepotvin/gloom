@@ -1,13 +1,16 @@
 #pragma once
 
-#include "../../game/actor/Actor.h"
+#include "ImGuiAdapter.h"
 
-#include "../UiActorAdapter.h"
+class Actor;
 
-class ImGuiActorAdapter : public UiActorAdapter
+class ImGuiActorAdapter : public ImGuiAdapter
 {
 public:
 	ImGuiActorAdapter(Actor* actor);
 
-	void RenderUi() const;
+	void Render() const override;
+
+private:
+	Actor* m_Actor;
 };

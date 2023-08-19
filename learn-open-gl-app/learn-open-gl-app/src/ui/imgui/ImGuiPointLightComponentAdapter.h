@@ -1,13 +1,16 @@
 #pragma once
 
-#include "../UiComponentAdapter.h"
+#include "ImGuiAdapter.h"
 
-#include "../../game/component/PointLightComponent.h"
+class PointLightComponent;
 
-class ImGuiPointLightComponentAdapter : public UiComponentAdapter
+class ImGuiPointLightComponentAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiPointLightComponentAdapter(PointLightComponent* component);
+	ImGuiPointLightComponentAdapter(PointLightComponent* pointLightComponent);
 
-	void RenderUi() const override;
+	void Render() const override;
+
+private:
+	PointLightComponent* m_PointLightComponent;
 };

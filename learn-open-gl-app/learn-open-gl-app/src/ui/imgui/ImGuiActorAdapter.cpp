@@ -2,15 +2,17 @@
 
 #include "../../vendor/imgui/imgui.h"
 
+#include "../../game/actor/Actor.h"
+
 ImGuiActorAdapter::ImGuiActorAdapter(Actor* actor)
-	: UiActorAdapter(actor)
+	: m_Actor(actor)
 {
 }
 
-void ImGuiActorAdapter::RenderUi() const
+void ImGuiActorAdapter::Render() const
 {
-	if (actor)
+	if (m_Actor)
 	{
-		ImGui::Text(actor->GetName().c_str());
+		ImGui::Text(m_Actor->GetName().c_str());
 	}
 }

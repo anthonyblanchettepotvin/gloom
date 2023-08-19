@@ -36,8 +36,7 @@
 #include "infrastructure/asset/texture/TextureImporter.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/shader/GlShaderImporter.h"
-#include "ui/imgui/ImGuiAdapterFactory.h"
-#include "ui/imgui/tool/ImGuiAssetsTool.h"
+#include "ui/imgui/ImGuiMain.h"
 
 /* UI library. */
 #include "vendor/imgui/imgui.h"
@@ -151,7 +150,6 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 
 void initImGui(GLFWwindow* window);
 void newImGuiFrame();
-void setupImGuiFrame();
 void renderImGuiFrame();
 void shutdownImGui();
 
@@ -529,7 +527,7 @@ int main()
 	reflectionShader->BindToGlobalData(*cameraGlobalData);
 	refractionShader->BindToGlobalData(*cameraGlobalData);
 
-	ImGuiAssetsTool assetsTool(applicationManager, assetManager);
+	ImGuiMain ui(applicationManager, assetManager, graphicsEngine);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))
@@ -556,7 +554,6 @@ int main()
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 		newImGuiFrame();
-		setupImGuiFrame();
 
 		graphicsEngine.StartFrame();
 
@@ -593,7 +590,7 @@ int main()
 
 		graphicsEngine.EndFrame();
 
-		assetsTool.Render();
+		ui.Render();
 
 		// --- Post-frame stuff ---
 
@@ -626,42 +623,6 @@ void newImGuiFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-}
-
-ImGuiAdapterFactory adapterFactory;
-
-void setupImGuiFrame()
-{
-	ImGui::Begin("Controls");
-	static int currentItem = -1;
-	std::vector<std::string> actorsName = world.GetActorsName();
-	std::vector<const char*> actorsCName;
-	for (const auto& actorName : actorsName)
-		actorsCName.push_back(actorName.c_str());
-	ImGui::ListBox("Actors", &currentItem, actorsCName.data(), (int)world.GetActors().size());
-	ImGui::End();
-
-	ImGui::Begin("Properties");
-	if (currentItem != -1 && currentItem <= world.GetActors().size())
-	{
-		UiAdapter* actorAdapter = adapterFactory.CreateActorAdapter(world.GetActors()[currentItem]);
-		if (actorAdapter)
-		{
-			actorAdapter->RenderUi();
-		}
-
-		for (const auto& component : world.GetActors()[currentItem]->GetComponents())
-		{
-			ImGui::Separator();
-
-			UiAdapter* componentAdapter = adapterFactory.CreateComponentAdapter(component);
-			if (componentAdapter)
-			{
-				componentAdapter->RenderUi();
-			}
-		}
-	}
-	ImGui::End();
 }
 
 void renderImGuiFrame()

@@ -42,6 +42,8 @@ public:
 	void Render(const Mesh& mesh) override;
 	void Render(const Skybox& skybox) override;
 	void Render(const Sprite& sprite) override;
+	
+	void* GetTextureId(const Texture& texture) override;
 
 private:
 	std::unique_ptr<GlFramebuffer> m_Framebuffer = nullptr;
