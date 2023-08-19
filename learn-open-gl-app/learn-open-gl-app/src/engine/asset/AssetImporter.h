@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cassert>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "../object/Object.h"
 
