@@ -34,6 +34,7 @@
 #include "infrastructure/asset/shader/ShaderImporter.h"
 #include "infrastructure/asset/texture/TextureAssetFactory.h"
 #include "infrastructure/asset/texture/TextureImporter.h"
+#include "infrastructure/asset/world/WorldAssetFactory.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/shader/GlShaderImporter.h"
 #include "ui/imgui/ImGuiMain.h"
@@ -105,9 +106,6 @@ bool firstMouse = true;
 // Timing
 float deltaTime = 0.0f;	// Time between current frame and last frame.
 float lastFrame = 0.0f;
-
-// World
-World world;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -275,6 +273,11 @@ int main()
 	std::unique_ptr<AssetFactory> shaderAssetFactory = std::make_unique<ShaderAssetFactory>(graphicsEngine);
 	assetRegistry.DefineAsset(shaderAssetDescriptor, shaderAssetFactory);
 
+	// World
+	AssetDescriptor worldAssetDescriptor(ObjectType(typeid(World)), "World");
+	std::unique_ptr<AssetFactory> worldAssetFactory = std::make_unique<WorldAssetFactory>();
+	assetRegistry.DefineAsset(worldAssetDescriptor, worldAssetFactory);
+
 	// --- Shaders ---
 
 	Asset* phongShaderAsset = shaderImporter.Import("Phong", PHONG_SHADER_PATH);
@@ -441,13 +444,16 @@ int main()
 
 	// --- World ---
 
-	world.SpawnActor(&skyboxActor);
-	world.SpawnActor(&backpackActor);
-	world.SpawnActor(&testActor);
-	world.SpawnActor(&cubeActor);
-	world.SpawnActor(&suzanneActor);
-	world.SpawnActor(&pointLightActor);
-	world.SpawnActor(&directionalLightActor);
+	Asset* worldAsset = assetManager.CreateBlankAsset(ObjectType(typeid(World)), "Default");
+	World* world = (World*)worldAsset->GetObject();
+
+	world->SpawnActor(&skyboxActor);
+	world->SpawnActor(&backpackActor);
+	world->SpawnActor(&testActor);
+	world->SpawnActor(&cubeActor);
+	world->SpawnActor(&suzanneActor);
+	world->SpawnActor(&pointLightActor);
+	world->SpawnActor(&directionalLightActor);
 
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
 	block that matches a UBO and is bound to it will share its data. This is handy,

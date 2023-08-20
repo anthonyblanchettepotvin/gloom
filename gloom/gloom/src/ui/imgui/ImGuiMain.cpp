@@ -22,6 +22,7 @@ void ImGuiMain::Render()
 {
 	m_AssetsTool.Render();
 	m_PropertiesTool.Render();
+	m_WorldTool.Render();
 }
 
 void ImGuiMain::LoadFont()

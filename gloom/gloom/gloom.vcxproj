@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\imgui\tool\ImGuiWorldTool.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiMain.cpp" />
@@ -233,8 +234,10 @@
     <ClCompile Include="src\game\world\World.cpp" />
     <ClCompile Include="src\game\component\TransformComponent.cpp" />
     <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp" />
+    <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ui\imgui\tool\ImGuiWorldTool.h" />
     <ClInclude Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiMain.h" />
     <ClInclude Include="src\ui\imgui\adapter\ImGuiTextureAdapter.h" />
@@ -323,6 +326,7 @@
     <ClInclude Include="src\ui\imgui\ImGuiAdapter.h" />
     <ClInclude Include="src\game\component\TransformComponent.h" />
     <ClInclude Include="src\infrastructure\asset\texture\TextureAssetFactory.h" />
+    <ClInclude Include="src\infrastructure\asset\world\WorldAssetFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\libs\assimp\assimp-vc143-mt.dll">

@@ -276,6 +276,12 @@
     <ClCompile Include="src\ui\imgui\ImGuiAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\imgui\tool\ImGuiWorldTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -540,6 +546,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\tool\ImGuiWorldTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\asset\world\WorldAssetFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

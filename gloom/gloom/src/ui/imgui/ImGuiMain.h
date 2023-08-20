@@ -3,6 +3,7 @@
 #include "ImGuiAdapterFactory.h"
 #include "tool/ImGuiAssetsTool.h"
 #include "tool/ImGuiPropertiesTool.h"
+#include "tool/ImGuiWorldTool.h"
 
 class ApplicationManager;
 class AssetManager;
@@ -20,6 +21,7 @@ private:
 
 	ImGuiAssetsTool m_AssetsTool;
 	ImGuiPropertiesTool m_PropertiesTool;
+	ImGuiWorldTool m_WorldTool;
 
 	void LoadFont();
 	
