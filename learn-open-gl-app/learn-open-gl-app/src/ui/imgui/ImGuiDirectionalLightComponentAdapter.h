@@ -7,10 +7,10 @@ class DirectionalLightComponent;
 class ImGuiDirectionalLightComponentAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent* directionalLightComponent);
+	ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent& directionalLightComponent);
 
 	void Render() const override;
 
 private:
-	DirectionalLightComponent* m_DirectionalLightComponent;
+	DirectionalLightComponent& m_DirectionalLightComponent;
 };

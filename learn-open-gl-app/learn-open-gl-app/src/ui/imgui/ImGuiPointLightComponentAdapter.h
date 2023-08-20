@@ -7,10 +7,10 @@ class PointLightComponent;
 class ImGuiPointLightComponentAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiPointLightComponentAdapter(PointLightComponent* pointLightComponent);
+	ImGuiPointLightComponentAdapter(PointLightComponent& pointLightComponent);
 
 	void Render() const override;
 
 private:
-	PointLightComponent* m_PointLightComponent;
+	PointLightComponent& m_PointLightComponent;
 };

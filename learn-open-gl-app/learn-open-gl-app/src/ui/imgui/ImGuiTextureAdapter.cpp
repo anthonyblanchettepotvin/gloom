@@ -7,8 +7,8 @@
 
 #define TEXTURE_PREVIEW_SIZE ImVec2(128, 128)
 
-ImGuiTextureAdapter::ImGuiTextureAdapter(Texture& texture, GraphicsEngine& graphicsEngine)
-	: m_Texture(texture), m_GraphicsEngine(graphicsEngine)
+ImGuiTextureAdapter::ImGuiTextureAdapter(GraphicsEngine& graphicsEngine, Texture& texture)
+	: m_GraphicsEngine(graphicsEngine), m_Texture(texture)
 {
 }
 
@@ -28,26 +28,34 @@ void ImGuiTextureAdapter::Render() const
 
 ImVec2 ImGuiTextureAdapter::GetTexturePreviewUvStart() const
 {
-	ImVec2 uvStart(0, 0);
+	ImVec2 texturePreviewUvStart(0, 0);
 
 	if (m_Texture.GetIsFlippedVertically())
-		uvStart.y = 1;
+	{
+		texturePreviewUvStart.y = 1;
+	}
 
 	if (m_Texture.GetIsFlippedHorizontally())
-		uvStart.x = 1;
+	{
+		texturePreviewUvStart.x = 1;
+	}
 
-	return uvStart;
+	return texturePreviewUvStart;
 }
 
 ImVec2 ImGuiTextureAdapter::GetTexturePreviewUvEnd() const
 {
-	ImVec2 uvEnd(1, 1);
+	ImVec2 texturePreviewUvEnd(1, 1);
 
 	if (m_Texture.GetIsFlippedVertically())
-		uvEnd.y = 0;
+	{
+		texturePreviewUvEnd.y = 0;
+	}
 
 	if (m_Texture.GetIsFlippedHorizontally())
-		uvEnd.x = 0;
+	{
+		texturePreviewUvEnd.x = 0;
+	}
 
-	return uvEnd;
+	return texturePreviewUvEnd;
 }

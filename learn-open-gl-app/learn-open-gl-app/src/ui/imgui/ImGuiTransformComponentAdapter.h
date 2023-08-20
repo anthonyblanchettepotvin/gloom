@@ -7,10 +7,10 @@ class TransformComponent;
 class ImGuiTransformComponentAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiTransformComponentAdapter(TransformComponent* transformComponent);
+	ImGuiTransformComponentAdapter(TransformComponent& transformComponent);
 
 	void Render() const override;
 
 private:
-	TransformComponent* m_TransformComponent;
+	TransformComponent& m_TransformComponent;
 };

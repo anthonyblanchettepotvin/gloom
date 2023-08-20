@@ -1,5 +1,7 @@
 #include "World.h"
 
+#include "../actor/Actor.h"
+
 void World::SpawnActor(Actor* actor)
 {
 	actors.push_back(actor);

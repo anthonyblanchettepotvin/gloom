@@ -9,14 +9,14 @@ class Texture;
 class ImGuiTextureAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiTextureAdapter(Texture& texture, GraphicsEngine& graphicsEngine);
+	ImGuiTextureAdapter(GraphicsEngine& graphicsEngine, Texture& texture);
 
 	void Render() const override;
 
 private:
-	Texture& m_Texture;
-
 	GraphicsEngine& m_GraphicsEngine;
+
+	Texture& m_Texture;
 
 	ImVec2 GetTexturePreviewUvStart() const;
 	ImVec2 GetTexturePreviewUvEnd() const;

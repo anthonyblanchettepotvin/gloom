@@ -3,14 +3,17 @@
 #include "ImGuiAdapter.h"
 
 class Actor;
+class ImGuiAdapterFactory;
 
 class ImGuiActorAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiActorAdapter(Actor* actor);
+	ImGuiActorAdapter(const ImGuiAdapterFactory& adapterFactory, Actor& actor);
 
 	void Render() const override;
 
 private:
-	Actor* m_Actor;
+	const ImGuiAdapterFactory& m_AdapterFactory;
+
+	Actor& m_Actor;
 };

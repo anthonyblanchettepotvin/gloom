@@ -3,16 +3,27 @@
 #include "../../vendor/imgui/imgui.h"
 
 #include "../../game/actor/Actor.h"
+#include "../../game/component/ActorComponent.h"
 
-ImGuiActorAdapter::ImGuiActorAdapter(Actor* actor)
-	: m_Actor(actor)
+#include "ImGuiAdapterFactory.h"
+
+ImGuiActorAdapter::ImGuiActorAdapter(const ImGuiAdapterFactory& adapterFactory, Actor& actor)
+	: m_AdapterFactory(adapterFactory), m_Actor(actor)
 {
 }
 
 void ImGuiActorAdapter::Render() const
 {
-	if (m_Actor)
+	ImGui::Text(m_Actor.GetName().c_str());
+
+	for (const auto& component : m_Actor.GetComponents())
 	{
-		ImGui::Text(m_Actor->GetName().c_str());
+		ImGui::Separator();
+
+		ImGuiAdapter* componentAdapter = m_AdapterFactory.CreateAdapter(component);
+		if (componentAdapter)
+		{
+			componentAdapter->Render();
+		}
 	}
 }

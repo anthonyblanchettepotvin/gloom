@@ -1,9 +1,8 @@
 #pragma once
 
+#include "ImGuiAdapterFactory.h"
 #include "tool/ImGuiAssetsTool.h"
 #include "tool/ImGuiPropertiesTool.h"
-
-#include "ImGuiAdapterFactory.h"
 
 class ApplicationManager;
 class AssetManager;
