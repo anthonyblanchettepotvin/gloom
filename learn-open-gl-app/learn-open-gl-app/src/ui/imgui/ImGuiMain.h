@@ -20,4 +20,8 @@ private:
 
 	ImGuiAssetsTool m_AssetsTool;
 	ImGuiPropertiesTool m_PropertiesTool;
+
+	void LoadFont();
+	
+	void ApplyStyle();
 };
