@@ -20,25 +20,25 @@ ImGuiAdapterFactory::ImGuiAdapterFactory(GraphicsEngine& graphicsEngine)
 {
 }
 
-ImGuiAdapter* ImGuiAdapterFactory::CreateAdapter(Object* object) const
+std::unique_ptr<ImGuiAdapter> ImGuiAdapterFactory::CreateAdapter(Object* object) const
 {
 	if (Actor* actor = dynamic_cast<Actor*>(object))
-		return new ImGuiActorAdapter(*this, *actor);
+		return std::make_unique<ImGuiActorAdapter>(*this, *actor);
 
 	if (Cubemap* cubemap = dynamic_cast<Cubemap*>(object))
-		return new ImGuiCubemapAdapter(*this, *cubemap);
+		return std::make_unique<ImGuiCubemapAdapter>(*this, *cubemap);
 
 	if (DirectionalLightComponent* castedComponent = dynamic_cast<DirectionalLightComponent*>(object))
-		return new ImGuiDirectionalLightComponentAdapter(*castedComponent);
+		return std::make_unique<ImGuiDirectionalLightComponentAdapter>(*castedComponent);
 
 	if (PointLightComponent* castedComponent = dynamic_cast<PointLightComponent*>(object))
-		return new ImGuiPointLightComponentAdapter(*castedComponent);
+		return std::make_unique<ImGuiPointLightComponentAdapter>(*castedComponent);
 
 	if (Texture* texture = dynamic_cast<Texture*>(object))
-		return new ImGuiTextureAdapter(m_GraphicsEngine, *texture);
+		return std::make_unique<ImGuiTextureAdapter>(m_GraphicsEngine, *texture);
 
 	if (TransformComponent* castedComponent = dynamic_cast<TransformComponent*>(object))
-		return new ImGuiTransformComponentAdapter(*castedComponent);
+		return std::make_unique<ImGuiTransformComponentAdapter>(*castedComponent);
 
 	return nullptr;
 }

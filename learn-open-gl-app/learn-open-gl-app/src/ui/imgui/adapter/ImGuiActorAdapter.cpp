@@ -1,5 +1,7 @@
 #include "ImGuiActorAdapter.h"
 
+#include <memory>
+
 #include "../../../vendor/imgui/imgui.h"
 
 #include "../../../game/actor/Actor.h"
@@ -20,7 +22,7 @@ void ImGuiActorAdapter::Render() const
 	{
 		ImGui::Separator();
 
-		ImGuiAdapter* componentAdapter = m_AdapterFactory.CreateAdapter(component);
+		std::unique_ptr<ImGuiAdapter> componentAdapter = m_AdapterFactory.CreateAdapter(component);
 		if (componentAdapter)
 		{
 			componentAdapter->Render();

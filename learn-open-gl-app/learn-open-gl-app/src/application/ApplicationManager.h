@@ -7,7 +7,7 @@ class Object;
 class ApplicationManager
 {
 public:
-	void SelectObject(const Object& object);
+	void SelectObject(Object& object);
 
 	Object* GetSelectedObject() const { return m_SelectedObject; }
 

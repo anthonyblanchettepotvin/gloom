@@ -1,5 +1,7 @@
 #include "ImGuiPropertiesTool.h"
 
+#include <memory>
+
 #include "../../../vendor/imgui/imgui.h"
 
 #include "../../../application/ApplicationManager.h"
@@ -22,7 +24,7 @@ void ImGuiPropertiesTool::Render()
 	Object* selectedObject = m_ApplicationManager.GetSelectedObject();
 	if (selectedObject)
 	{
-		ImGuiAdapter* selectedObjectAdapter = m_AdapterFactory.CreateAdapter(selectedObject);
+		std::unique_ptr<ImGuiAdapter> selectedObjectAdapter = m_AdapterFactory.CreateAdapter(selectedObject);
 		if (selectedObjectAdapter)
 		{
 			selectedObjectAdapter->Render();
