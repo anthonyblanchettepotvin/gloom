@@ -6,14 +6,35 @@
 #include "../../engine/asset/AssetManager.h"
 #include "../../engine/graphics/engine/GraphicsEngine.h"
 
+#define ROBOTO_REGULAR_TTF_PATH ".\\fonts\\roboto\\Roboto-Regular.ttf"
+
 ImGuiMain::ImGuiMain(ApplicationManager& applicationManager, AssetManager& assetManager, GraphicsEngine& graphicsEngine)
 	: m_AdapterFactory(graphicsEngine)
 	, m_AssetsTool(applicationManager, assetManager)
 	, m_PropertiesTool(m_AdapterFactory, applicationManager, graphicsEngine)
 {
+	LoadFont();
+
+	ApplyStyle();
 }
 
 void ImGuiMain::Render()
+{
+	m_AssetsTool.Render();
+	m_PropertiesTool.Render();
+}
+
+void ImGuiMain::LoadFont()
+{
+	ImGuiIO& io = ImGui::GetIO();
+
+	if (!io.Fonts)
+		return;
+
+	io.Fonts->AddFontFromFileTTF(ROBOTO_REGULAR_TTF_PATH, 16);
+}
+
+void ImGuiMain::ApplyStyle()
 {
 	ImGuiStyle& style = ImGui::GetStyle();
 
@@ -22,9 +43,11 @@ void ImGuiMain::Render()
 	style.FramePadding = ImVec2(6, 6);
 	style.WindowPadding = ImVec2(8, 8);
 
+	// Spacing
 	style.ItemInnerSpacing = ImVec2(4, 4);
 	style.ItemSpacing = ImVec2(8, 8);
 
+	// Size
 	style.GrabMinSize = 16;
 	style.ScrollbarSize = 16;
 
@@ -36,13 +59,13 @@ void ImGuiMain::Render()
 	style.WindowBorderSize = 0;
 
 	// Rounding
-	style.ChildRounding = 0;
-	style.FrameRounding = 0;
-	style.GrabRounding = 0;
-	style.PopupRounding = 0;
-	style.ScrollbarRounding = 0;
-	style.TabRounding = 0;
-	style.WindowRounding = 0;
+	style.ChildRounding = 2;
+	style.FrameRounding = 2;
+	style.GrabRounding = 2;
+	style.PopupRounding = 2;
+	style.ScrollbarRounding = 2;
+	style.TabRounding = 2;
+	style.WindowRounding = 2;
 
 	// Miscellaneous
 	style.SeparatorTextBorderSize = 1;
@@ -51,9 +74,9 @@ void ImGuiMain::Render()
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_Text] = ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);
-	colors[ImGuiCol_WindowBg] = ImVec4(0.03f, 0.03f, 0.04f, 1.00f);
-	colors[ImGuiCol_ChildBg] = ImVec4(0.02f, 0.02f, 0.02f, 1.00f);
-	colors[ImGuiCol_PopupBg] = ImVec4(0.06f, 0.06f, 0.08f, 1.00f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.11f, 0.16f, 1.00f);
+	colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.10f, 1.00f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.09f, 0.09f, 0.12f, 1.00f);
 	colors[ImGuiCol_FrameBg] = ImVec4(0.16f, 0.16f, 0.20f, 1.00f);
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.18f, 0.18f, 0.55f, 1.00f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.16f, 0.16f, 0.47f, 1.00f);
@@ -89,7 +112,4 @@ void ImGuiMain::Render()
 	colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 	colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.04f);
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.67f);
-
-	m_AssetsTool.Render();
-	m_PropertiesTool.Render();
 }
