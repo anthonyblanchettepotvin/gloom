@@ -1,11 +1,11 @@
 #include "ImGuiActorAdapter.h"
 
-#include "../../vendor/imgui/imgui.h"
+#include "../../../vendor/imgui/imgui.h"
 
-#include "../../game/actor/Actor.h"
-#include "../../game/component/ActorComponent.h"
+#include "../../../game/actor/Actor.h"
+#include "../../../game/component/ActorComponent.h"
 
-#include "ImGuiAdapterFactory.h"
+#include "../ImGuiAdapterFactory.h"
 
 ImGuiActorAdapter::ImGuiActorAdapter(const ImGuiAdapterFactory& adapterFactory, Actor& actor)
 	: m_AdapterFactory(adapterFactory), m_Actor(actor)

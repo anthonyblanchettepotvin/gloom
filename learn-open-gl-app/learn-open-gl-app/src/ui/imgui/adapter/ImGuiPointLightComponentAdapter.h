@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImGuiAdapter.h"
+#include "../ImGuiAdapter.h"
 
 class PointLightComponent;
 

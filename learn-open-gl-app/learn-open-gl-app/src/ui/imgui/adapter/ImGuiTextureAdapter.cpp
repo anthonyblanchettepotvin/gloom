@@ -1,9 +1,9 @@
 #include "ImGuiTextureAdapter.h"
 
-#include "../../vendor/imgui/imgui.h"
+#include "../../../vendor/imgui/imgui.h"
 
-#include "../../engine/graphics/engine/GraphicsEngine.h"
-#include "../../engine/graphics/texture/Texture.h"
+#include "../../../engine/graphics/engine/GraphicsEngine.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
 #define TEXTURE_PREVIEW_SIZE ImVec2(128, 128)
 

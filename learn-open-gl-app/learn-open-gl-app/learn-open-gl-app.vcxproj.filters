@@ -54,7 +54,7 @@
     <ClCompile Include="src\game\world\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiActorAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiActorAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\component\ActorComponent.cpp">
@@ -84,13 +84,13 @@
     <ClCompile Include="src\ui\imgui\ImGuiAdapterFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiTransformComponentAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiTransformComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiDirectionalLightComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiPointLightComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\graphics\material\Material.cpp">
@@ -264,13 +264,16 @@
     <ClCompile Include="src\ui\imgui\tool\ImGuiPropertiesTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiTextureAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiTextureAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\imgui\ImGuiMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiCubemapAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\imgui\ImGuiAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -317,7 +320,7 @@
     <ClInclude Include="src\ui\imgui\ImGuiAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiActorAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiActorAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\component\ActorComponent.h">
@@ -347,13 +350,13 @@
     <ClInclude Include="src\ui\imgui\ImGuiAdapterFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiTransformComponentAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiTransformComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiDirectionalLightComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiPointLightComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\graphics\material\Material.h">
@@ -530,13 +533,13 @@
     <ClInclude Include="src\ui\imgui\tool\ImGuiPropertiesTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiTextureAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiTextureAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ui\imgui\ImGuiMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiCubemapAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

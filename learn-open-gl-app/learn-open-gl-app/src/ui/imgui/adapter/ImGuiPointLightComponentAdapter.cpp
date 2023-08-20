@@ -2,9 +2,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../vendor/imgui/imgui.h"
+#include "../../../vendor/imgui/imgui.h"
 
-#include "../../game/component/PointLightComponent.h"
+#include "../../../game/component/PointLightComponent.h"
 
 ImGuiPointLightComponentAdapter::ImGuiPointLightComponentAdapter(PointLightComponent& pointLightComponent)
 	: m_PointLightComponent(pointLightComponent)

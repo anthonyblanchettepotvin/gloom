@@ -2,9 +2,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../vendor/imgui/imgui.h"
+#include "../../../vendor/imgui/imgui.h"
 
-#include "../../game/component/DirectionalLightComponent.h"
+#include "../../../game/component/DirectionalLightComponent.h"
 
 ImGuiDirectionalLightComponentAdapter::ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent& directionalLightComponent)
 	: m_DirectionalLightComponent(directionalLightComponent)

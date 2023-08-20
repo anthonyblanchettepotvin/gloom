@@ -2,9 +2,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../vendor/imgui/imgui.h"
+#include "../../../vendor/imgui/imgui.h"
 
-#include "../../game/component/TransformComponent.h"
+#include "../../../game/component/TransformComponent.h"
 
 ImGuiTransformComponentAdapter::ImGuiTransformComponentAdapter(TransformComponent& transformComponent)
 	: m_TransformComponent(transformComponent)

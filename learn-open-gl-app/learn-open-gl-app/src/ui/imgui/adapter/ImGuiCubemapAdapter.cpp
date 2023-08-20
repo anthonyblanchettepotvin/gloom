@@ -1,10 +1,10 @@
 #include "ImGuiCubemapAdapter.h"
 
-#include "../../vendor/imgui/imgui.h"
+#include "../../../vendor/imgui/imgui.h"
 
-#include "../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/cubemap/Cubemap.h"
 
-#include "ImGuiAdapterFactory.h"
+#include "../ImGuiAdapterFactory.h"
 
 ImGuiCubemapAdapter::ImGuiCubemapAdapter(const ImGuiAdapterFactory& adapterFactory, Cubemap& cubemap)
 	: m_AdapterFactory(adapterFactory), m_Cubemap(cubemap)
