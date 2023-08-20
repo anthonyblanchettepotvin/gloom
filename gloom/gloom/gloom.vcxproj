@@ -328,7 +328,6 @@
     <CopyFileToFolders Include="..\libs\assimp\assimp-vc143-mt.dll">
       <FileType>Document</FileType>
     </CopyFileToFolders>
-    <None Include=".gitignore" />
     <None Include="imgui.ini" />
     <None Include="shaders\chromatic_aberration.shader" />
     <None Include="shaders\phong.shader" />

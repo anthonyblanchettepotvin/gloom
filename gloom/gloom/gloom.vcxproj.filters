@@ -554,7 +554,6 @@
     <None Include="shaders\skybox.shader" />
     <None Include="shaders\sprite.shader" />
     <None Include="shaders\chromatic_aberration.shader" />
-    <None Include=".gitignore" />
     <None Include="imgui.ini" />
   </ItemGroup>
 </Project>
