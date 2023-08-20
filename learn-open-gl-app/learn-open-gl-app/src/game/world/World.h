@@ -2,9 +2,11 @@
 
 #include <vector>
 
-#include "../actor/Actor.h"
+#include "../../engine/object/Object.h"
 
-class World
+class Actor;
+
+class World : public Object
 {
 public:
 	void SpawnActor(Actor* actor);

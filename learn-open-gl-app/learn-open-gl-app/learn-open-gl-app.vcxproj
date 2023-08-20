@@ -145,6 +145,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\imgui\ImGuiAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\ImGuiMain.cpp" />
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiTextureAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\tool\ImGuiPropertiesTool.cpp" />
     <ClCompile Include="src\application\ApplicationManager.cpp" />
     <ClCompile Include="src\ui\imgui\tool\ImGuiAssetsTool.cpp" />
     <ClCompile Include="src\infrastructure\asset\material\MaterialAssetFactory.cpp" />
@@ -194,11 +199,9 @@
     <ClCompile Include="src\engine\graphics\material\Material.cpp" />
     <ClCompile Include="src\engine\graphics\cubemap\Cubemap.cpp" />
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c" />
-    <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp" />
-    <ClCompile Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.cpp" />
-    <ClCompile Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.cpp" />
-    <ClCompile Include="src\ui\imgui\ImGuiModelRendererComponentAdapter.cpp" />
-    <ClCompile Include="src\ui\imgui\ImGuiTransformComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiPointLightComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiDirectionalLightComponentAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiTransformComponentAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiAdapterFactory.cpp" />
     <ClCompile Include="src\engine\graphics\sprite\Sprite.cpp" />
     <ClCompile Include="src\game\component\SpriteRendererComponent.cpp" />
@@ -208,7 +211,7 @@
     <ClCompile Include="src\game\component\ModelRendererComponent.cpp" />
     <ClCompile Include="src\game\component\RendererComponent.cpp" />
     <ClCompile Include="src\game\component\ActorComponent.cpp" />
-    <ClCompile Include="src\ui\imgui\ImGuiActorAdapter.cpp" />
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiActorAdapter.cpp" />
     <ClCompile Include="src\game\actor\Actor.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
@@ -225,15 +228,16 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\vendor\stbi\stb_image.cpp" />
     <ClCompile Include="src\engine\graphics\texture\Texture.cpp" />
-    <ClCompile Include="src\ui\UiActorAdapter.cpp" />
     <ClCompile Include="src\engine\graphics\mesh\Vertex.cpp" />
     <ClCompile Include="src\game\world\World.cpp" />
     <ClCompile Include="src\game\component\TransformComponent.cpp" />
-    <ClCompile Include="src\ui\UiComponentAdapter.cpp" />
-    <ClCompile Include="src\ui\UiAdapterFactory.cpp" />
     <ClCompile Include="src\infrastructure\asset\texture\TextureAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.h" />
+    <ClInclude Include="src\ui\imgui\ImGuiMain.h" />
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiTextureAdapter.h" />
+    <ClInclude Include="src\ui\imgui\tool\ImGuiPropertiesTool.h" />
     <ClInclude Include="src\application\ApplicationManager.h" />
     <ClInclude Include="src\ui\imgui\ImGuiUtils.hpp" />
     <ClInclude Include="src\ui\imgui\tool\ImGuiAssetsTool.h" />
@@ -284,11 +288,9 @@
     <ClInclude Include="src\engine\graphics\material\Material.h" />
     <ClInclude Include="src\engine\graphics\cubemap\Cubemap.h" />
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h" />
-    <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h" />
-    <ClInclude Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.h" />
-    <ClInclude Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.h" />
-    <ClInclude Include="src\ui\imgui\ImGuiModelRendererComponentAdapter.h" />
-    <ClInclude Include="src\ui\imgui\ImGuiTransformComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiPointLightComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiDirectionalLightComponentAdapter.h" />
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiTransformComponentAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiAdapterFactory.h" />
     <ClInclude Include="src\engine\graphics\sprite\Sprite.h" />
     <ClInclude Include="src\game\component\SpriteRendererComponent.h" />
@@ -298,7 +300,7 @@
     <ClInclude Include="src\game\component\ModelRendererComponent.h" />
     <ClInclude Include="src\game\component\RendererComponent.h" />
     <ClInclude Include="src\game\component\ActorComponent.h" />
-    <ClInclude Include="src\ui\imgui\ImGuiActorAdapter.h" />
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiActorAdapter.h" />
     <ClInclude Include="src\game\actor\Actor.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
     <ClInclude Include="src\vendor\imgui\imgui.h" />
@@ -315,13 +317,10 @@
     <ClInclude Include="src\engine\graphics\shader\Shader.h" />
     <ClInclude Include="src\vendor\stbi\stb_image.h" />
     <ClInclude Include="src\engine\graphics\texture\Texture.h" />
-    <ClInclude Include="src\ui\UiActorAdapter.h" />
     <ClInclude Include="src\engine\graphics\mesh\Vertex.h" />
     <ClInclude Include="src\game\world\World.h" />
-    <ClInclude Include="src\ui\UiAdapter.h" />
+    <ClInclude Include="src\ui\imgui\ImGuiAdapter.h" />
     <ClInclude Include="src\game\component\TransformComponent.h" />
-    <ClInclude Include="src\ui\UiComponentAdapter.h" />
-    <ClInclude Include="src\ui\UiAdapterFactory.h" />
     <ClInclude Include="src\infrastructure\asset\texture\TextureAssetFactory.h" />
   </ItemGroup>
   <ItemGroup>

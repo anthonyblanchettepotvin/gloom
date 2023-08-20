@@ -22,7 +22,7 @@ std::unique_ptr<Object> TextureImporter::ImportObject(const std::string& assetNa
 	unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channelCount, 0);
 	if (data)
 	{
-		texture = new Texture(width, height, channelCount, data);
+		texture = new Texture(width, height, channelCount, data, true);
 	}
 	else
 	{

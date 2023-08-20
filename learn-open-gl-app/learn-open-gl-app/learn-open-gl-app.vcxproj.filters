@@ -54,10 +54,7 @@
     <ClCompile Include="src\game\world\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiActorAdapter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\UiActorAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiActorAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\component\ActorComponent.cpp">
@@ -84,28 +81,16 @@
     <ClCompile Include="src\game\component\SpriteRendererComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\UiComponentAdapter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\UiAdapterFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\imgui\ImGuiAdapterFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiTransformComponentAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiTransformComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiModelRendererComponentAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiDirectionalLightComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui\imgui\ImGuiPointLightComponentAdapter.cpp">
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiPointLightComponentAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\graphics\material\Material.cpp">
@@ -276,6 +261,21 @@
     <ClCompile Include="src\application\ApplicationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\imgui\tool\ImGuiPropertiesTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiTextureAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\imgui\ImGuiMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\imgui\ImGuiAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -317,13 +317,10 @@
     <ClInclude Include="src\game\world\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UiAdapter.h">
+    <ClInclude Include="src\ui\imgui\ImGuiAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UiActorAdapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiActorAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiActorAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\component\ActorComponent.h">
@@ -350,28 +347,16 @@
     <ClInclude Include="src\game\component\SpriteRendererComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UiComponentAdapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\UiAdapterFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ui\imgui\ImGuiAdapterFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiTransformComponentAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiTransformComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiModelRendererComponentAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiDirectionalLightComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiSpriteRendererComponentAdapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiDirectionalLightComponentAdapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ui\imgui\ImGuiPointLightComponentAdapter.h">
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiPointLightComponentAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\graphics\material\Material.h">
@@ -543,6 +528,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\application\ApplicationManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\tool\ImGuiPropertiesTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiTextureAdapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\ImGuiMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,10 +1,18 @@
 #pragma once
 
-#include "../UiAdapterFactory.h"
+#include <memory>
 
-class ImGuiAdapterFactory : public UiAdapterFactory
+class GraphicsEngine;
+class ImGuiAdapter;
+class Object;
+
+class ImGuiAdapterFactory
 {
 public:
-	UiActorAdapter* CreateActorAdapter(Actor* actor) const override;
-	UiComponentAdapter* CreateComponentAdapter(ActorComponent* component) const override;
+	ImGuiAdapterFactory(GraphicsEngine& graphicsEngine);
+
+	std::unique_ptr<ImGuiAdapter> CreateAdapter(Object* object) const;
+
+private:
+	GraphicsEngine& m_GraphicsEngine;
 };

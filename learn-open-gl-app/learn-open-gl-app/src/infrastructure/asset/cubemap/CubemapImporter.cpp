@@ -23,7 +23,7 @@ std::unique_ptr<Object> CubemapImporter::ImportObject(const std::string& assetNa
 		unsigned char* data = stbi_load(facePath.c_str(), &width, &height, &channelCount, 0);
 		if (data)
 		{
-			Texture* texture = new Texture(width, height, channelCount, data);
+			Texture* texture = new Texture(width, height, channelCount, data, false);
 
 			textures.push_back(texture);
 		}

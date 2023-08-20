@@ -13,6 +13,7 @@ class PointLight;
 class Shader;
 class Skybox;
 class Sprite;
+class Texture;
 
 class GraphicsEngine
 {
@@ -36,4 +37,6 @@ public:
 	virtual void Render(const Mesh& mesh) = 0;
 	virtual void Render(const Skybox& skybox) = 0;
 	virtual void Render(const Sprite& sprite) = 0;
+
+	virtual void* GetTextureId(const Texture& texture) = 0;
 };

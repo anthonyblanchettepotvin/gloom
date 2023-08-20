@@ -1,6 +1,6 @@
 #include "ApplicationManager.h"
 
-void ApplicationManager::SelectObject(const Object& object)
+void ApplicationManager::SelectObject(Object& object)
 {
 	if (m_SelectedObject == &object)
 		return;

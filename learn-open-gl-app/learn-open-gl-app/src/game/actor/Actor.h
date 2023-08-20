@@ -5,9 +5,11 @@
 
 #include <glm/glm.hpp>
 
+#include "../../engine/object/Object.h"
+
 class ActorComponent;
 
-class Actor
+class Actor : public Object
 {
 public:
 	Actor(const std::string& name);

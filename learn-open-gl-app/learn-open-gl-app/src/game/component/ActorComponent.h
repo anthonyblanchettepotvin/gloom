@@ -1,8 +1,10 @@
 #pragma once
 
+#include "../../engine/object/Object.h"
+
 class Actor;
 
-class ActorComponent
+class ActorComponent : public Object
 {
 public:
 	virtual ~ActorComponent() = default;

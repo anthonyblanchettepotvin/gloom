@@ -273,6 +273,20 @@ void GlGraphicsEngine::Render(const Sprite& sprite)
 	m_SamplerIndex = 0;
 }
 
+void* GlGraphicsEngine::GetTextureId(const Texture& texture)
+{
+	ObjectID textureId = texture.GetId();
+
+	auto it = m_GlTextures.find(textureId);
+	if (it == m_GlTextures.end())
+	{
+		m_GlTextures[textureId] = std::make_unique<GlTexture>(texture);
+	}
+
+	return (void*)m_GlTextures[textureId]->GetId();
+
+}
+
 void GlGraphicsEngine::ApplyMaterial(const Material& material)
 {
 	material.GetShader()->Use();

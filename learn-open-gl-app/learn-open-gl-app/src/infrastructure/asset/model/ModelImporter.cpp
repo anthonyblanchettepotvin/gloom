@@ -246,7 +246,7 @@ std::string ModelImporter::GenerateTextureName(const std::string& texturePath) c
 
 std::string ModelImporter::ExtractFileNameFromFilePath(const std::string& filePath) const
 {
-	size_t lastSeparatorPosition = filePath.find_last_of('/\\');
+	size_t lastSeparatorPosition = filePath.find_last_of("/\\");
 	if (lastSeparatorPosition != std::string::npos)
 	{
 		std::string fileName = filePath.substr(lastSeparatorPosition + 1);
