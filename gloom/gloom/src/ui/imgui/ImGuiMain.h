@@ -12,7 +12,7 @@ class GraphicsEngine;
 class ImGuiMain
 {
 public:
-	ImGuiMain(ApplicationManager& applicationManager, AssetManager& assetManager, GraphicsEngine& graphicsEngine);
+	ImGuiMain(ApplicationManager& applicationManager, AssetManager& assetManager, GameManager& gameManager, GraphicsEngine& graphicsEngine);
 
 	void Render();
 

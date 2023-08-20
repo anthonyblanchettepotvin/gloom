@@ -52,6 +52,11 @@ std::vector<Asset*> AssetManager::FindAssetsByObjectType(const ObjectType& objec
 	return m_AssetRepository.FindAssetsByObjectType(objectType);
 }
 
+Asset* AssetManager::FindAssetByObjectId(const ObjectID& objectId) const
+{
+	return m_AssetRepository.FindAssetByObjectId(objectId);
+}
+
 std::vector<AssetDescriptor> AssetManager::GetAssetDescriptors() const
 {
 	return m_AssetRegistry.GetAssetDescriptors();

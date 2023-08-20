@@ -24,6 +24,7 @@
 #include "game/component/SpriteRendererComponent.h"
 #include "game/component/PointLightComponent.h"
 #include "game/component/DirectionalLightComponent.h"
+#include "game/GameManager.h"
 #include "game/world/World.h"
 #include "infrastructure/asset/cubemap/CubemapAssetFactory.h"
 #include "infrastructure/asset/cubemap/CubemapImporter.h"
@@ -230,6 +231,10 @@ int main()
 	// --- Application Manager ---
 
 	ApplicationManager applicationManager;
+
+	// --- Game Manager ---
+
+	GameManager gameManager;
 
 	// --- Asset Manager ---
 
@@ -447,13 +452,13 @@ int main()
 	Asset* worldAsset = assetManager.CreateBlankAsset(ObjectType(typeid(World)), "Default");
 	World* world = (World*)worldAsset->GetObject();
 
-	world->SpawnActor(&skyboxActor);
-	world->SpawnActor(&backpackActor);
-	world->SpawnActor(&testActor);
-	world->SpawnActor(&cubeActor);
-	world->SpawnActor(&suzanneActor);
-	world->SpawnActor(&pointLightActor);
-	world->SpawnActor(&directionalLightActor);
+	world->SpawnActor(skyboxActor);
+	world->SpawnActor(backpackActor);
+	world->SpawnActor(testActor);
+	world->SpawnActor(cubeActor);
+	world->SpawnActor(suzanneActor);
+	world->SpawnActor(pointLightActor);
+	world->SpawnActor(directionalLightActor);
 
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
 	block that matches a UBO and is bound to it will share its data. This is handy,
@@ -540,7 +545,7 @@ int main()
 	reflectionShader->BindToGlobalData(*cameraGlobalData);
 	refractionShader->BindToGlobalData(*cameraGlobalData);
 
-	ImGuiMain ui(applicationManager, assetManager, graphicsEngine);
+	ImGuiMain ui(applicationManager, assetManager, gameManager, graphicsEngine);
 
 	// This is the render loop.
 	while (!glfwWindowShouldClose(window))

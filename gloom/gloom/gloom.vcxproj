@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\GameManager.cpp" />
     <ClCompile Include="src\ui\imgui\tool\ImGuiWorldTool.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiAdapter.cpp" />
     <ClCompile Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.cpp" />
@@ -237,6 +238,7 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\GameManager.h" />
     <ClInclude Include="src\ui\imgui\tool\ImGuiWorldTool.h" />
     <ClInclude Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.h" />
     <ClInclude Include="src\ui\imgui\ImGuiMain.h" />

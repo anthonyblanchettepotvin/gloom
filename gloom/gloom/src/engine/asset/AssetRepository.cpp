@@ -54,3 +54,19 @@ std::vector<Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& ob
 
 	return result;
 }
+
+Asset* AssetRepository::FindAssetByObjectId(const ObjectID& objectId) const
+{
+	for (const auto& asset : m_Assets)
+	{
+		assert(asset != nullptr);
+		assert(asset->GetObject() != nullptr);
+
+		if (asset->GetObject()->GetId() == objectId)
+		{
+			return asset.get();
+		}
+	}
+
+	return nullptr;
+}

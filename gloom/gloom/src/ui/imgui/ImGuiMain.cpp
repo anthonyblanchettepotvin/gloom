@@ -5,13 +5,15 @@
 #include "../../application/ApplicationManager.h"
 #include "../../engine/asset/AssetManager.h"
 #include "../../engine/graphics/engine/GraphicsEngine.h"
+#include "../../game/GameManager.h"
 
 #define ROBOTO_REGULAR_TTF_PATH "..\\..\\assets\\fonts\\roboto\\Roboto-Regular.ttf"
 
-ImGuiMain::ImGuiMain(ApplicationManager& applicationManager, AssetManager& assetManager, GraphicsEngine& graphicsEngine)
+ImGuiMain::ImGuiMain(ApplicationManager& applicationManager, AssetManager& assetManager, GameManager& gameManager, GraphicsEngine& graphicsEngine)
 	: m_AdapterFactory(graphicsEngine)
 	, m_AssetsTool(applicationManager, assetManager)
 	, m_PropertiesTool(m_AdapterFactory, applicationManager, graphicsEngine)
+	, m_WorldTool(applicationManager, assetManager, gameManager)
 {
 	LoadFont();
 

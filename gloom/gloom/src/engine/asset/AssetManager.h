@@ -10,6 +10,7 @@ class AssetFactory;
 class AssetRegistry;
 class AssetRepository;
 class Object;
+class ObjectID;
 class ObjectType;
 
 class AssetManager
@@ -24,6 +25,7 @@ public:
 
 	std::vector<Asset*> GetAssets() const;
 	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType) const;
+	Asset* FindAssetByObjectId(const ObjectID& objectId) const;
 
 	std::vector<AssetDescriptor> GetAssetDescriptors() const;
 
