@@ -1,11 +1,14 @@
 #pragma once
 
+#include <string>
 #include <typeindex>
 
 class ObjectType final
 {
 public:
 	ObjectType(const std::type_index& typeIndex);
+
+	std::string GetDisplayName() const { return m_TypeIndex.name(); }
 
 private:
 	const std::type_index m_TypeIndex;

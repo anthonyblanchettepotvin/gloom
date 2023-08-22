@@ -1,9 +1,11 @@
 #include "ImGuiActorAdapter.h"
 
+#include <cassert>
 #include <memory>
 
 #include "../../../vendor/imgui/imgui.h"
 
+#include "../../../engine/object/ObjectType.h"
 #include "../../../game/actor/Actor.h"
 #include "../../../game/component/ActorComponent.h"
 
@@ -20,10 +22,13 @@ void ImGuiActorAdapter::Render() const
 
 	for (const auto& component : m_Actor.GetComponents())
 	{
-		ImGui::Separator();
+		assert(component != nullptr);
 
 		std::unique_ptr<ImGuiAdapter> componentAdapter = m_AdapterFactory.CreateAdapter(component);
-		if (componentAdapter)
+		if (!componentAdapter)
+			continue;
+
+		if (ImGui::CollapsingHeader(component->GetObjectType().GetDisplayName().c_str()))
 		{
 			componentAdapter->Render();
 		}

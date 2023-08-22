@@ -5,13 +5,15 @@
 #include "../../application/ApplicationManager.h"
 #include "../../engine/asset/AssetManager.h"
 #include "../../engine/graphics/engine/GraphicsEngine.h"
+#include "../../game/GameManager.h"
 
 #define ROBOTO_REGULAR_TTF_PATH "..\\..\\assets\\fonts\\roboto\\Roboto-Regular.ttf"
 
-ImGuiMain::ImGuiMain(ApplicationManager& applicationManager, AssetManager& assetManager, GraphicsEngine& graphicsEngine)
+ImGuiMain::ImGuiMain(ApplicationManager& applicationManager, AssetManager& assetManager, GameManager& gameManager, GraphicsEngine& graphicsEngine)
 	: m_AdapterFactory(graphicsEngine)
 	, m_AssetsTool(applicationManager, assetManager)
 	, m_PropertiesTool(m_AdapterFactory, applicationManager, graphicsEngine)
+	, m_WorldTool(applicationManager, assetManager, gameManager)
 {
 	LoadFont();
 
@@ -22,6 +24,7 @@ void ImGuiMain::Render()
 {
 	m_AssetsTool.Render();
 	m_PropertiesTool.Render();
+	m_WorldTool.Render();
 }
 
 void ImGuiMain::LoadFont()
@@ -44,7 +47,7 @@ void ImGuiMain::ApplyStyle()
 	style.WindowPadding = ImVec2(8, 8);
 
 	// Spacing
-	style.ItemInnerSpacing = ImVec2(4, 4);
+	style.ItemInnerSpacing = ImVec2(8, 8);
 	style.ItemSpacing = ImVec2(8, 8);
 
 	// Size
@@ -74,9 +77,9 @@ void ImGuiMain::ApplyStyle()
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_Text] = ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);
-	colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.11f, 0.16f, 1.00f);
-	colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.10f, 1.00f);
-	colors[ImGuiCol_PopupBg] = ImVec4(0.09f, 0.09f, 0.12f, 1.00f);
+	colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.11f, 0.16f, 0.95f);
+	colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.10f, 0.95f);
+	colors[ImGuiCol_PopupBg] = ImVec4(0.09f, 0.09f, 0.12f, 0.95f);
 	colors[ImGuiCol_FrameBg] = ImVec4(0.16f, 0.16f, 0.20f, 1.00f);
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.18f, 0.18f, 0.55f, 1.00f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(0.16f, 0.16f, 0.47f, 1.00f);

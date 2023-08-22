@@ -14,7 +14,7 @@ class Actor : public Object
 public:
 	Actor(const std::string& name);
 
-	std::string GetName() { return name; }
+	std::string GetName() const { return name; }
 
 	std::vector<ActorComponent*> GetComponents() { return components; }
 

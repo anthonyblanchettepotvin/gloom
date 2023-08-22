@@ -9,11 +9,10 @@ class Actor;
 class World : public Object
 {
 public:
-	void SpawnActor(Actor* actor);
+	void SpawnActor(Actor& actor);
 
-	std::vector<Actor*> GetActors() { return actors; };
-	std::vector<std::string> GetActorsName();
+	std::vector<Actor*> GetActors() { return m_Actors; }
 
 private:
-	std::vector<Actor*> actors;
+	std::vector<Actor*> m_Actors;
 };
