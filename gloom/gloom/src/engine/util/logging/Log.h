@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 
-#define ENUM_VALUE_UNKNOWN "Enum value unknown."
+#define ENUM_VALUE_UNKNOWN "Enum value is unknown."
 
 typedef size_t EntryIndex;
 

@@ -1,5 +1,7 @@
 #include "Log.h"
 
+#include <cassert>
+
 #define INDEX_OUT_OF_RANGE "Index is out of range."
 #define ENTRY_SECTION_SEPARATOR " | "
 
@@ -33,6 +35,8 @@ std::string Log::GetEntry(EntryIndex entryIndex) const
 	}
 
 	std::streambuf* buffer = m_OutStream.rdbuf();
+
+	assert(buffer != nullptr);
 
 	LogEntryData entryData = m_EntriesData.at(entryIndex);
 
