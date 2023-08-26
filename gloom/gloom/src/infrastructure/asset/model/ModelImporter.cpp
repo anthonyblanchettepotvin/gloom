@@ -1,5 +1,6 @@
 #include "ModelImporter.h"
 
+#include <sstream>
 #include <string>
 
 #include <assimp/Importer.hpp>
@@ -9,6 +10,7 @@
 #include <assimp/scene.h>
 #include <assimp/texture.h>
 
+#include "../../../engine/EngineGlobals.h"
 #include "../../../engine/asset/Asset.h"
 #include "../../../engine/graphics/material/Material.h"
 #include "../../../engine/graphics/material/MaterialAttributes.h"
@@ -35,7 +37,9 @@ std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& assetName
 
 	if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
 	{
-		// TODO: Log error
+		std::stringstream ss;
+		ss << "Could not import model " << filePath << ".";
+		gLogErrorMessage(ss.str());
 
 		return nullptr;
 	}
@@ -185,7 +189,7 @@ Material* ModelImporter::ImportMaterial(aiMaterial* material)
 	}
 	else
 	{
-		// TODO: Log error
+		gLogErrorMessage("Shading model is not supported.");
 	}
 
 	return nullptr;
@@ -224,10 +228,6 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material
 				textures.push_back(texture);
 
 				m_ImportedTextures[textureAbsolutePath] = texture;
-			}
-			else
-			{
-				// TODO: Log error
 			}
 		}
 	}

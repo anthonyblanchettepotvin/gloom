@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <memory>
+#include <sstream>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/material/MaterialAttributes.h"
 
 #include "../globaldata/GlGlobalData.h"
@@ -113,7 +115,7 @@ void GlShader::BindToGlobalData(GlobalData& globalData)
 	}
 	catch (std::bad_cast e)
 	{
-		// TODO: Display error
+		gLogErrorMessage("GlShader expects to be passed a GlGlobalData instance.");
 	}
 }
 
@@ -143,7 +145,9 @@ unsigned int GlShader::CompileVertexShader()
 		char infoLog[512];
 		glGetShaderInfoLog(vertexShaderId, 512, NULL, infoLog);
 
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::stringstream ss;
+		ss << "Vertex shader compilation failed:\n" << infoLog;
+		gLogErrorMessage(ss.str());
 	}
 
 	return vertexShaderId;
@@ -164,7 +168,9 @@ unsigned int GlShader::CompileFragmentShader()
 		char infoLog[512];
 		glGetShaderInfoLog(fragmentShaderId, 512, NULL, infoLog);
 
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::stringstream ss;
+		ss << "Fragment shader compilation failed:\n" << infoLog;
+		gLogErrorMessage(ss.str());
 	}
 
 	return fragmentShaderId;
@@ -184,7 +190,9 @@ unsigned int GlShader::LinkShaders(unsigned int vertexShaderId, unsigned int fra
 		char infoLog[512];
 		glGetProgramInfoLog(programId, 512, NULL, infoLog);
 
-		std::cout << "ERROR::SHADER::PROGRAM::LIKING_FAILED\n" << infoLog << std::endl;
+		std::stringstream ss;
+		ss << "Shader program linking failed:\n" << infoLog;
+		gLogErrorMessage(ss.str());
 	}
 
 	return programId;

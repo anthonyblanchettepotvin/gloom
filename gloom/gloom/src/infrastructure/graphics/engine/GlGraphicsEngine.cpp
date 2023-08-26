@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 
+#include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
 #include "../../../engine/graphics/sprite/Sprite.h"
 #include "../../../engine/graphics/skybox/Skybox.h"
@@ -11,6 +12,8 @@
 #include "../mesh/GlMesh.h"
 #include "../sprite/GlSprite.h"
 #include "../skybox/GlSkybox.h"
+
+#define EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE "GlGraphicsEngine expects to be passed a GlGlobalData instance."
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
@@ -143,7 +146,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		// TODO: Display error
+		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
 	}
 }
 
@@ -157,7 +160,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		// TODO: Display error
+		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
 	}
 }
 
@@ -171,7 +174,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		// TODO: Display error
+		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
 	}
 }
 
@@ -185,7 +188,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		// TODO: Display error
+		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
 	}
 }
 
@@ -199,7 +202,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		// TODO: Display error
+		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
 	}
 }
 
@@ -311,8 +314,10 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, MaterialAt
 	{
 		ApplyMaterialAttributeToShader(shader, floatAttribute);
 	}
-
-	// TODO: Display error
+	else
+	{
+		gLogErrorMessage("Material attribute type is not supported.");
+	}
 }
 
 void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, TextureMaterialAttribute* attribute)
