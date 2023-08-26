@@ -1,6 +1,5 @@
-#include <iostream>
-
 #include "application/ApplicationManager.h"
+#include "engine/EngineGlobals.h"
 #include "engine/asset/Asset.h"
 #include "engine/asset/AssetDescriptor.h"
 #include "engine/asset/AssetFactory.h"
@@ -182,6 +181,11 @@ void processInput(GLFWwindow* window)
 
 int main()
 {
+	LoggingManager loggingManager;
+
+	std::unique_ptr<EngineGlobalsInstance> engineGlobalsInstance = std::make_unique<EngineGlobalsInstance>(loggingManager);
+	EngineGlobals::SetInstance(engineGlobalsInstance);
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -193,7 +197,7 @@ int main()
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Gloom", nullptr, nullptr);
 	if (!window)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		gLogErrorMessageForKey("main", "Failed to create GLFW window.");
 
 		glfwTerminate();
 
@@ -210,7 +214,7 @@ int main()
 	// glfwGetProcAddress gives us the correct OpenGL function pointers based on the OS.
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		gLogErrorMessageForKey("main", "Failed to initialize GLAD.");
 
 		glfwTerminate();
 

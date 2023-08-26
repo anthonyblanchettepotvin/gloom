@@ -1,7 +1,10 @@
 #include "CubemapImporter.h"
 
+#include <sstream>
+
 #include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
 
+#include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/cubemap/Cubemap.h"
 
 CubemapImporter::CubemapImporter(AssetManager& assetManager)
@@ -29,7 +32,11 @@ std::unique_ptr<Object> CubemapImporter::ImportObject(const std::string& assetNa
 		}
 		else
 		{
-			// TODO: Log error
+			std::stringstream ss;
+			ss << "Could not import cubemap texture " << facePath << ".";
+			gLogErrorMessage(ss.str());
+
+			return nullptr;
 		}
 	}
 

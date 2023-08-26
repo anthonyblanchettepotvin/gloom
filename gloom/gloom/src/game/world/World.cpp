@@ -1,5 +1,7 @@
 #include "World.h"
 
+#include "../../engine/EngineGlobals.h"
+
 #include "../actor/Actor.h"
 
 void World::SpawnActor(Actor& actor)
@@ -11,6 +13,8 @@ void World::SpawnActor(Actor& actor)
 	}
 	else
 	{
-		// TODO: Log error
+		std::stringstream ss;
+		ss << "Actor " << actor.GetName() << " already spawned.";
+		gLogErrorMessage(ss.str());
 	}
 }

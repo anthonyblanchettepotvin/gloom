@@ -5,6 +5,8 @@
 
 #include <glad/glad.h>
 
+#include "../../../engine/EngineGlobals.h"
+
 #include "GlShader.h"
 
 const std::string START_VERTEX_SHADER_TOKEN = "START_VERTEX_SHADER";
@@ -29,9 +31,13 @@ std::unique_ptr<GlShader> GlShaderImporter::Import(const std::string& filePath)
 		vertexShader = ParseVertexShader(shaderFile);
 		fragmentShader = ParseFragmentShader(shaderFile);
 	}
-	catch (const std::exception& e)
+	catch (std::exception e)
 	{
-		std::cout << "ERROR::SHADER::FILE::READING_FAILED\n" << e.what() << std::endl;
+		std::stringstream ss;
+		ss << "Could not import shader " << filePath << ".";
+		gLogErrorMessage(ss.str());
+
+		return nullptr;
 	}
 
 	vertexShader = AssembleShader({ version, vertexShader });

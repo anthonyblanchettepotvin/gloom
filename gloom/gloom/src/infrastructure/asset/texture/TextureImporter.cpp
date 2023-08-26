@@ -1,7 +1,10 @@
 #include "TextureImporter.h"
 
+#include <sstream>
+
 #include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
 
+#include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/texture/Texture.h"
 
 TextureImporter::TextureImporter(AssetManager& assetManager)
@@ -26,7 +29,9 @@ std::unique_ptr<Object> TextureImporter::ImportObject(const std::string& assetNa
 	}
 	else
 	{
-		// TODO: Log error
+		std::stringstream ss;
+		ss << "Could not import texture " << filePath << ".";
+		gLogErrorMessage(ss.str());
 	}
 
 	return std::unique_ptr<Texture>(texture);

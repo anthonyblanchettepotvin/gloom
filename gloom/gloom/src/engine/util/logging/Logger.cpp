@@ -1,0 +1,29 @@
+#include "Logger.h"
+
+#include "Log.h"
+
+#define INDEX_OUT_OF_RANGE "Index is out of range."
+
+Logger::Logger(const std::string& key, Log& log)
+	: m_Key(key), m_Log(log)
+{
+}
+
+void Logger::LogMessage(LogLevel logLevel, const std::string& message)
+{
+	EntryIndex entryIndexInLog = m_Log.LogMessageForKey(m_Key, logLevel, message);
+
+	m_EntriesIndexInLog.push_back(entryIndexInLog);
+}
+
+std::string Logger::GetEntry(EntryIndex entryIndex) const
+{
+	if (entryIndex >= m_EntriesIndexInLog.size())
+	{
+		throw std::out_of_range(INDEX_OUT_OF_RANGE);
+	}
+
+	EntryIndex entryIndexInLog = m_EntriesIndexInLog.at(entryIndex);
+
+	return m_Log.GetEntry(entryIndexInLog);
+}

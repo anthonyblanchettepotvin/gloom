@@ -146,6 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\EngineGlobals.cpp" />
+    <ClCompile Include="src\engine\util\logging\Log.cpp" />
+    <ClCompile Include="src\engine\util\logging\LoggingManager.cpp" />
+    <ClCompile Include="src\engine\util\logging\Logger.cpp" />
     <ClCompile Include="src\game\GameManager.cpp" />
     <ClCompile Include="src\ui\imgui\tool\ImGuiWorldTool.cpp" />
     <ClCompile Include="src\ui\imgui\ImGuiAdapter.cpp" />
@@ -238,6 +242,10 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\EngineGlobals.h" />
+    <ClInclude Include="src\engine\util\logging\Log.h" />
+    <ClInclude Include="src\engine\util\logging\LoggingManager.h" />
+    <ClInclude Include="src\engine\util\logging\Logger.h" />
     <ClInclude Include="src\game\GameManager.h" />
     <ClInclude Include="src\ui\imgui\tool\ImGuiWorldTool.h" />
     <ClInclude Include="src\ui\imgui\adapter\ImGuiCubemapAdapter.h" />
