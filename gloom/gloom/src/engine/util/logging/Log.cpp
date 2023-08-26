@@ -1,0 +1,45 @@
+#include "Log.h"
+
+#define INDEX_OUT_OF_RANGE "Index is out of range."
+#define ENTRY_SECTION_SEPARATOR " | "
+
+Log::Log()
+	: m_OutStream(&m_StringBuffer)
+{
+}
+
+EntryIndex Log::LogMessageForKey(const std::string& key, LogLevel logLevel, const std::string& message)
+{
+	std::streampos entryStart = m_OutStream.tellp();
+
+	m_OutStream << __TIME__ 
+		<< ENTRY_SECTION_SEPARATOR << LogLevelToString(logLevel) 
+		<< ENTRY_SECTION_SEPARATOR << key
+		<< ENTRY_SECTION_SEPARATOR << message
+		<< std::endl;
+
+	std::streampos entryEnd = m_OutStream.tellp();
+
+	m_EntriesData.emplace_back(LogEntryData{ entryStart, entryEnd });
+
+	return m_EntriesData.size() - 1;
+}
+
+std::string Log::GetEntry(EntryIndex entryIndex) const
+{
+	if (entryIndex >= m_EntriesData.size())
+	{
+		throw std::out_of_range(INDEX_OUT_OF_RANGE);
+	}
+
+	std::streambuf* buffer = m_OutStream.rdbuf();
+
+	LogEntryData entryData = m_EntriesData.at(entryIndex);
+
+	std::string entry(entryData.GetSize(), NULL);
+
+	buffer->pubseekpos(entryData.Start);
+	buffer->sgetn(&entry[0], entryData.GetSize());
+
+	return entry;
+}
