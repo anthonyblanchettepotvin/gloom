@@ -10,21 +10,21 @@ typedef size_t EntryIndex;
 
 enum LogLevel
 {
-	INFO = 1,
-	WARNING = 2,
-	ERROR = 4
+	ERROR = 1,
+	INFO = 2,
+	WARNING = 4,
 };
 
 constexpr const char* LogLevelToString(LogLevel logLevel)
 {
 	switch (logLevel)
 	{
+	case LogLevel::ERROR:
+		return "ERROR";
 	case LogLevel::INFO:
 		return "INFO";
 	case LogLevel::WARNING:
 		return "WARNING";
-	case LogLevel::ERROR:
-		return "ERROR";
 	default:
 		throw std::invalid_argument(ENUM_VALUE_UNKNOWN);
 	}

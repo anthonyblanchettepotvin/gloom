@@ -10,6 +10,10 @@
 
 #define SELECTED_LOGGER_COMBO_LABEL "Selected Logger"
 
+#define DISPLAY_ERRORS_OPTION_LABEL "Errors"
+#define DISPLAY_INFOS_OPTION_LABEL "Infos"
+#define DISPLAY_WARNINGS_OPTION_LABEL "Warnings"
+
 #define LOG_LEVEL_ERROR_COLOR ImVec4(1.0f, 0.2f, 0.2f, 1.0f)
 #define LOG_LEVEL_INFO_COLOR ImVec4(0.2f, 0.53f, 1.0f, 1.0f)
 #define LOG_LEVEL_WARNING_COLOR ImVec4(1.0f, 0.69f, 0.2f, 1.0f)
@@ -31,13 +35,13 @@ void ImGuiLogTool::Render()
 void ImGuiLogTool::RenderDisplayOptions()
 {
 	ImGui::SameLine();
-	ImGui::Checkbox("Errors", &m_DisplayErrors);
+	ImGui::Checkbox(DISPLAY_ERRORS_OPTION_LABEL, &m_DisplayErrors);
 
 	ImGui::SameLine();
-	ImGui::Checkbox("Infos", &m_DisplayInfos);
+	ImGui::Checkbox(DISPLAY_INFOS_OPTION_LABEL, &m_DisplayInfos);
 
 	ImGui::SameLine();
-	ImGui::Checkbox("Warnings", &m_DisplayWarnings);
+	ImGui::Checkbox(DISPLAY_WARNINGS_OPTION_LABEL, &m_DisplayWarnings);
 }
 
 void ImGuiLogTool::RenderSelectedLoggerCombo()
