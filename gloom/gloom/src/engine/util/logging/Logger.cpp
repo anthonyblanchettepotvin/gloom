@@ -16,7 +16,7 @@ void Logger::LogMessage(LogLevel logLevel, const std::string& message)
 	m_EntriesIndexInLog.push_back(entryIndexInLog);
 }
 
-std::string Logger::GetEntry(EntryIndex entryIndex) const
+LogEntry Logger::GetEntry(EntryIndex entryIndex) const
 {
 	if (entryIndex >= m_EntriesIndexInLog.size())
 	{
@@ -26,4 +26,20 @@ std::string Logger::GetEntry(EntryIndex entryIndex) const
 	EntryIndex entryIndexInLog = m_EntriesIndexInLog.at(entryIndex);
 
 	return m_Log.GetEntry(entryIndexInLog);
+}
+
+std::vector<LogEntry> Logger::GetEntries(int flags) const
+{
+	std::vector<LogEntry> entries;
+
+	for (size_t i = 0; i < GetEntryCount(); i++)
+	{
+		auto entry = GetEntry(i);
+		if (entry.Data.LogLevel & flags)
+		{
+			entries.push_back(entry);
+		}
+	}
+
+	return entries;
 }

@@ -15,6 +15,8 @@
 #include "engine/graphics/skybox/Skybox.h"
 #include "engine/graphics/sprite/Sprite.h"
 #include "engine/graphics/texture/Texture.h"
+#include "engine/util/logging/LoggerRepository.h"
+#include "engine/util/logging/LoggingManager.h"
 #include "game/actor/Actor.h"
 #include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
@@ -181,7 +183,8 @@ void processInput(GLFWwindow* window)
 
 int main()
 {
-	LoggingManager loggingManager;
+	LoggerRepository loggerRepository;
+	LoggingManager loggingManager(loggerRepository);
 
 	std::unique_ptr<EngineGlobalsInstance> engineGlobalsInstance = std::make_unique<EngineGlobalsInstance>(loggingManager);
 	EngineGlobals::SetInstance(engineGlobalsInstance);

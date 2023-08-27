@@ -23,6 +23,7 @@ ImGuiMain::ImGuiMain(ApplicationManager& applicationManager, AssetManager& asset
 void ImGuiMain::Render()
 {
 	m_AssetsTool.Render();
+	m_LogTool.Render();
 	m_PropertiesTool.Render();
 	m_WorldTool.Render();
 }
