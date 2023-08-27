@@ -23,11 +23,11 @@ Asset* AssetManager::CreateAssetWithObject(const std::string& assetName, std::un
 	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(object->GetObjectType());
 
 	std::unique_ptr<Asset> asset = assetRegistryEntry.GetFactory().CreateWithObject(assetRegistryEntry.GetDescriptor(), assetName, object);
-	Asset* assetPr = asset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
+	Asset* assetPtr = asset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
 
 	m_AssetRepository.Insert(asset);
 
-	return assetPr;
+	return assetPtr;
 }
 
 Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType, const std::string& assetName)

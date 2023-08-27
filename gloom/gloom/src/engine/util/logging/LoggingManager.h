@@ -1,23 +1,29 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
+#include <vector>
 
 #include "Log.h"
 
 class Logger;
+class LoggerRepository;
 
 class LoggingManager
 {
 public:
-	Logger& GetOrCreateLogger(const std::string& key);
+	LoggingManager(LoggerRepository& loggerRepository);
 
-	std::vector<Logger> GetLoggers() const;
+	void LogMessage(const std::string& key, LogLevel logLevel, const std::string& message);
 
-	const Log& GetLog() const { return m_Log; }
+	std::vector<std::string> GetKeys() const;
+
+	std::vector<LogEntry> GetLogEntries(int flags) const;
+	std::vector<LogEntry> GetLogEntriesByKey(const std::string& key, int flags) const;
 
 private:
-	std::unordered_map<std::string, Logger> m_KeyToLoggerMapping;
+	LoggerRepository& m_LoggerRepository;
 
 	Log m_Log;
+
+	Logger& GetOrCreateLogger(const std::string& key);
 };

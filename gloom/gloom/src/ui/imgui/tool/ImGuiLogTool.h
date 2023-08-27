@@ -27,7 +27,7 @@ private:
 	void RenderSelectedLoggerCombo();
 	void RenderDisplayOptions();
 	void RenderSelectedLoggerComboAllOption();
-	void RenderSelectedLoggerComboOption(const Logger& logger);
+	void RenderSelectedLoggerComboOption(const std::string& loggerKey);
 
 	void RenderLog();
 	int GetEntriesFlags() const;

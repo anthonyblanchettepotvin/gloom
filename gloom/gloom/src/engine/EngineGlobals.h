@@ -7,7 +7,7 @@
 
 #define DEFAULT_LOGGER_KEY typeid(this).name()
 
-#define gLogMessageForKey(key, logLevel, message) EngineGlobals::GetInstance().GetLoggingManager().GetOrCreateLogger(key).LogMessage(logLevel, message)
+#define gLogMessageForKey(key, logLevel, message) EngineGlobals::GetInstance().GetLoggingManager().LogMessage(key, logLevel, message)
 #define gLogMessage(logLevel, message) gLogMessageForKey(DEFAULT_LOGGER_KEY, logLevel, message)
 
 #define gLogErrorMessageForKey(key, message) gLogMessageForKey(key, LogLevel::ERROR, message)

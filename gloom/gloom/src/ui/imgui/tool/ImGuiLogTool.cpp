@@ -48,7 +48,7 @@ void ImGuiLogTool::RenderSelectedLoggerCombo()
 	{
 		RenderSelectedLoggerComboAllOption();
 
-		auto loggers = EngineGlobals::GetInstance().GetLoggingManager().GetLoggers();
+		auto loggers = EngineGlobals::GetInstance().GetLoggingManager().GetKeys();
 		for (const auto& logger : loggers)
 		{
 			RenderSelectedLoggerComboOption(logger);
@@ -66,11 +66,11 @@ void ImGuiLogTool::RenderSelectedLoggerComboAllOption()
 	}
 }
 
-void ImGuiLogTool::RenderSelectedLoggerComboOption(const Logger& logger)
+void ImGuiLogTool::RenderSelectedLoggerComboOption(const std::string& loggerKey)
 {
-	if (ImGui::Selectable(logger.GetKey().c_str(), m_SelectedLoggerKey == logger.GetKey()))
+	if (ImGui::Selectable(loggerKey.c_str(), m_SelectedLoggerKey == loggerKey))
 	{
-		m_SelectedLoggerKey = logger.GetKey();
+		m_SelectedLoggerKey = loggerKey;
 	}
 }
 
@@ -81,8 +81,8 @@ void ImGuiLogTool::RenderLog()
 		int entriesFlags = GetEntriesFlags();
 
 		auto logEntries = m_SelectedLoggerKey == SELECTED_LOGGER_COMBO_ALL_OPTION
-			? EngineGlobals::GetInstance().GetLoggingManager().GetLog().GetEntries(entriesFlags)
-			: EngineGlobals::GetInstance().GetLoggingManager().GetOrCreateLogger(m_SelectedLoggerKey).GetEntries(entriesFlags);
+			? EngineGlobals::GetInstance().GetLoggingManager().GetLogEntries(entriesFlags)
+			: EngineGlobals::GetInstance().GetLoggingManager().GetLogEntriesByKey(m_SelectedLoggerKey, entriesFlags);
 
 		RenderLogEntries(logEntries);
 

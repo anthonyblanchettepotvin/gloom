@@ -1,26 +1,48 @@
 #include "LoggingManager.h"
 
 #include "Logger.h"
+#include "LoggerRepository.h"
+
+LoggingManager::LoggingManager(LoggerRepository& loggerRepository)
+    : m_LoggerRepository(loggerRepository)
+{
+}
+
+void LoggingManager::LogMessage(const std::string& key, LogLevel logLevel, const std::string& message)
+{
+    Logger& logger = GetOrCreateLogger(key);
+
+    logger.LogMessage(logLevel, message);
+}
+
+std::vector<std::string> LoggingManager::GetKeys() const
+{
+    return m_LoggerRepository.GetKeys();
+}
+
+std::vector<LogEntry> LoggingManager::GetLogEntries(int flags) const
+{
+    return m_Log.GetEntries(flags);
+}
+
+std::vector<LogEntry> LoggingManager::GetLogEntriesByKey(const std::string& key, int flags) const
+{
+    const Logger& logger = m_LoggerRepository.GetLogger(key);
+
+    return logger.GetEntries(flags);
+}
 
 Logger& LoggingManager::GetOrCreateLogger(const std::string& key)
 {
-    auto it = m_KeyToLoggerMapping.find(key);
-    if (it == m_KeyToLoggerMapping.end())
+    if (m_LoggerRepository.DoesLoggerExists(key))
     {
-        m_KeyToLoggerMapping.emplace(key, Logger(key, m_Log));
+        return m_LoggerRepository.GetLogger(key);
     }
 
-    return m_KeyToLoggerMapping.at(key);
-}
+    std::unique_ptr<Logger> logger = std::make_unique<Logger>(key, m_Log);
+    Logger* loggerPtr = logger.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
 
-std::vector<Logger> LoggingManager::GetLoggers() const
-{
-    std::vector<Logger> loggers;
+    m_LoggerRepository.Insert(logger);
 
-    for (const auto& keyToLogger : m_KeyToLoggerMapping)
-    {
-        loggers.emplace_back(keyToLogger.second);
-    }
-
-    return loggers;
+    return *loggerPtr;
 }
