@@ -118,6 +118,7 @@ void ImGuiAssetsTool::RenderAssetsTab(const std::string& label, const std::vecto
                     RenderAssetsTabRow(*asset);
                 }
             }
+            clipper.End();
 
             ImGui::EndTable();
         }

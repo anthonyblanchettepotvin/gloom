@@ -8,11 +8,11 @@
 
 typedef size_t EntryIndex;
 
-enum class LogLevel
+enum LogLevel
 {
-	INFO,
-	WARNING,
-	ERROR
+	INFO = 1,
+	WARNING = 2,
+	ERROR = 4
 };
 
 constexpr const char* LogLevelToString(LogLevel logLevel)
@@ -32,10 +32,19 @@ constexpr const char* LogLevelToString(LogLevel logLevel)
 
 struct LogEntryData
 {
+	LogLevel LogLevel;
+
 	std::streampos Start;
 	std::streampos End;
 
 	std::streamsize GetSize() const { return End - Start; }
+};
+
+struct LogEntry
+{
+	std::string Text;
+
+	LogEntryData Data;
 };
 
 class Log
@@ -45,7 +54,8 @@ public:
 
 	EntryIndex LogMessageForKey(const std::string& key, LogLevel logLevel, const std::string& message);
 
-	std::string GetEntry(EntryIndex entryIndex) const;
+	LogEntry GetEntry(EntryIndex entryIndex) const;
+	std::vector<LogEntry> GetEntries(int flags) const;
 
 	size_t GetEntryCount() const { return m_EntriesData.size(); }
 

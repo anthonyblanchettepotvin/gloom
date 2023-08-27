@@ -5,7 +5,9 @@
 
 typedef size_t EntryIndex;
 
-enum class LogLevel;
+enum LogLevel;
+
+struct LogEntry;
 
 class Log;
 
@@ -16,7 +18,10 @@ public:
 
 	void LogMessage(LogLevel logLevel, const std::string& message);
 
-	std::string GetEntry(EntryIndex entryIndex) const;
+	std::string GetKey() const { return m_Key; }
+
+	LogEntry GetEntry(EntryIndex entryIndex) const;
+	std::vector<LogEntry> GetEntries(int flags) const;
 
 	size_t GetEntryCount() const { return m_EntriesIndexInLog.size(); }
 

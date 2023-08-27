@@ -2,6 +2,7 @@
 
 #include "ImGuiAdapterFactory.h"
 #include "tool/ImGuiAssetsTool.h"
+#include "tool/ImGuiLogTool.h"
 #include "tool/ImGuiPropertiesTool.h"
 #include "tool/ImGuiWorldTool.h"
 
@@ -20,6 +21,7 @@ private:
 	ImGuiAdapterFactory m_AdapterFactory;
 
 	ImGuiAssetsTool m_AssetsTool;
+	ImGuiLogTool m_LogTool;
 	ImGuiPropertiesTool m_PropertiesTool;
 	ImGuiWorldTool m_WorldTool;
 
