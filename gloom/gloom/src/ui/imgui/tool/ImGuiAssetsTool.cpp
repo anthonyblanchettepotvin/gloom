@@ -127,7 +127,7 @@ void ImGuiAssetsTool::RenderAssetsTab(const std::string& label, const std::vecto
     }
 }
 
-void ImGuiAssetsTool::RenderAssetsTabRow(const Asset& asset)
+void ImGuiAssetsTool::RenderAssetsTabRow(Asset& asset)
 {
     ImGui::PushID(asset.GetId().ToString().c_str());
 

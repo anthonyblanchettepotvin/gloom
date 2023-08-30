@@ -1,5 +1,6 @@
 #include "AssetManager.h"
 
+#include "../object/Object.h"
 #include "../object/ObjectType.h"
 
 #include "Asset.h"
@@ -18,18 +19,6 @@ void AssetManager::DefineAsset(const AssetDescriptor& assetDescriptor, std::uniq
 	m_AssetRegistry.DefineAsset(assetDescriptor, assetFactory);
 }
 
-Asset* AssetManager::CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object)
-{
-	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(object->GetObjectType());
-
-	std::unique_ptr<Asset> asset = assetRegistryEntry.GetFactory().CreateWithObject(assetRegistryEntry.GetDescriptor(), assetName, object);
-	Asset* assetPtr = asset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
-
-	m_AssetRepository.Insert(asset);
-
-	return assetPtr;
-}
-
 Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType, const std::string& assetName)
 {
 	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(objectType);
@@ -40,6 +29,18 @@ Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType, const std::s
 	m_AssetRepository.Insert(blankAsset);
 
 	return blankAssetPtr;
+}
+
+Asset* AssetManager::CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object)
+{
+	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(object->GetObjectType());
+
+	std::unique_ptr<Asset> asset = assetRegistryEntry.GetFactory().CreateWithObject(assetRegistryEntry.GetDescriptor(), assetName, object);
+	Asset* assetPtr = asset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
+
+	m_AssetRepository.Insert(asset);
+
+	return assetPtr;
 }
 
 std::vector<Asset*> AssetManager::GetAssets() const

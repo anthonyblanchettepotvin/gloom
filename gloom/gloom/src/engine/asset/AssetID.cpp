@@ -5,14 +5,14 @@ AssetID::AssetID(unsigned int value)
 {
 }
 
+std::string AssetID::ToString() const
+{
+    return std::to_string(m_Value);
+}
+
 AssetID AssetID::Generate()
 {
     static unsigned int nextValue = 0;
 
     return AssetID(nextValue++);
-}
-
-std::string AssetID::ToString() const
-{
-    return std::to_string(m_Value);
 }

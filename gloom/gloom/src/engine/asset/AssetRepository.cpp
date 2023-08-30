@@ -3,6 +3,7 @@
 #include <cassert>
 #include <stdexcept>
 
+#include "../object/Object.h"
 #include "../object/ObjectType.h"
 
 #include "Asset.h"

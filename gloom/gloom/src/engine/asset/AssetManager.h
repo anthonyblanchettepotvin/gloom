@@ -20,8 +20,8 @@ public:
 
 	void DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
 
-	Asset* CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object);
 	Asset* CreateBlankAsset(const ObjectType& objectType, const std::string& assetName);
+	Asset* CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object);
 
 	std::vector<Asset*> GetAssets() const;
 	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType) const;

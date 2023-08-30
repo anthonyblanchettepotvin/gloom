@@ -3,10 +3,10 @@
 #include <memory>
 #include <string>
 
-#include "../object/Object.h"
-
 #include "AssetDescriptor.h"
 #include "AssetID.h"
+
+class Object;
 
 class Asset
 {
@@ -20,7 +20,8 @@ public:
 	void SetName(const std::string& name) { m_Name = name; }
 	std::string GetName() const { return m_Name; }
 
-	Object* GetObject() const { return m_Object.get(); }
+	Object* GetObject() { return m_Object.get(); }
+	const Object* GetObject() const { return m_Object.get(); }
 
 private:
 	const AssetID m_Id;

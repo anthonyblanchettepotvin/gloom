@@ -29,7 +29,7 @@ private:
     void RenderAllAssetsTab();
     void RenderAssetsTab(const AssetDescriptor& assetDescriptor);
     void RenderAssetsTab(const std::string& label, const std::vector<Asset*>& assets);
-    void RenderAssetsTabRow(const Asset& asset);
+    void RenderAssetsTabRow(Asset& asset);
     bool IsAssetSelected(const Asset& asset) const;
 
     void RenderCreateAssetButton();

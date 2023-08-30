@@ -9,9 +9,9 @@ private:
 	AssetID(unsigned int value);
 
 public:
-	static AssetID Generate();
-
 	std::string ToString() const;
+
+	static AssetID Generate();
 
 private:
 	const unsigned int m_Value;
