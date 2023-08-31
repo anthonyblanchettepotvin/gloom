@@ -12,7 +12,7 @@
 
 void AssetRepository::Insert(std::unique_ptr<Asset>& asset)
 {
-	assert(asset != nullptr);
+	assert(asset != nullptr); // FIXME: Should throw an exception
 
 	auto it = std::find(m_Assets.begin(), m_Assets.end(), asset);
 	if (it != m_Assets.end())
@@ -23,25 +23,12 @@ void AssetRepository::Insert(std::unique_ptr<Asset>& asset)
 	m_Assets.emplace_back(std::move(asset));
 }
 
-std::vector<Asset*> AssetRepository::GetAssets() const
+template<class T, class Self>
+std::vector<T*> FindAssetsByObjectTypeImpl(Self& self, const ObjectType& objectType)
 {
-	std::vector<Asset*> result;
+	std::vector<T*> result;
 
-	for (const auto& asset : m_Assets)
-	{
-		assert(asset != nullptr);
-
-		result.push_back(asset.get());
-	}
-
-	return result;
-}
-
-std::vector<Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& objectType) const
-{
-	std::vector<Asset*> result;
-
-	for (const auto& asset : m_Assets)
+	for (const auto& asset : self.m_Assets)
 	{
 		assert(asset != nullptr);
 
@@ -54,11 +41,24 @@ std::vector<Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& ob
 	return result;
 }
 
-Asset* AssetRepository::FindAssetByObjectId(const ObjectID& objectId) const
+std::vector<Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& objectType)
 {
-	for (const auto& asset : m_Assets)
+	return FindAssetsByObjectTypeImpl<Asset>(*this, objectType);
+}
+
+std::vector<const Asset*> AssetRepository::FindAssetsByObjectType(const ObjectType& objectType) const
+{
+	return FindAssetsByObjectTypeImpl<const Asset>(*this, objectType);
+}
+
+template<class T, class Self>
+T* FindAssetByObjectIdImpl(Self& self, const ObjectID& objectId)
+{
+	for (const auto& asset : self.m_Assets)
 	{
 		assert(asset != nullptr);
+		/* FIXME: It's totally valid that the object can be nullptr (if it's not loaded).
+		Although, we still want a single source of truth for the object's ID. */
 		assert(asset->GetObject() != nullptr);
 
 		if (asset->GetObject()->GetId() == objectId)
@@ -68,4 +68,39 @@ Asset* AssetRepository::FindAssetByObjectId(const ObjectID& objectId) const
 	}
 
 	return nullptr;
+}
+
+Asset* AssetRepository::FindAssetByObjectId(const ObjectID& objectId)
+{
+	return FindAssetByObjectIdImpl<Asset>(*this, objectId);
+}
+
+const Asset* AssetRepository::FindAssetByObjectId(const ObjectID& objectId) const
+{
+	return FindAssetByObjectIdImpl<const Asset>(*this, objectId);
+}
+
+template<class T, class Self>
+std::vector<T*> GetAssetsImpl(Self& self)
+{
+	std::vector<T*> result;
+
+	for (const auto& asset : self.m_Assets)
+	{
+		assert(asset != nullptr);
+
+		result.push_back(asset.get());
+	}
+
+	return result;
+}
+
+std::vector<Asset*> AssetRepository::GetAssets()
+{
+	return GetAssetsImpl<Asset>(*this);
+}
+
+std::vector<const Asset*> AssetRepository::GetAssets() const
+{
+	return GetAssetsImpl<const Asset>(*this);
 }

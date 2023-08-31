@@ -21,7 +21,7 @@ void AssetManager::DefineAsset(const AssetDescriptor& assetDescriptor, std::uniq
 
 Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType, const std::string& assetName)
 {
-	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(objectType);
+	AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(objectType);
 
 	std::unique_ptr<Asset> blankAsset = assetRegistryEntry.GetFactory().CreateBlank(assetRegistryEntry.GetDescriptor(), assetName);
 	Asset* blankAssetPtr = blankAsset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
@@ -33,7 +33,7 @@ Asset* AssetManager::CreateBlankAsset(const ObjectType& objectType, const std::s
 
 Asset* AssetManager::CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object)
 {
-	const AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(object->GetObjectType());
+	AssetRegistryEntry& assetRegistryEntry = m_AssetRegistry.FindEntry(object->GetObjectType());
 
 	std::unique_ptr<Asset> asset = assetRegistryEntry.GetFactory().CreateWithObject(assetRegistryEntry.GetDescriptor(), assetName, object);
 	Asset* assetPtr = asset.get(); // Retrieve the raw pointer before the ownership is transferred to the repository.
@@ -43,22 +43,37 @@ Asset* AssetManager::CreateAssetWithObject(const std::string& assetName, std::un
 	return assetPtr;
 }
 
-std::vector<Asset*> AssetManager::GetAssets() const
-{
-	return m_AssetRepository.GetAssets();
-}
-
-std::vector<Asset*> AssetManager::FindAssetsByObjectType(const ObjectType& objectType) const
+std::vector<Asset*> AssetManager::FindAssetsByObjectType(const ObjectType& objectType)
 {
 	return m_AssetRepository.FindAssetsByObjectType(objectType);
 }
 
-Asset* AssetManager::FindAssetByObjectId(const ObjectID& objectId) const
+std::vector<const Asset*> AssetManager::FindAssetsByObjectType(const ObjectType& objectType) const
+{
+	return const_cast<const AssetRepository&>(m_AssetRepository).FindAssetsByObjectType(objectType);
+}
+
+Asset* AssetManager::FindAssetByObjectId(const ObjectID& objectId)
 {
 	return m_AssetRepository.FindAssetByObjectId(objectId);
+}
+
+const Asset* AssetManager::FindAssetByObjectId(const ObjectID& objectId) const
+{
+	return const_cast<const AssetRepository&>(m_AssetRepository).FindAssetByObjectId(objectId);
 }
 
 std::vector<AssetDescriptor> AssetManager::GetAssetDescriptors() const
 {
 	return m_AssetRegistry.GetAssetDescriptors();
+}
+
+std::vector<Asset*> AssetManager::GetAssets()
+{
+	return m_AssetRepository.GetAssets();
+}
+
+std::vector<const Asset*> AssetManager::GetAssets() const
+{
+	return const_cast<const AssetRepository&>(m_AssetRepository).GetAssets();
 }

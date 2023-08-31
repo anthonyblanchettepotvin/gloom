@@ -10,16 +10,30 @@ Getter of member variable **copy** is const.
 T Get() const;
 ```
 
-Getter of const raw pointer is const.
+Getter of const raw pointer or reference is const.
 
 ```c++
 const T* Get() const;
+const T& Get() const;
 ```
 
-Getter of non-const raw pointer is non-const.
+Getter of non-const raw pointer or reference is non-const.
 
 ```c++
 T* Get();
+T& Get();
+```
+
+Getter of vector of const raw pointers is const.
+
+```c++
+std::vector<const T*> Get() const; 
+```
+
+Getter of vector of non-const raw pointers is non-const.
+
+```c++
+std::vector<T*> Get();
 ```
 
 #### Source(s)
@@ -111,6 +125,33 @@ void SetX(const T& x);
 const T& GetX() const;
 ```
 
+## Functions
+
+TODO Use early exit when possible.
+
 ## Exceptions and assertions
 
-TODO Define when to use exceptions and when to use assertions for null-checks.
+### Exceptions vs. assertions
+
+Use assertions to catch:
+- incorrect internal input/output
+    - `nullptr` passed to a **private** function when it shouldn't
+    - `nullptr` returned from a **private** function when it shouldn't
+- programming errors
+    - pointer deleted illegally
+
+> Use assert statements to test for conditions during development that should never be true if all your code is correct. There's no point in handling such an error by using an exception, because the error indicates that something in the code has to be fixed. -- Microsoft Learn
+
+Use exceptions to catch:
+- incorrect external input/output
+    - user input
+- external influences
+    - network issue
+    - hardware issue
+
+> Use exceptions to check error conditions that might occur at run time even if your code is correct, for example, "file not found" or "out of memory." -- Microsoft Learn
+
+#### Source(s)
+
+- https://learn.microsoft.com/en-us/cpp/cpp/errors-and-exception-handling-modern-cpp
+- https://softwareengineering.stackexchange.com/questions/15515/when-to-use-assertions-and-when-to-use-exceptions

@@ -23,11 +23,16 @@ public:
 	Asset* CreateBlankAsset(const ObjectType& objectType, const std::string& assetName);
 	Asset* CreateAssetWithObject(const std::string& assetName, std::unique_ptr<Object>& object);
 
-	std::vector<Asset*> GetAssets() const;
-	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType) const;
-	Asset* FindAssetByObjectId(const ObjectID& objectId) const;
+	std::vector<Asset*> FindAssetsByObjectType(const ObjectType& objectType);
+	std::vector<const Asset*> FindAssetsByObjectType(const ObjectType& objectType) const;
+
+	Asset* FindAssetByObjectId(const ObjectID& objectId);
+	const Asset* FindAssetByObjectId(const ObjectID& objectId) const;
 
 	std::vector<AssetDescriptor> GetAssetDescriptors() const;
+
+	std::vector<Asset*> GetAssets();
+	std::vector<const Asset*> GetAssets() const;
 
 private:
 	AssetRegistry& m_AssetRegistry;
