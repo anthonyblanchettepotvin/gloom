@@ -24,7 +24,7 @@
     <ClCompile Include="src\vendor\stbi\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\camera\Camera.cpp">
+    <ClCompile Include="src\engine\graphics\camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\actor\Actor.cpp">
@@ -308,7 +308,7 @@
     <ClInclude Include="src\vendor\stbi\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\camera\Camera.h">
+    <ClInclude Include="src\engine\graphics\camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\actor\Actor.h">

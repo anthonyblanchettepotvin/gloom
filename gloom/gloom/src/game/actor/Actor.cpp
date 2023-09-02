@@ -4,33 +4,57 @@
 
 #include <glm/ext/matrix_transform.hpp>
 
+#include "../../engine/EngineHelpers.h"
+
 #include "../component/TransformComponent.h"
 #include "../component/RendererComponent.h"
 
+#define COMPONENT_ALREADY_ADDED_TO_ACTOR "Component is already added to the actor."
+
 Actor::Actor(const std::string& name)
-	: name(name)
+	: m_Name(name)
 {
 }
 
 void Actor::Render()
 {
 	std::vector<RendererComponent*> rendererComponents = FindComponentsByType<RendererComponent>();
-	for (auto rendererComponent : rendererComponents)
+	for (const auto& rendererComponent : rendererComponents)
 	{
+		assert(rendererComponent != nullptr);
+
 		rendererComponent->Render();
 	}
 }
 
-void Actor::AddComponent(ActorComponent* component)
+void Actor::AddComponent(std::unique_ptr<ActorComponent>& component)
 {
-	if (std::find(components.begin(), components.end(), component) == components.end())
+	if (!component)
 	{
-		components.push_back(component);
+		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(component));
+	}
 
-		component->SetParent(this);
-	}
-	else
+	auto it = std::find(m_Components.begin(), m_Components.end(), component);
+	if (it != m_Components.end())
 	{
-		std::cerr << "ERROR::ACTOR::ADD_COMPONENT::" << "Actor already has that component" << std::endl;
+		throw std::runtime_error(COMPONENT_ALREADY_ADDED_TO_ACTOR);
 	}
+
+	component->SetParent(this);
+
+	m_Components.emplace_back(std::move(component));
+}
+
+std::vector<ActorComponent*> Actor::GetComponents()
+{
+	std::vector<ActorComponent*> result;
+
+	for (const auto& component : m_Components)
+	{
+		assert(component != nullptr);
+
+		result.emplace_back(component.get());
+	}
+
+	return result;
 }

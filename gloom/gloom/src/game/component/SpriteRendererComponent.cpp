@@ -1,5 +1,8 @@
 #include "SpriteRendererComponent.h"
 
+#include "../../engine/graphics/engine/GraphicsEngine.h"
+#include "../../engine/graphics/sprite/Sprite.h"
+
 #include "../actor/Actor.h"
 
 #include "TransformComponent.h"
@@ -11,14 +14,14 @@ SpriteRendererComponent::SpriteRendererComponent(GraphicsEngine& graphicsEngine,
 
 void SpriteRendererComponent::Render()
 {
-	if (parent && m_Sprite)
-	{
-		TransformComponent* transformComponent = parent->FindComponentByType<TransformComponent>();
-		if (transformComponent)
-		{
-			m_Sprite->SetTransform(transformComponent->GetTransform());
+	if (!m_Parent || !m_Sprite)
+		return;
 
-			m_GraphicsEngine.Render(*m_Sprite);
-		}
-	}
+	TransformComponent* transformComponent = m_Parent->FindComponentByType<TransformComponent>();
+	if (!transformComponent)
+		return;
+
+	m_Sprite->SetTransform(transformComponent->GetTransform());
+
+	m_GraphicsEngine.Render(*m_Sprite);
 }

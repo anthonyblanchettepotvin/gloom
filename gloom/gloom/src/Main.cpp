@@ -6,9 +6,12 @@
 #include "engine/asset/AssetManager.h"
 #include "engine/asset/AssetRegistry.h"
 #include "engine/asset/AssetRepository.h"
+#include "engine/graphics/camera/Camera.h"
 #include "engine/graphics/cubemap/Cubemap.h"
 #include "engine/graphics/engine/GraphicsEngine.h"
 #include "engine/graphics/globaldata/GlobalData.h"
+#include "engine/graphics/lighting/DirectionalLight.h"
+#include "engine/graphics/lighting/PointLight.h"
 #include "engine/graphics/material/MaterialAttributes.h"
 #include "engine/graphics/model/Model.h"
 #include "engine/graphics/shader/Shader.h"
@@ -19,7 +22,6 @@
 #include "engine/util/logging/LoggerRepository.h"
 #include "engine/util/logging/LoggingManager.h"
 #include "game/actor/Actor.h"
-#include "game/camera/Camera.h"
 #include "game/component/TransformComponent.h"
 #include "game/component/ModelRendererComponent.h"
 #include "game/component/SkyboxRendererComponent.h"
@@ -94,8 +96,8 @@ const std::vector<std::string> CUBEMAP_FACES_PATH = {
 };
 
 // Settings
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 900;
+const size_t SCR_WIDTH = 1600;
+const size_t SCR_HEIGHT = 900;
 
 // Camera
 bool cameraMode = false;
@@ -115,8 +117,8 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 	// The OpenGL viewport is relative to the lower left corner of the window.
 	glViewport(0, 0, width, height);
 
-	camera.setViewWidth(width);
-	camera.setViewHeight(height);
+	camera.SetViewWidth(width);
+	camera.SetViewHeight(height);
 }
 
 void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
@@ -396,36 +398,36 @@ int main()
 
 	Actor skyboxActor("Skybox");
 
-	SkyboxRendererComponent skyboxRendererComponent(graphicsEngine, skybox);
-	skyboxActor.AddComponent(&skyboxRendererComponent);
+	std::unique_ptr<ActorComponent> skyboxRendererComponent = std::make_unique<SkyboxRendererComponent>(graphicsEngine, skybox);
+	skyboxActor.AddComponent(skyboxRendererComponent);
 
 	Actor backpackActor("Backpack");
 
-	TransformComponent backpackTransformComponent;
-	backpackActor.AddComponent(&backpackTransformComponent);
-	ModelRendererComponent backpackRendererComponent(graphicsEngine, backpackModel);
-	backpackActor.AddComponent(&backpackRendererComponent);
+	std::unique_ptr<ActorComponent> backpackTransformComponent = std::make_unique<TransformComponent>();
+	backpackActor.AddComponent(backpackTransformComponent);
+	std::unique_ptr<ActorComponent> backpackRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, backpackModel);
+	backpackActor.AddComponent(backpackRendererComponent);
 
 	Actor testActor("Test");
 
-	TransformComponent testTransformComponent(glm::vec3(4.0f, 0.0f, 0.0f));
-	testActor.AddComponent(&testTransformComponent);
-	ModelRendererComponent testRendererComponent(graphicsEngine, testModel);
-	testActor.AddComponent(&testRendererComponent);
+	std::unique_ptr<ActorComponent> testTransformComponent = std::make_unique<TransformComponent>(glm::vec3(4.0f, 0.0f, 0.0f));
+	testActor.AddComponent(testTransformComponent);
+	std::unique_ptr<ActorComponent> testRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, testModel);
+	testActor.AddComponent(testRendererComponent);
 
 	Actor cubeActor("Cube");
 
-	TransformComponent cubeTransformComponent(glm::vec3(-4.0f, 0.0f, 0.0f));
-	cubeActor.AddComponent(&cubeTransformComponent);
-	ModelRendererComponent cubeRendererComponent(graphicsEngine, cubeModel);
-	cubeActor.AddComponent(&cubeRendererComponent);
+	std::unique_ptr<ActorComponent> cubeTransformComponent = std::make_unique<TransformComponent>(glm::vec3(-4.0f, 0.0f, 0.0f));
+	cubeActor.AddComponent(cubeTransformComponent);
+	std::unique_ptr<ActorComponent> cubeRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, cubeModel);
+	cubeActor.AddComponent(cubeRendererComponent);
 
 	Actor suzanneActor("Suzanne");
 
-	TransformComponent suzanneTransformComponent(glm::vec3(0.0f, 0.0f, 2.0f));
-	suzanneActor.AddComponent(&suzanneTransformComponent);
-	ModelRendererComponent suzanneRendererComponent(graphicsEngine, suzanneModel);
-	suzanneActor.AddComponent(&suzanneRendererComponent);
+	std::unique_ptr<ActorComponent> suzanneTransformComponent = std::make_unique<TransformComponent>(glm::vec3(0.0f, 0.0f, 2.0f));
+	suzanneActor.AddComponent(suzanneTransformComponent);
+	std::unique_ptr<ActorComponent> suzanneRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, suzanneModel);
+	suzanneActor.AddComponent(suzanneRendererComponent);
 
 	// --- Lights ---
 
@@ -433,26 +435,26 @@ int main()
 
 	PointLight pointLight(glm::vec3(0.2f), glm::vec3(0.5f), glm::vec3(1.0f), { 1.0f, 0.14f, 0.07f });
 
-	TransformComponent pointLightTransformComponent(glm::vec3(2.0f));
-	pointLightActor.AddComponent(&pointLightTransformComponent);
-	PointLightComponent pointLightComponent(&pointLight);
-	pointLightActor.AddComponent(&pointLightComponent);
-	SpriteRendererComponent pointLightRendererComponent(graphicsEngine, pointLightSprite);
-	pointLightActor.AddComponent(&pointLightRendererComponent);
+	std::unique_ptr<ActorComponent> pointLightTransformComponent = std::make_unique<TransformComponent>(glm::vec3(2.0f));
+	pointLightActor.AddComponent(pointLightTransformComponent);
+	std::unique_ptr<ActorComponent> pointLightComponent = std::make_unique<PointLightComponent>(&pointLight);
+	pointLightActor.AddComponent(pointLightComponent);
+	std::unique_ptr<ActorComponent> pointLightRendererComponent = std::make_unique<SpriteRendererComponent>(graphicsEngine, pointLightSprite);
+	pointLightActor.AddComponent(pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");
 
 	DirectionalLight directionalLight(glm::vec3(0.05f), glm::vec3(0.4f), glm::vec3(0.5f));
 
-	DirectionalLightComponent directionalLightComponent(&directionalLight);
-	directionalLightActor.AddComponent(&directionalLightComponent);
+	std::unique_ptr<ActorComponent> directionalLightComponent = std::make_unique<DirectionalLightComponent>(&directionalLight);
+	directionalLightActor.AddComponent(directionalLightComponent);
 
 	std::vector<PointLightComponent*> pointLightComponents = {
-		&pointLightComponent
+		pointLightActor.FindComponentByType<PointLightComponent>()
 	};
 
 	std::vector<DirectionalLightComponent*> directionalLightComponents = {
-		&directionalLightComponent
+		directionalLightActor.FindComponentByType<DirectionalLightComponent>()
 	};
 
 	// --- World ---

@@ -14,19 +14,19 @@ public:
 	PointLight(const glm::vec3& ambientColor, const glm::vec3& diffuseColor, const glm::vec3& specularColor, const PointLightAttenuation& attenuation);
 
 	void SetPosition(const glm::vec3& position) { m_Position = position; }
-	glm::vec3& GetPosition() { return m_Position; } // TODO: Return copy
+	glm::vec3& GetPosition() { return m_Position; }
 
-	void SetAmbientColor(const glm::vec3& ambientColor) { m_AmbientColor = ambientColor; };
-	glm::vec3& GetAmbientColor() { return m_AmbientColor; };
+	void SetAmbientColor(const glm::vec3& ambientColor) { m_AmbientColor = ambientColor; }
+	glm::vec3& GetAmbientColor() { return m_AmbientColor; }
 
-	void SetDiffuseColor(const glm::vec3& diffuseColor) { m_DiffuseColor = diffuseColor; };
-	glm::vec3& GetDiffuseColor() { return m_DiffuseColor; };
+	void SetDiffuseColor(const glm::vec3& diffuseColor) { m_DiffuseColor = diffuseColor; }
+	glm::vec3& GetDiffuseColor() { return m_DiffuseColor; }
 
-	void SetSpecularColor(const glm::vec3& specularColor) { m_SpecularColor = specularColor; };
-	glm::vec3& GetSpecularColor() { return m_SpecularColor; };
+	void SetSpecularColor(const glm::vec3& specularColor) { m_SpecularColor = specularColor; }
+	glm::vec3& GetSpecularColor() { return m_SpecularColor; }
 
-	void SetAttenuation(const PointLightAttenuation& attenuation) { m_Attenuation = attenuation; };
-	PointLightAttenuation& GetAttenuation() { return m_Attenuation; };
+	void SetAttenuation(const PointLightAttenuation& attenuation) { m_Attenuation = attenuation; }
+	PointLightAttenuation& GetAttenuation() { return m_Attenuation; }
 
 private:
 	glm::vec3 m_Position{ 2.0f };

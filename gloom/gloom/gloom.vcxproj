@@ -231,7 +231,7 @@
     <ClCompile Include="src\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\engine\graphics\mesh\Mesh.cpp" />
     <ClCompile Include="src\engine\graphics\model\Model.cpp" />
-    <ClCompile Include="src\game\camera\Camera.cpp" />
+    <ClCompile Include="src\engine\graphics\camera\Camera.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Shader.cpp" />
     <ClCompile Include="src\vendor\glad\glad.c" />
     <ClCompile Include="src\Main.cpp" />
@@ -332,7 +332,7 @@
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\engine\graphics\mesh\Mesh.h" />
     <ClInclude Include="src\engine\graphics\model\Model.h" />
-    <ClInclude Include="src\game\camera\Camera.h" />
+    <ClInclude Include="src\engine\graphics\camera\Camera.h" />
     <ClInclude Include="src\engine\graphics\shader\Shader.h" />
     <ClInclude Include="src\vendor\stbi\stb_image.h" />
     <ClInclude Include="src\engine\graphics\texture\Texture.h" />

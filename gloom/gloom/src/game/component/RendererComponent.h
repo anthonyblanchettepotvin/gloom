@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../engine/graphics/engine/GraphicsEngine.h"
-
 #include "ActorComponent.h"
+
+class GraphicsEngine;
 
 class RendererComponent : public ActorComponent
 {

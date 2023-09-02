@@ -4,6 +4,8 @@
 
 #include "../../../vendor/imgui/imgui.h"
 
+#include "../../../engine/graphics/lighting/DirectionalLight.h"
+
 #include "../../../game/component/DirectionalLightComponent.h"
 
 ImGuiDirectionalLightComponentAdapter::ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent& directionalLightComponent)

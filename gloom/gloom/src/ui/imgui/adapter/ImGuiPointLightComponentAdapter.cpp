@@ -4,6 +4,8 @@
 
 #include "../../../vendor/imgui/imgui.h"
 
+#include "../../../engine/graphics/lighting/PointLight.h"
+
 #include "../../../game/component/PointLightComponent.h"
 
 ImGuiPointLightComponentAdapter::ImGuiPointLightComponentAdapter(PointLightComponent& pointLightComponent)

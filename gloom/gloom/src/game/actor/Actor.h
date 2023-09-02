@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,48 +15,48 @@ class Actor : public Object
 public:
 	Actor(const std::string& name);
 
-	std::string GetName() const { return name; }
-
-	std::vector<ActorComponent*> GetComponents() { return components; }
-
-	void AddComponent(ActorComponent* component);
-
-	template<typename T>
-	std::vector<T*> FindComponentsByType() const;
-
-	template<typename T>
-	T* FindComponentByType() const;
-
 	void Render();
 
-private:
-	std::string name;
+	void AddComponent(std::unique_ptr<ActorComponent>& component);
 
-	std::vector<ActorComponent*> components;
+	template<typename T>
+	std::vector<T*> FindComponentsByType();
+
+	template<typename T>
+	T* FindComponentByType();
+
+	std::string GetName() const { return m_Name; }
+
+	std::vector<ActorComponent*> GetComponents();
+
+private:
+	std::string m_Name;
+
+	std::vector<std::unique_ptr<ActorComponent>> m_Components;
 };
 
 template<typename T>
-inline std::vector<T*> Actor::FindComponentsByType() const
+inline std::vector<T*> Actor::FindComponentsByType()
 {
-	std::vector<T*> componentsOfType;
+	std::vector<T*> result;
 
-	for (auto component : components)
+	for (const auto& component : m_Components)
 	{
-		if (T* castedComponent = dynamic_cast<T*>(component))
+		if (T* castedComponent = dynamic_cast<T*>(component.get()))
 		{
-			componentsOfType.push_back(castedComponent);
+			result.emplace_back(castedComponent);
 		}
 	}
 
-	return componentsOfType;
+	return result;
 }
 
 template<typename T>
-T* Actor::FindComponentByType() const
+inline T* Actor::FindComponentByType()
 {
-	for (auto component : components)
+	for (const auto& component : m_Components)
 	{
-		if (T* castedComponent = dynamic_cast<T*>(component))
+		if (T* castedComponent = dynamic_cast<T*>(component.get()))
 		{
 			return castedComponent;
 		}

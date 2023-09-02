@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../../engine/graphics/sprite/Sprite.h"
-
 #include "RendererComponent.h"
+
+class Sprite;
 
 class SpriteRendererComponent : public RendererComponent
 {
 public:
 	SpriteRendererComponent(GraphicsEngine& graphicsEngine, Sprite* sprite);
 
-	Sprite* GetSprite() const { return m_Sprite; };
-
 	void Render() override;
 
+	const Sprite* GetSprite() const { return m_Sprite; }
+
 private:
-	Sprite* m_Sprite;
+	Sprite* m_Sprite = nullptr;
 };
