@@ -15,11 +15,15 @@ SpriteRendererComponent::SpriteRendererComponent(GraphicsEngine& graphicsEngine,
 void SpriteRendererComponent::Render()
 {
 	if (!m_Parent || !m_Sprite)
+	{
 		return;
+	}
 
 	TransformComponent* transformComponent = m_Parent->FindComponentByType<TransformComponent>();
 	if (!transformComponent)
+	{
 		return;
+	}
 
 	m_Sprite->SetTransform(transformComponent->GetTransform());
 

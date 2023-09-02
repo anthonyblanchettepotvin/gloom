@@ -11,7 +11,9 @@ SkyboxRendererComponent::SkyboxRendererComponent(GraphicsEngine& graphicsEngine,
 void SkyboxRendererComponent::Render()
 {
 	if (!m_Skybox)
+	{
 		return;
+	}
 
 	m_GraphicsEngine.Render(*m_Skybox);
 }

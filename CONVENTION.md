@@ -97,16 +97,43 @@ Classes' member functions and member variables should follow this structure:
 
 TODO Structure of forward declarations.
 
-TODO Getters/setters with more than one line should be defined in the .cpp.
-
-TODO Definition of static member variables in the .cpp should appear before any member function definitions.
-
-TODO Member functions should be ordered by theme (merge with the following one).
-
-Given a member functions category, member functions are ordered by ascending number of parameters.
+Private member variables should be prefixed with `m_`.
 
 ```c++
+class Foo
+{
+private:
+    std::string m_X;
+};
+```
+
+Getters/setters defined in .h files should not end with `;`.
+
+```c++
+class Foo
+{
+public:
+    std::string GetX() const { return n_X; } // Good.
+    std::string GetX() const { return n_X; }; // Bad.
+
+private:
+    std::string m_X;
+};
+```
+
+Getters/setters with more than one line should be defined in the .cpp.
+
+TODO Definition of static member variables in .cpp files should appear before any member function definitions.
+
+Given a member functions category, member functions are ordered by:  
+
+- ascending number of parameters
+- theme
+
+```c++
+void Foo(const T& a);
 void Foo(const T& a, const U& b);
+void Bar(const T& a, const U& b);
 void Bar(const T& a, const U& b, const V& c);
 ```
 
@@ -135,11 +162,36 @@ const T& GetX() const;
 
 ## Functions
 
-TODO Use early exit when possible.
+Use early exit when possible.
 
+```c++
+// Good.
+void Foo()
+{
+    if (!m_Bar)
+    {
+        return;
+    }
+
+    // ...
+}
+
+// Bad.
+void Foo()
+{
+    if (m_Bar)
+    {
+        // ...
+    }
+}
+```
+
+TODO Always use curly braces.
 ## Includes and forward declarations
 
-TODO Include What You Use
+### Includes
+
+Include what you use -- no less, no more.
 
 ## Exceptions and assertions
 

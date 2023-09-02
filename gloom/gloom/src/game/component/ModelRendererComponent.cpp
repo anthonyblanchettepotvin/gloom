@@ -15,11 +15,15 @@ ModelRendererComponent::ModelRendererComponent(GraphicsEngine& graphicsEngine, M
 void ModelRendererComponent::Render()
 {
 	if (!m_Parent || !m_Model)
+	{
 		return;
+	}
 
 	TransformComponent* transformComponent = m_Parent->FindComponentByType<TransformComponent>();
 	if (!transformComponent)
+	{
 		return;
+	}
 	
 	m_Model->SetTransform(transformComponent->GetTransform());
 
