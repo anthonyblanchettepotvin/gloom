@@ -129,6 +129,10 @@ const T& GetX() const;
 
 TODO Use early exit when possible.
 
+## Includes and forward declarations
+
+TODO Include What You Use
+
 ## Exceptions and assertions
 
 ### Exceptions vs. assertions

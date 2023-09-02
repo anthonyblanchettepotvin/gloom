@@ -34,9 +34,9 @@ public:
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, DirectionalLight& reference) = 0;
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, PointLight& reference) = 0;
 
-	virtual void Render(const Mesh& mesh) = 0;
-	virtual void Render(const Skybox& skybox) = 0;
-	virtual void Render(const Sprite& sprite) = 0;
+	virtual void Render(Mesh& mesh) = 0;
+	virtual void Render(Skybox& skybox) = 0;
+	virtual void Render(Sprite& sprite) = 0;
 
 	virtual void* GetTextureId(const Texture& texture) = 0;
 };

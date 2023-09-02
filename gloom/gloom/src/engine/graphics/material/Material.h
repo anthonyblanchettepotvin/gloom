@@ -15,12 +15,12 @@ public:
 	Material() = default;
 	Material(Shader* shader, std::vector<std::unique_ptr<MaterialAttribute>>& attributes);
 
-	std::vector<MaterialAttribute*> GetAttributes() const;
-
-	Shader* GetShader() const { return m_Shader; }
-
 	template<class T>
 	T* FindAttribute(const std::string& name) const;
+
+	Shader* GetShader() { return m_Shader; }
+
+	std::vector<const MaterialAttribute*> GetAttributes() const;
 	
 private:
 	Shader* m_Shader = nullptr;
@@ -35,7 +35,9 @@ inline T* Material::FindAttribute(const std::string& name) const
 	{
 		T* typedAttribute = dynamic_cast<T*>(attribute.get());
 		if (typedAttribute && attribute->GetName() == name)
+		{
 			return typedAttribute;
+		}
 	}
 
 	return nullptr;

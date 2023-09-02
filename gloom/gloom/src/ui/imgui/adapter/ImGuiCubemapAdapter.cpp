@@ -5,6 +5,7 @@
 #include "../../../vendor/imgui/imgui.h"
 
 #include "../../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
 #include "../ImGuiAdapterFactory.h"
 

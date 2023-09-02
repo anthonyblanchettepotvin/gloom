@@ -1,17 +1,19 @@
 #include "ShaderRegistry.h"
 
-#include "../../../engine/graphics/shader/Shader.h"
+#include "Shader.h"
 
-void ShaderRegistry::Register(const ShadingModel& shadingModel, Shader& shader)
+void ShaderRegistry::Register(ShadingModel shadingModel, Shader& shader)
 {
 	m_Shaders.emplace(shadingModel, shader);
 }
 
-Shader* ShaderRegistry::FindShader(const ShadingModel& shadingModel) const
+Shader* ShaderRegistry::FindShader(ShadingModel shadingModel)
 {
 	auto it = m_Shaders.find(shadingModel);
 	if (it == m_Shaders.end())
+	{
 		return nullptr;
+	}
 
-	return &m_Shaders.at(shadingModel);
+	return &it->second;
 }

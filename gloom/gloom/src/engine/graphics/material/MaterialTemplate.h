@@ -3,9 +3,9 @@
 #include <memory>
 #include <vector>
 
-#include "Material.h"
 #include "MaterialAttribute.h"
 
+class Material;
 class Shader;
 
 class MaterialTemplate
@@ -15,7 +15,7 @@ public:
 
 	void AddAttribute(std::unique_ptr<MaterialAttribute>& attribute);
 
-	Material* CreateMaterialInstance() const;
+	Material* CreateMaterialInstance();
 
 private:
 	Shader& m_Shader;

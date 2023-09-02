@@ -14,6 +14,7 @@
 #include "../skybox/GlSkybox.h"
 
 #define EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE "GlGraphicsEngine expects to be passed a GlGlobalData instance."
+#define EXPECTS_GL_SHADER_ERROR_MESSAGE "GlGraphicsEngine expects GlShader instance."
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
@@ -206,7 +207,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 }
 
-void GlGraphicsEngine::Render(const Mesh& mesh)
+void GlGraphicsEngine::Render(Mesh& mesh)
 {
 	if (!mesh.GetMaterial() || !mesh.GetMaterial()->GetShader())
 		return;
@@ -230,7 +231,7 @@ void GlGraphicsEngine::Render(const Mesh& mesh)
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(const Skybox& skybox)
+void GlGraphicsEngine::Render(Skybox& skybox)
 {
 	if (!skybox.GetMaterial() || !skybox.GetMaterial()->GetShader())
 		return;
@@ -252,7 +253,7 @@ void GlGraphicsEngine::Render(const Skybox& skybox)
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(const Sprite& sprite)
+void GlGraphicsEngine::Render(Sprite& sprite)
 {
 	if (!sprite.GetMaterial() || !sprite.GetMaterial()->GetShader())
 		return;
@@ -290,27 +291,34 @@ void* GlGraphicsEngine::GetTextureId(const Texture& texture)
 
 }
 
-void GlGraphicsEngine::ApplyMaterial(const Material& material)
+void GlGraphicsEngine::ApplyMaterial(Material& material)
 {
-	material.GetShader()->Use();
-
-	for (const auto& attribute : material.GetAttributes())
+	if (GlShader* glShader = dynamic_cast<GlShader*>(material.GetShader()))
 	{
-		ApplyMaterialAttributeToShader(*material.GetShader(), attribute);
+		glShader->Use();
+
+		for (const auto& attribute : material.GetAttributes())
+		{
+			ApplyMaterialAttributeToShader(*glShader, attribute);
+		}
+	}
+	else
+	{
+		gLogErrorMessage(EXPECTS_GL_SHADER_ERROR_MESSAGE);
 	}
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, MaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute)
 {
-	if (TextureMaterialAttribute* textureAttribute = dynamic_cast<TextureMaterialAttribute*>(attribute))
+	if (const TextureMaterialAttribute* textureAttribute = dynamic_cast<const TextureMaterialAttribute*>(attribute))
 	{
 		ApplyMaterialAttributeToShader(shader, textureAttribute);
 	}
-	else if (CubemapMaterialAttribute* cubemapAttribute = dynamic_cast<CubemapMaterialAttribute*>(attribute))
+	else if (const CubemapMaterialAttribute* cubemapAttribute = dynamic_cast<const CubemapMaterialAttribute*>(attribute))
 	{
 		ApplyMaterialAttributeToShader(shader, cubemapAttribute);
 	}
-	else if (FloatMaterialAttribute* floatAttribute = dynamic_cast<FloatMaterialAttribute*>(attribute))
+	else if (const FloatMaterialAttribute* floatAttribute = dynamic_cast<const FloatMaterialAttribute*>(attribute))
 	{
 		ApplyMaterialAttributeToShader(shader, floatAttribute);
 	}
@@ -320,9 +328,9 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, MaterialAt
 	}
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, TextureMaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const TextureMaterialAttribute* attribute)
 {
-	Texture* texture = attribute->GetValue();
+	const Texture* texture = attribute->GetValue();
 	if (!texture)
 		return;
 
@@ -342,9 +350,9 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, TextureMat
 	m_SamplerIndex++;
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, CubemapMaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const CubemapMaterialAttribute* attribute)
 {
-	Cubemap* cubemap = attribute->GetValue();
+	const Cubemap* cubemap = attribute->GetValue();
 	if (!cubemap)
 		return;
 
@@ -364,7 +372,7 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, CubemapMat
 	m_SamplerIndex++;
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, FloatMaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const FloatMaterialAttribute* attribute)
 {
 	shader.SetFloat(attribute->GetName(), attribute->GetValue());
 }

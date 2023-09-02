@@ -12,9 +12,9 @@ enum class ShadingModel
 class ShaderRegistry
 {
 public:
-	void Register(const ShadingModel& shadingModel, Shader& shader);
+	void Register(ShadingModel shadingModel, Shader& shader);
 
-	Shader* FindShader(const ShadingModel& shadingModel) const;
+	Shader* FindShader(ShadingModel shadingModel);
 
 private:
 	std::unordered_map<ShadingModel, Shader&> m_Shaders;

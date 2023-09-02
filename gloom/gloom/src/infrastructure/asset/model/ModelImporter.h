@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -36,8 +37,8 @@ private:
 	std::unordered_map<std::string, Texture*> m_ImportedTextures;
 	std::unordered_map<std::string, Material*> m_ImportedMaterial;
 
-	void ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes);
-	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
+	void ProcessNode(aiNode* node, const aiScene* scene, std::vector<std::unique_ptr<Mesh>>& meshes);
+	std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
 	Material* ImportMaterial(aiMaterial* material);
 	std::vector<Texture*> ImportMaterialTextures(aiMaterial* material, aiTextureType type);

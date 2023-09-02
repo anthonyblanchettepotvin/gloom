@@ -76,10 +76,10 @@ void GlGlobalDataFloat::SendToDevice(unsigned int& offset)
 
 GlGlobalDataDirectionalLight::GlGlobalDataDirectionalLight(DirectionalLight& value)
 	: m_Value(value)
-	, m_DirectionGlobalData(value.GetDirectionReference())
-	, m_AmbientColorGlobalData(value.GetAmbientColorReference())
-	, m_DiffuseColorGlobalData(value.GetDiffuseColorReference())
-	, m_SpecularColorGlobalData(value.GetSpecularColorReference())
+	, m_DirectionGlobalData(value.GetDirection())
+	, m_AmbientColorGlobalData(value.GetAmbientColor())
+	, m_DiffuseColorGlobalData(value.GetDiffuseColor())
+	, m_SpecularColorGlobalData(value.GetSpecularColor())
 {
 }
 
@@ -107,13 +107,13 @@ void GlGlobalDataDirectionalLight::SendToDevice(unsigned int& offset)
 
 GlGlobalDataPointLight::GlGlobalDataPointLight(PointLight& value)
 	: m_Value(value)
-	, m_PositionGlobalData(value.GetPositionReference())
-	, m_AmbientColorGlobalData(value.GetAmbientColorReference())
-	, m_DiffuseColorGlobalData(value.GetDiffuseColorReference())
-	, m_SpecularColorGlobalData(value.GetSpecularColorReference())
-	, m_AttenuationConstantGlobalData(value.GetAttenuationReference().constant)
-	, m_AttenuationLinearGlobalData(value.GetAttenuationReference().linear)
-	, m_AttenuationQuadraticGlobalData(value.GetAttenuationReference().quadratic)
+	, m_PositionGlobalData(value.GetPosition())
+	, m_AmbientColorGlobalData(value.GetAmbientColor())
+	, m_DiffuseColorGlobalData(value.GetDiffuseColor())
+	, m_SpecularColorGlobalData(value.GetSpecularColor())
+	, m_AttenuationConstantGlobalData(value.GetAttenuation().Constant)
+	, m_AttenuationLinearGlobalData(value.GetAttenuation().Linear)
+	, m_AttenuationQuadraticGlobalData(value.GetAttenuation().Quadratic)
 {
 }
 

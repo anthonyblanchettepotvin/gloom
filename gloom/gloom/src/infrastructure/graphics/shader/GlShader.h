@@ -14,9 +14,7 @@ public:
 	GlShader() = default;
 	GlShader(const std::string& vertexShader, const std::string& fragmentShader);
 
-	void InitializeMaterialTemplate() override;
-
-	void Use() override;
+	void Use();
 
 	void SetBool(const std::string& name, bool value) override;
 	void SetInt(const std::string& name, int value) override;
@@ -25,6 +23,7 @@ public:
 	void SetFloatMat3(const std::string& name, glm::mat3 value) override;
 	void SetFloatMat4(const std::string& name, glm::mat4 value) override;
 
+	void InitializeMaterialTemplate() override;
 	void BindToGlobalData(GlobalData& globalData) override;
 
 private:

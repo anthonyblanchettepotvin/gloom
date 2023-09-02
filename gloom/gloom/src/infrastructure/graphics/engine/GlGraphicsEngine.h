@@ -39,13 +39,19 @@ public:
 	void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, DirectionalLight& reference) override;
 	void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, PointLight& reference) override;
 
-	void Render(const Mesh& mesh) override;
-	void Render(const Skybox& skybox) override;
-	void Render(const Sprite& sprite) override;
+	void Render(Mesh& mesh) override;
+	void Render(Skybox& skybox) override;
+	void Render(Sprite& sprite) override;
 	
 	void* GetTextureId(const Texture& texture) override;
 
 private:
+	void ApplyMaterial(Material& material);
+	void ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute);
+	void ApplyMaterialAttributeToShader(GlShader& shader, const TextureMaterialAttribute* attribute);
+	void ApplyMaterialAttributeToShader(GlShader& shader, const CubemapMaterialAttribute* attribute);
+	void ApplyMaterialAttributeToShader(GlShader& shader, const FloatMaterialAttribute* attribute);
+
 	std::unique_ptr<GlFramebuffer> m_Framebuffer = nullptr;
 	std::unique_ptr<GlTexture> m_RenderTexture = nullptr;
 	std::unique_ptr<GlRenderbuffer> m_Renderbuffer = nullptr;
@@ -59,10 +65,4 @@ private:
 	std::unordered_map<ObjectID, std::unique_ptr<GlCubemap>> m_GlCubemaps;
 
 	size_t m_SamplerIndex = 0;
-
-	void ApplyMaterial(const Material& material);
-	void ApplyMaterialAttributeToShader(Shader& shader, MaterialAttribute* attribute);
-	void ApplyMaterialAttributeToShader(Shader& shader, TextureMaterialAttribute* attribute);
-	void ApplyMaterialAttributeToShader(Shader& shader, CubemapMaterialAttribute* attribute);
-	void ApplyMaterialAttributeToShader(Shader& shader, FloatMaterialAttribute* attribute);
 };

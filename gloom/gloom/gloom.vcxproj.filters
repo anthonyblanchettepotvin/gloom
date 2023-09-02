@@ -596,6 +596,9 @@
     <ClInclude Include="src\engine\util\logging\LoggerRepository.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\EngineHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\libs\assimp\assimp-vc143-mt.dll" />

@@ -7,26 +7,22 @@ class DirectionalLight
 public:
 	DirectionalLight(const glm::vec3& ambientColor, const glm::vec3& diffuseColor, const glm::vec3& specularColor);
 
-	glm::vec3 GetDirection() { return direction; }
-	glm::vec3& GetDirectionReference() { return direction; };
-	void SetDirection(const glm::vec3 direction) { this->direction = direction; };
+	void SetDirection(const glm::vec3& direction) { m_Direction = direction; };
+	glm::vec3& GetDirection() { return m_Direction; };
 
-	glm::vec3 GetAmbientColor() { return ambientColor; }
-	glm::vec3& GetAmbientColorReference() { return ambientColor; };
-	void SetAmbientColor(const glm::vec3 ambientColor) { this->ambientColor = ambientColor; };
+	void SetAmbientColor(const glm::vec3& ambientColor) { m_AmbientColor = ambientColor; };
+	glm::vec3& GetAmbientColor() { return m_AmbientColor; };
 
-	glm::vec3 GetDiffuseColor() { return diffuseColor; }
-	glm::vec3& GetDiffuseColorReference() { return diffuseColor; };
-	void SetDiffuseColor(const glm::vec3 diffuseColor) { this->diffuseColor = diffuseColor; };
+	void SetDiffuseColor(const glm::vec3& diffuseColor) { m_DiffuseColor = diffuseColor; };
+	glm::vec3& GetDiffuseColor() { return m_DiffuseColor; };
 
-	glm::vec3 GetSpecularColor() { return specularColor; }
-	glm::vec3& GetSpecularColorReference() { return specularColor; };
-	void SetSpecularColor(const glm::vec3 specularColor) { this->specularColor = specularColor; };
+	void SetSpecularColor(const glm::vec3& specularColor) { m_SpecularColor = specularColor; };
+	glm::vec3& GetSpecularColor() { return m_SpecularColor; };
 
 private:
-	glm::vec3 direction = glm::vec3(-1.0f);
+	glm::vec3 m_Direction{ -1.0f };
 
-	glm::vec3 ambientColor = glm::vec3(0.05f);
-	glm::vec3 diffuseColor = glm::vec3(0.4f);
-	glm::vec3 specularColor = glm::vec3(0.5f);
+	glm::vec3 m_AmbientColor{ 0.05f };
+	glm::vec3 m_DiffuseColor{ 0.4f };
+	glm::vec3 m_SpecularColor{ 0.5f };
 };

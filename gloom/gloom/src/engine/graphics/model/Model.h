@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -8,17 +9,19 @@
 
 #include "../mesh/Mesh.h"
 
+class Material;
+
 class Model : public Object
 {
 public:
 	Model() = default;
-	Model(const std::vector<Mesh*>& meshes);
+	Model(std::vector<std::unique_ptr<Mesh>>& meshes);
 
 	void SetTransform(const glm::mat4& transform);
 	void SetMaterial(Material* material);
 
-	std::vector<Mesh*> GetMeshes() const { return m_Meshes; }
+	std::vector<Mesh*> GetMeshes();
 
 private:
-	std::vector<Mesh*> m_Meshes;
+	std::vector<std::unique_ptr<Mesh>> m_Meshes;
 };

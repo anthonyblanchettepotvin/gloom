@@ -1,11 +1,13 @@
 #include "CubemapImporter.h"
 
+#include <memory>
 #include <sstream>
 
 #include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
 
 #include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
 CubemapImporter::CubemapImporter(AssetManager& assetManager)
 	: AssetImporter(assetManager)
@@ -16,7 +18,7 @@ std::unique_ptr<Object> CubemapImporter::ImportObject(const std::string& assetNa
 {
 	stbi_set_flip_vertically_on_load(false);
 
-	std::vector<Texture*> textures;
+	std::vector<std::unique_ptr<Texture>> textures;
 
 	for (size_t i = 0; i < facesFilePath.size(); i++)
 	{
@@ -26,9 +28,7 @@ std::unique_ptr<Object> CubemapImporter::ImportObject(const std::string& assetNa
 		unsigned char* data = stbi_load(facePath.c_str(), &width, &height, &channelCount, 0);
 		if (data)
 		{
-			Texture* texture = new Texture(width, height, channelCount, data, false);
-
-			textures.push_back(texture);
+			textures.emplace_back(std::make_unique<Texture>(width, height, channelCount, data, false));
 		}
 		else
 		{

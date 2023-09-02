@@ -14,6 +14,7 @@
 #include "../../../engine/asset/Asset.h"
 #include "../../../engine/graphics/material/Material.h"
 #include "../../../engine/graphics/material/MaterialAttributes.h"
+#include "../../../engine/graphics/mesh/Mesh.h"
 #include "../../../engine/graphics/model/Model.h"
 #include "../../../engine/graphics/shader/Shader.h"
 #include "../../../engine/graphics/shader/ShaderRegistry.h"
@@ -46,7 +47,7 @@ std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& assetName
 
 	m_Directory = filePath.substr(0, filePath.find_last_of('\\'));
 
-	std::vector<Mesh*> meshes;
+	std::vector<std::unique_ptr<Mesh>> meshes;
 
 	/* Because each node (possibly) contains a set of children we want to first process
 	the node in question, and then continue processing all the node's children and so on. */
@@ -59,7 +60,7 @@ std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& assetName
 	return std::make_unique<Model>(meshes);
 }
 
-void ModelImporter::ProcessNode(aiNode* node, const aiScene* scene, std::vector<Mesh*>& meshes)
+void ModelImporter::ProcessNode(aiNode* node, const aiScene* scene, std::vector<std::unique_ptr<Mesh>>& meshes)
 {
 	// Process all the node's meshes (if any)
 	for (size_t i = 0; i < node->mNumMeshes; i++)
@@ -69,9 +70,7 @@ void ModelImporter::ProcessNode(aiNode* node, const aiScene* scene, std::vector<
 		unsigned int assimpMeshIndex = node->mMeshes[i];
 		aiMesh* assimpMesh = scene->mMeshes[assimpMeshIndex];
 
-		Mesh* mesh = ProcessMesh(assimpMesh, scene);
-
-		meshes.push_back(mesh);
+		meshes.push_back(ProcessMesh(assimpMesh, scene));
 	}
 
 	for (size_t i = 0; i < node->mNumChildren; i++)
@@ -80,7 +79,7 @@ void ModelImporter::ProcessNode(aiNode* node, const aiScene* scene, std::vector<
 	}
 }
 
-Mesh* ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+std::unique_ptr<Mesh> ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -140,7 +139,7 @@ Mesh* ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 		material = ImportMaterial(assimpMaterial);
 	}
 
-	return new Mesh(vertices, indices, material);
+	return std::make_unique<Mesh>(vertices, indices, material);
 }
 
 Material* ModelImporter::ImportMaterial(aiMaterial* material)

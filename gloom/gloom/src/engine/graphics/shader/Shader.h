@@ -14,10 +14,6 @@ class Shader : public Object
 public:
 	Shader();
 
-	virtual void InitializeMaterialTemplate() = 0;
-
-	virtual void Use() = 0;
-
 	virtual void SetBool(const std::string& name, bool value) = 0;
 	virtual void SetInt(const std::string& name, int value) = 0;
 	virtual void SetFloat(const std::string& name, float value) = 0;
@@ -27,6 +23,7 @@ public:
 
 	virtual void BindToGlobalData(GlobalData& globalData) = 0;
 
+	virtual void InitializeMaterialTemplate() = 0;
 	virtual Material* CreateMaterialInstance();
 
 protected:

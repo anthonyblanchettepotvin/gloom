@@ -1,5 +1,7 @@
 #include "GlCubemap.h"
 
+#include "../../../engine/graphics/texture/Texture.h"
+
 GlCubemap::GlCubemap(const Cubemap& cubemap)
 	: m_Cubemap(cubemap)
 {
@@ -8,7 +10,7 @@ GlCubemap::GlCubemap(const Cubemap& cubemap)
 
 	for (size_t i = 0; i < cubemap.GetTextures().size(); i++)
 	{
-		Texture* texture = cubemap.GetTextures()[i];
+		const Texture* texture = cubemap.GetTextures()[i];
 
 		GLenum format = ChannelCountToFormat(texture->GetChannelCount());
 
