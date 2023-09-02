@@ -8,7 +8,7 @@ public:
 	DirectionalLight(const glm::vec3& ambientColor, const glm::vec3& diffuseColor, const glm::vec3& specularColor);
 
 	void SetDirection(const glm::vec3& direction) { m_Direction = direction; };
-	glm::vec3& GetDirection() { return m_Direction; };
+	glm::vec3& GetDirection() { return m_Direction; }; // TODO: Return copy
 
 	void SetAmbientColor(const glm::vec3& ambientColor) { m_AmbientColor = ambientColor; };
 	glm::vec3& GetAmbientColor() { return m_AmbientColor; };

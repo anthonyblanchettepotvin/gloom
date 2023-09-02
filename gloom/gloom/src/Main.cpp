@@ -8,6 +8,7 @@
 #include "engine/asset/AssetRepository.h"
 #include "engine/graphics/cubemap/Cubemap.h"
 #include "engine/graphics/engine/GraphicsEngine.h"
+#include "engine/graphics/globaldata/GlobalData.h"
 #include "engine/graphics/material/MaterialAttributes.h"
 #include "engine/graphics/model/Model.h"
 #include "engine/graphics/shader/Shader.h"

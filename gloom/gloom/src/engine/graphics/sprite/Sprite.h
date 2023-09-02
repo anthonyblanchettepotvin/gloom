@@ -12,7 +12,7 @@ public:
 	Sprite(Material* material);
 
 	void SetTransform(const glm::mat4& transform) { m_Transform = transform; }
-	const glm::mat4& GetTransform() const { return m_Transform; }
+	glm::mat4 GetTransform() const { return m_Transform; }
 
 	Material* GetMaterial() { return m_Material; }
 

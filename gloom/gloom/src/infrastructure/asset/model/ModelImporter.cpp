@@ -154,11 +154,9 @@ Material* ModelImporter::ImportMaterial(aiMaterial* material)
 
 	if (materialShadingModel == aiShadingMode_Phong || materialShadingModel == aiReturn_FAILURE)
 	{
-		Shader* phongShader = m_ShaderRegistry.FindShader(ShadingModel::Phong);
-		if (!phongShader)
-			return nullptr;
+		Shader& phongShader = m_ShaderRegistry.FindShader(ShadingModel::Phong);
 
-		Material* phongMaterial = phongShader->CreateMaterialInstance();
+		Material* phongMaterial = phongShader.CreateMaterialInstance();
 		if (!phongMaterial)
 			return nullptr;
 

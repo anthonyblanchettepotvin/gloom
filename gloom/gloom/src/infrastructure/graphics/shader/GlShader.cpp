@@ -12,6 +12,8 @@
 
 #include "../globaldata/GlGlobalData.h"
 
+#define EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE "GlShader expects to be passed a GlGlobalData instance."
+
 GlShader::GlShader(const std::string& vertexShader, const std::string& fragmentShader)
 	: m_VertexShader(vertexShader), m_FragmentShader(fragmentShader)
 {
@@ -90,17 +92,17 @@ void GlShader::SetFloat(const std::string& name, float value)
 	glUniform1f(glGetUniformLocation(m_Id, name.c_str()), value);
 }
 
-void GlShader::SetFloatVec3(const std::string& name, glm::vec3 value)
+void GlShader::SetFloatVec3(const std::string& name, const glm::vec3& value)
 {
 	glUniform3fv(glGetUniformLocation(m_Id, name.c_str()), 1, glm::value_ptr(value));
 }
 
-void GlShader::SetFloatMat3(const std::string& name, glm::mat3 value)
+void GlShader::SetFloatMat3(const std::string& name, const glm::mat3& value)
 {
 	glUniformMatrix3fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void GlShader::SetFloatMat4(const std::string& name, glm::mat4 value)
+void GlShader::SetFloatMat4(const std::string& name, const glm::mat4& value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
@@ -115,7 +117,7 @@ void GlShader::BindToGlobalData(GlobalData& globalData)
 	}
 	catch (std::bad_cast e)
 	{
-		gLogErrorMessage("GlShader expects to be passed a GlGlobalData instance.");
+		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
 	}
 }
 

@@ -132,7 +132,7 @@ std::unique_ptr<Shader> GlGraphicsEngine::ImportShader(const std::string& filePa
 	return GlShaderImporter().Import(filePath);
 }
 
-GlobalData* GlGraphicsEngine::CreateGlobalData(const std::string& name) const
+GlobalData* GlGraphicsEngine::CreateGlobalData(const std::string& name)
 {
 	return new GlGlobalData(name);
 }

@@ -3,6 +3,7 @@
 #include <cassert>
 #include <stdexcept>
 
+#include "../EngineHelpers.h"
 #include "../object/Object.h"
 #include "../object/ObjectType.h"
 
@@ -12,7 +13,10 @@
 
 void AssetRepository::Insert(std::unique_ptr<Asset>& asset)
 {
-	assert(asset != nullptr); // FIXME: Should throw an exception
+	if (!asset)
+	{
+		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(asset));
+	}
 
 	auto it = std::find(m_Assets.begin(), m_Assets.end(), asset);
 	if (it != m_Assets.end())

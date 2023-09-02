@@ -39,6 +39,8 @@ std::vector<T*> Get();
 #### Source(s)
 
 - https://stackoverflow.com/questions/14505789/c-const-correctness-issue-with-getters
+- https://stackoverflow.com/questions/27065617/const-vector-implies-const-elements
+- https://stackoverflow.com/questions/77029040/const-correctness-with-getters-of-vector-of-non-pointers
 
 ## Return types
 
@@ -92,6 +94,12 @@ Classes' member functions and member variables should follow this structure:
 1. Private member **variables**
 1. Operator overloads
 1. Friends
+
+TODO Structure of forward declarations.
+
+TODO Getters/setters with more than one line should be defined in the .cpp.
+
+TODO Definition of static member variables in the .cpp should appear before any member function definitions.
 
 TODO Member functions should be ordered by theme (merge with the following one).
 
@@ -159,3 +167,43 @@ Use exceptions to catch:
 
 - https://learn.microsoft.com/en-us/cpp/cpp/errors-and-exception-handling-modern-cpp
 - https://softwareengineering.stackexchange.com/questions/15515/when-to-use-assertions-and-when-to-use-exceptions
+
+## `auto` keyword
+
+### Usages
+
+Use `auto` in template functions when `const` keyword presence needs to be infered.
+
+```c++
+template<class T, class Self>
+T* GetImpl(Self& self, const std::string& arg)
+{
+    // GetImpl is called by a non-const implementation and a const implementation of Get. So, element may be non-const or const.
+    auto element = self.GetElement();
+
+    return *element;
+}
+
+Object* Get(const std::string& arg)
+{
+    return GetImpl<Object>(*this);
+}
+
+const Object* Get(const std::string& arg) const
+{
+    return GetImpl<const Object>(*this);
+}
+```
+
+Use `auto` in range-based `for` loops.
+```c++
+for (const auto& element : elements)
+{
+    // ...
+}
+```
+
+Use `auto` when declaring iterators.
+```c++
+auto it = std::find(elements.begin(), elements.end(), element);
+```

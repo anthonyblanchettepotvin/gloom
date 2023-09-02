@@ -17,3 +17,10 @@ AssetRegistryEntry::AssetRegistryEntry(const AssetDescriptor& assetDescriptor, s
 
 	m_AssetFactory = std::move(assetFactory);
 }
+
+AssetFactory& AssetRegistryEntry::GetFactory()
+{
+	assert(m_AssetFactory != nullptr);
+	
+	return *m_AssetFactory;
+}

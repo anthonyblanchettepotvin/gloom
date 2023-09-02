@@ -5,14 +5,14 @@ ObjectID::ObjectID(unsigned int value)
 {
 }
 
+std::string ObjectID::ToString() const
+{
+    return std::to_string(m_Value);
+}
+
 ObjectID ObjectID::Generate()
 {
     static unsigned int nextValue = 0;
 
     return ObjectID(nextValue++);
-}
-
-std::string ObjectID::ToString() const
-{
-    return std::to_string(m_Value);
 }

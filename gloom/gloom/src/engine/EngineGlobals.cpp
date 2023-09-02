@@ -2,21 +2,26 @@
 
 #include <cassert>
 
+#include "EngineHelpers.h"
+
+std::unique_ptr<EngineGlobalsInstance> EngineGlobals::m_Instance;
+
 EngineGlobalsInstance::EngineGlobalsInstance(LoggingManager& loggingManager)
 	: m_LoggingManager(loggingManager)
 {
 }
 
-std::unique_ptr<EngineGlobalsInstance> EngineGlobals::m_Instance;
-
 void EngineGlobals::SetInstance(std::unique_ptr<EngineGlobalsInstance>& instance)
 {
-	assert(instance != nullptr);
+	if (!instance)
+	{
+		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(instance));
+	}
 
 	m_Instance = std::move(instance);
 }
 
-const EngineGlobalsInstance& EngineGlobals::GetInstance()
+EngineGlobalsInstance& EngineGlobals::GetInstance()
 {
 	assert(m_Instance != nullptr);
 

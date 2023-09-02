@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <memory>
 
 #include "AssetDescriptor.h"
@@ -14,7 +13,7 @@ public:
 
 	AssetDescriptor GetDescriptor() const { return m_AssetDescriptor; }
 
-	AssetFactory& GetFactory() { assert(m_AssetFactory != nullptr); return *m_AssetFactory; } // TODO: Not sure about this line.
+	AssetFactory& GetFactory();
 
 private:
 	AssetDescriptor m_AssetDescriptor;
