@@ -113,8 +113,8 @@ Getters/setters defined in .h files should not end with `;`.
 class Foo
 {
 public:
-    std::string GetX() const { return n_X; } // Good.
-    std::string GetX() const { return n_X; }; // Bad.
+    std::string GetX() const { return m_X; } // Good.
+    std::string GetX() const { return m_X; }; // Bad.
 
 private:
     std::string m_X;
