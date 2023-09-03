@@ -46,7 +46,7 @@ std::unique_ptr<GlShader> GlShaderImporter::Import(const std::string& filePath)
 	return std::make_unique<GlShader>(vertexShader, fragmentShader);
 }
 
-std::string GlShaderImporter::ParseVersion(std::ifstream& file)
+std::string GlShaderImporter::ParseVersion(std::ifstream& file) const
 {
 	std::string version;
 
@@ -55,7 +55,7 @@ std::string GlShaderImporter::ParseVersion(std::ifstream& file)
 	return version;
 }
 
-std::string GlShaderImporter::ParseVertexShader(std::ifstream& file)
+std::string GlShaderImporter::ParseVertexShader(std::ifstream& file) const
 {
 	std::stringstream vertexShader;
 
@@ -84,7 +84,7 @@ std::string GlShaderImporter::ParseVertexShader(std::ifstream& file)
 	return vertexShader.str();
 }
 
-std::string GlShaderImporter::ParseFragmentShader(std::ifstream& file)
+std::string GlShaderImporter::ParseFragmentShader(std::ifstream& file) const
 {
 	std::stringstream fragmentShader;
 
@@ -113,7 +113,7 @@ std::string GlShaderImporter::ParseFragmentShader(std::ifstream& file)
 	return fragmentShader.str();
 }
 
-std::string GlShaderImporter::AssembleShader(const std::vector<std::string>& parts)
+std::string GlShaderImporter::AssembleShader(const std::vector<std::string>& parts) const
 {
 	std::stringstream shader;
 

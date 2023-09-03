@@ -1,6 +1,5 @@
 #include "GlShader.h"
 
-#include <iostream>
 #include <memory>
 #include <sstream>
 
@@ -12,64 +11,16 @@
 
 #include "../globaldata/GlGlobalData.h"
 
+#define MAX_UNIFORM_NAME_LENGTH 32
+
+#define MATERIAL_STRUCT_NAME "material"
+
 #define EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE "GlShader expects to be passed a GlGlobalData instance."
 
 GlShader::GlShader(const std::string& vertexShader, const std::string& fragmentShader)
 	: m_VertexShader(vertexShader), m_FragmentShader(fragmentShader)
 {
 	Initialize();
-}
-
-void GlShader::InitializeMaterialTemplate()
-{
-	if (m_Id == 0)
-		return;
-
-	GLint nbUniforms;
-	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORMS, &nbUniforms);
-
-	GLenum uniformType;
-	GLint uniformSize;
-
-	GLchar uniformName[MAX_UNIFORM_NAME_LENGTH];
-	GLsizei uniformNameLength;
-
-	for (size_t i = 0; i < nbUniforms; i++)
-	{
-		glGetActiveUniform(m_Id, (GLint)i, MAX_UNIFORM_NAME_LENGTH, &uniformNameLength, &uniformSize, &uniformType, uniformName);
-
-		std::string attributeName = (std::string)uniformName;
-
-		std::string structName = attributeName.substr(0, attributeName.find_first_of('.'));
-		if (structName == MATERIAL_STRUCT_NAME)
-		{
-			switch (uniformType)
-			{
-			case GL_FLOAT:
-			{
-				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<FloatMaterialAttribute>(attributeName);
-				m_MaterialTemplate.AddAttribute(attribute);
-				break;
-			}
-			case GL_SAMPLER_2D:
-			{
-				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<TextureMaterialAttribute>(attributeName);
-				m_MaterialTemplate.AddAttribute(attribute);
-				break;
-			}
-			case GL_SAMPLER_CUBE:
-			{
-				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<CubemapMaterialAttribute>(attributeName);
-				m_MaterialTemplate.AddAttribute(attribute);
-				break;
-			}
-			default:
-				break;
-			}
-		}
-	}
-
-	m_IsMaterialTemplateInitialized = true;
 }
 
 void GlShader::Use()
@@ -119,6 +70,60 @@ void GlShader::BindToGlobalData(GlobalData& globalData)
 	{
 		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
 	}
+}
+
+void GlShader::InitializeMaterialTemplate()
+{
+	if (m_Id == 0)
+	{
+		return;
+	}
+
+	GLint nbUniforms;
+	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORMS, &nbUniforms);
+
+	GLenum uniformType;
+	GLint uniformSize;
+
+	GLchar uniformName[MAX_UNIFORM_NAME_LENGTH];
+	GLsizei uniformNameLength;
+
+	for (size_t i = 0; i < nbUniforms; i++)
+	{
+		glGetActiveUniform(m_Id, (GLint)i, MAX_UNIFORM_NAME_LENGTH, &uniformNameLength, &uniformSize, &uniformType, uniformName);
+
+		std::string attributeName = (std::string)uniformName;
+
+		std::string structName = attributeName.substr(0, attributeName.find_first_of('.'));
+		if (structName == MATERIAL_STRUCT_NAME)
+		{
+			switch (uniformType)
+			{
+			case GL_FLOAT:
+			{
+				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<FloatMaterialAttribute>(attributeName);
+				m_MaterialTemplate.AddAttribute(attribute);
+				break;
+			}
+			case GL_SAMPLER_2D:
+			{
+				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<TextureMaterialAttribute>(attributeName);
+				m_MaterialTemplate.AddAttribute(attribute);
+				break;
+			}
+			case GL_SAMPLER_CUBE:
+			{
+				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<CubemapMaterialAttribute>(attributeName);
+				m_MaterialTemplate.AddAttribute(attribute);
+				break;
+			}
+			default:
+				break;
+			}
+		}
+	}
+
+	m_IsMaterialTemplateInitialized = true;
 }
 
 void GlShader::Initialize()

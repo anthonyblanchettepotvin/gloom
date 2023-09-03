@@ -1,5 +1,9 @@
 #include "GlTexture.h"
 
+#include <glad/glad.h>
+
+#include "../../../engine/graphics/texture/Texture.h"
+
 GlTexture::GlTexture(const Texture& texture)
 	: m_Texture(texture)
 {
@@ -15,7 +19,6 @@ GlTexture::GlTexture(const Texture& texture)
 	glTexImage2D(GL_TEXTURE_2D, 0, format, (GLsizei)m_Texture.GetWidth(), (GLsizei)m_Texture.GetHeight(), 0, format, GL_UNSIGNED_BYTE, m_Texture.GetData());
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	// TODO: Should be configurable.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -37,6 +40,8 @@ void GlTexture::Free()
 {
 	glActiveTexture(GL_TEXTURE0 + m_Index);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	m_Index = 0;
 }
 
 GLenum GlTexture::ChannelCountToFormat(size_t channelCount) const

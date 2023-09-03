@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../shader/GlShader.h"
-#include "../texture/GlTexture.h"
+class GlShader;
+class GlTexture;
 
 class GlRenderSurface
 {
@@ -11,8 +11,8 @@ public:
 	void RenderTexture(GlShader& shader, GlTexture& texture);
 
 private:
+	void SetupSurface();
+
 	unsigned int m_Vao;
 	unsigned int m_Vbo;
-
-	void SetupSurface();
 };

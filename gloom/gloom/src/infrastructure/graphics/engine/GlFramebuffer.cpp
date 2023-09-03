@@ -4,6 +4,10 @@
 
 #include <glad/glad.h>
 
+#include "../texture/GlTexture.h"
+
+#include "GlRenderbuffer.h"
+
 GlFramebuffer::GlFramebuffer(size_t width, size_t height)
 {
 	// Framebuffer

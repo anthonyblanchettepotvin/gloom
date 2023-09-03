@@ -1,20 +1,18 @@
 #include "GlGlobalData.h"
 
+#include <cassert>
+
 #include <glad/glad.h>
+
+#include "GlGlobalDataType.h"
 
 GlGlobalData::GlGlobalData(const std::string& name)
     : m_Name(name)
 {
-    glGenBuffers(1, &m_Id);
-
     m_Index = GetNextUniformBufferIndex();
-    glBindBufferBase(GL_UNIFORM_BUFFER, m_Index, m_Id);
-}
 
-void GlGlobalData::AddDataReference(const std::string& name, std::unique_ptr<GlGlobalDataType>& reference)
-{
-    m_References[name] = std::move(reference);
-    m_ReferencesNameOrdered.push_back(name);
+    glGenBuffers(1, &m_Id);
+    glBindBufferBase(GL_UNIFORM_BUFFER, m_Index, m_Id);
 }
 
 void GlGlobalData::SendToDevice()
@@ -25,6 +23,12 @@ void GlGlobalData::SendToDevice()
     }
 
     Send();
+}
+
+void GlGlobalData::AddDataReference(const std::string& name, std::unique_ptr<GlGlobalDataType>& reference)
+{
+    m_References[name] = std::move(reference);
+    m_ReferencesNameOrdered.push_back(name);
 }
 
 void GlGlobalData::Allocate()
@@ -39,27 +43,34 @@ void GlGlobalData::Allocate()
 void GlGlobalData::Send()
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_Id);
+
     unsigned int offset = 0;
     for (const auto& referenceName : m_ReferencesNameOrdered)
     {
-        GlGlobalDataType& currentReference = *m_References.at(referenceName);
+        GlGlobalDataType* currentReference = m_References.at(referenceName).get();
 
-        currentReference.SendToDevice(offset);
+        assert(currentReference != nullptr);
+
+        currentReference->SendToDevice(offset);
     }
+
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 unsigned int GlGlobalData::GetUniformBufferSize() const
 {
     unsigned int size = 0;
+
     for (const auto& referenceName : m_ReferencesNameOrdered)
     {
-        GlGlobalDataType& currentReference = *m_References.at(referenceName);
+        GlGlobalDataType* currentReference = m_References.at(referenceName).get();
 
-        unsigned int offset = currentReference.GetBaseAlignment() == 0 ? currentReference.GetBaseAlignment() : ceil(size / currentReference.GetBaseAlignment()) * currentReference.GetBaseAlignment();
+        assert(currentReference != nullptr);
 
-        size = offset + currentReference.GetSize();
+        unsigned int offset = currentReference->GetBaseAlignment() == 0 ? currentReference->GetBaseAlignment() : ceil(size / currentReference->GetBaseAlignment()) * currentReference->GetBaseAlignment();
+        size = offset + currentReference->GetSize();
     }
+
     return size;
 }
 

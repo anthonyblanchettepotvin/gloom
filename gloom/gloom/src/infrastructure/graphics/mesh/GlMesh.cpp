@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include "../../../engine/graphics/mesh/Mesh.h"
+
 GlMesh::GlMesh(const Mesh& mesh)
 	: m_Mesh(mesh)
 {

@@ -2,6 +2,9 @@
 
 #include <glad/glad.h>
 
+#include "../shader/GlShader.h"
+#include "../texture/GlTexture.h"
+
 GlRenderSurface::GlRenderSurface()
 {
 	SetupSurface();

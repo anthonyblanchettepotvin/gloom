@@ -42,6 +42,10 @@ std::vector<T*> Get();
 - https://stackoverflow.com/questions/27065617/const-vector-implies-const-elements
 - https://stackoverflow.com/questions/77029040/const-correctness-with-getters-of-vector-of-non-pointers
 
+### Member functions
+
+TODO Member functions that modify the state of an external resource (e.g., OpenGL's state machine) should be non-const.
+
 ## Return types
 
 ### Getters/setters

@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../texture/GlTexture.h"
-
-#include "GlRenderbuffer.h"
+class GlRenderbuffer;
+class GlTexture;
 
 class GlFramebuffer
 {
