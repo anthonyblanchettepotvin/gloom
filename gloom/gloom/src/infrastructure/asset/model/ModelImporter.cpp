@@ -45,7 +45,7 @@ std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& assetName
 		return nullptr;
 	}
 
-	m_Directory = filePath.substr(0, filePath.find_last_of('\\'));
+	m_Directory = ExtractDirectoryFromFilePath(filePath);
 
 	std::vector<std::unique_ptr<Mesh>> meshes;
 
@@ -55,102 +55,102 @@ std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& assetName
 	all of the scene's meshes directly, without doing all this complicated stuff with recursivity.
 	The reason we're doing this is that the initial idea for using nodes like this is that it
 	defines a parent-child relation between meshes. */
-	ProcessNode(scene->mRootNode, scene, meshes);
+	ProcessNode(*scene->mRootNode, *scene, meshes);
 
 	return std::make_unique<Model>(meshes);
 }
 
-void ModelImporter::ProcessNode(aiNode* node, const aiScene* scene, std::vector<std::unique_ptr<Mesh>>& meshes)
+void ModelImporter::ProcessNode(const aiNode& node, const aiScene& scene, std::vector<std::unique_ptr<Mesh>>& meshes)
 {
 	// Process all the node's meshes (if any)
-	for (size_t i = 0; i < node->mNumMeshes; i++)
+	for (size_t i = 0; i < node.mNumMeshes; i++)
 	{
 		/* Assimp's nodes doesn't contain the meshes themselves, but
 		an index in the scene's meshes array. */
-		unsigned int assimpMeshIndex = node->mMeshes[i];
-		aiMesh* assimpMesh = scene->mMeshes[assimpMeshIndex];
+		unsigned int assimpMeshIndex = node.mMeshes[i];
+		const aiMesh* assimpMesh = scene.mMeshes[assimpMeshIndex];
 
-		meshes.push_back(ProcessMesh(assimpMesh, scene));
+		meshes.emplace_back(ProcessMesh(*assimpMesh, scene));
 	}
 
-	for (size_t i = 0; i < node->mNumChildren; i++)
+	for (size_t i = 0; i < node.mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene, meshes);
+		ProcessNode(*node.mChildren[i], scene, meshes);
 	}
 }
 
-std::unique_ptr<Mesh> ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+std::unique_ptr<Mesh> ModelImporter::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
 	// Process vertices
-	for (size_t i = 0; i < mesh->mNumVertices; i++)
+	for (size_t i = 0; i < mesh.mNumVertices; i++)
 	{
 		glm::vec3 position;
-		position.x = mesh->mVertices[i].x;
-		position.y = mesh->mVertices[i].y;
-		position.z = mesh->mVertices[i].z;
+		position.x = mesh.mVertices[i].x;
+		position.y = mesh.mVertices[i].y;
+		position.z = mesh.mVertices[i].z;
 
 		glm::vec3 normal;
-		normal.x = mesh->mNormals[i].x;
-		normal.y = mesh->mNormals[i].y;
-		normal.z = mesh->mNormals[i].z;
+		normal.x = mesh.mNormals[i].x;
+		normal.y = mesh.mNormals[i].y;
+		normal.z = mesh.mNormals[i].z;
 
-		glm::vec2 textureCoordinates(0.0f);
+		glm::vec2 textureCoordinates{ 0.0f };
 		/* Assimp supports up to 8 different texture coordinates per vertex. But,
 		we only care about the first set. */
-		if (mesh->mTextureCoords[0])
+		if (mesh.mTextureCoords[0])
 		{
-			textureCoordinates.x = mesh->mTextureCoords[0][i].x;
-			textureCoordinates.y = mesh->mTextureCoords[0][i].y;
+			textureCoordinates.x = mesh.mTextureCoords[0][i].x;
+			textureCoordinates.y = mesh.mTextureCoords[0][i].y;
 		}
 
-		Vertex vertex{ position, normal, textureCoordinates };
-
-		vertices.push_back(vertex);
+		vertices.emplace_back(Vertex{ position, normal, textureCoordinates });
 	}
 
 	// Process indices
 	/* Assimp's interface defines each mesh as having an array of faces,
 	where each face represents a single primitive, which in our case
 	(due to the aiProcess_Triangulate option) are always triangles. */
-	for (size_t i = 0; i < mesh->mNumFaces; i++)
+	for (size_t i = 0; i < mesh.mNumFaces; i++)
 	{
-		const aiFace& face = mesh->mFaces[i];
+		const aiFace& face = mesh.mFaces[i];
 
 		for (size_t j = 0; j < face.mNumIndices; j++)
 		{
-			indices.push_back(face.mIndices[j]);
+			indices.emplace_back(face.mIndices[j]);
 		}
 	}
 
 	Material* material = nullptr;
 
 	// Process materials
-	if (mesh->mMaterialIndex >= 0)
+	if (mesh.mMaterialIndex >= 0)
 	{
 		/* A material object internally stores an array of texture locations for each texture type.
 		The different texture types are all prefixed with aiTextureType_.
 		We use a helper function called ImportMaterialTextures to retrieve, import, and initialize
 		the textures from the material. */
-		aiMaterial* assimpMaterial = scene->mMaterials[mesh->mMaterialIndex];
+		const aiMaterial* assimpMaterial = scene.mMaterials[mesh.mMaterialIndex];
 
-		material = ImportMaterial(assimpMaterial);
+		material = ImportMaterial(*assimpMaterial);
 	}
 
 	return std::make_unique<Mesh>(vertices, indices, material);
 }
 
-Material* ModelImporter::ImportMaterial(aiMaterial* material)
+Material* ModelImporter::ImportMaterial(const aiMaterial& material)
 {
-	std::string materialName = material->GetName().C_Str();
+	std::string materialName = material.GetName().C_Str();
 
 	if (m_ImportedMaterial.find(materialName) != m_ImportedMaterial.end())
+	{
 		return m_ImportedMaterial[materialName];
+	}
 
 	int materialShadingModel;
-	material->Get(AI_MATKEY_SHADING_MODEL, materialShadingModel);
+	material.Get(AI_MATKEY_SHADING_MODEL, materialShadingModel);
 
 	if (materialShadingModel == aiShadingMode_Phong || materialShadingModel == aiReturn_FAILURE)
 	{
@@ -192,14 +192,14 @@ Material* ModelImporter::ImportMaterial(aiMaterial* material)
 	return nullptr;
 }
 
-std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material, aiTextureType type)
+std::vector<Texture*> ModelImporter::ImportMaterialTextures(const aiMaterial& material, aiTextureType type)
 {
 	std::vector<Texture*> textures;
 
-	for (size_t i = 0; i < material->GetTextureCount(type); i++)
+	for (size_t i = 0; i < material.GetTextureCount(type); i++)
 	{
 		aiString textureRelativePath;
-		material->GetTexture(type, i, &textureRelativePath);
+		material.GetTexture(type, i, &textureRelativePath);
 
 		/* Note that we make the assumption that texture file paths in model files are local to
 		the actual model object e.g. in the same directory as the location of the model itself. */
@@ -210,7 +210,7 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material
 
 		if (m_ImportedTextures.find(textureAbsolutePath) != m_ImportedTextures.end())
 		{
-			textures.push_back(m_ImportedTextures[textureAbsolutePath]);
+			textures.emplace_back(m_ImportedTextures[textureAbsolutePath]);
 		}
 		else
 		{
@@ -218,11 +218,13 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(aiMaterial* material
 
 			Asset* textureAsset = m_TextureImporter.Import(textureName, textureAbsolutePath);
 			if (!textureAsset)
+			{
 				continue;
+			}
 
 			if (Texture* texture = static_cast<Texture*>(textureAsset->GetObject()))
 			{
-				textures.push_back(texture);
+				textures.emplace_back(texture);
 
 				m_ImportedTextures[textureAbsolutePath] = texture;
 			}
@@ -239,6 +241,13 @@ std::string ModelImporter::GenerateTextureName(const std::string& texturePath) c
 	std::string textureName = m_AssetName + "_" + textureNameWithoutExtension;
 
 	return textureName;
+}
+
+std::string ModelImporter::ExtractDirectoryFromFilePath(const std::string& filePath) const
+{
+	size_t lastSeparatorPosition = filePath.find_last_of("/\\");
+
+	return filePath.substr(0, lastSeparatorPosition);
 }
 
 std::string ModelImporter::ExtractFileNameFromFilePath(const std::string& filePath) const

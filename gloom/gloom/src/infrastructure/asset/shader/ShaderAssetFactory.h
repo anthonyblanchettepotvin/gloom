@@ -15,5 +15,5 @@ protected:
 	std::unique_ptr<Object> CreateBlankObject() override;
 
 private:
-	std::reference_wrapper<GraphicsEngine> m_GraphicsEngine;
+	GraphicsEngine& m_GraphicsEngine;
 };

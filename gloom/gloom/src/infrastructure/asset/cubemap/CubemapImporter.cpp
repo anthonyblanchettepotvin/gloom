@@ -3,7 +3,7 @@
 #include <memory>
 #include <sstream>
 
-#include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
+#include "../../../vendor/stbi/stb_image.h"
 
 #include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/cubemap/Cubemap.h"
@@ -22,22 +22,20 @@ std::unique_ptr<Object> CubemapImporter::ImportObject(const std::string& assetNa
 
 	for (size_t i = 0; i < facesFilePath.size(); i++)
 	{
-		std::string facePath = facesFilePath.at(i);
+		std::string faceFilePath = facesFilePath.at(i);
 
 		int width, height, channelCount;
-		unsigned char* data = stbi_load(facePath.c_str(), &width, &height, &channelCount, 0);
-		if (data)
-		{
-			textures.emplace_back(std::make_unique<Texture>(width, height, channelCount, data, false));
-		}
-		else
+		unsigned char* data = stbi_load(faceFilePath.c_str(), &width, &height, &channelCount, 0);
+		if (!data)
 		{
 			std::stringstream ss;
-			ss << "Could not import cubemap texture " << facePath << ".";
+			ss << "Could not import cubemap texture " << faceFilePath << ".";
 			gLogErrorMessage(ss.str());
 
 			return nullptr;
 		}
+
+		textures.emplace_back(std::make_unique<Texture>(width, height, channelCount, data, false));
 	}
 
 	return std::make_unique<Cubemap>(textures);
