@@ -1,8 +1,8 @@
-#include "GlRenderbuffer.h"
+#include "GlRenderbufferAttachment.h"
 
 #include <glad/glad.h>
 
-GlRenderbuffer::GlRenderbuffer(size_t width, size_t height)
+GlRenderbufferAttachment::GlRenderbufferAttachment(size_t width, size_t height)
 {
 	// Renderbuffer attachment
 	/* We create a renderbuffer the size of our viewport and we attach the renderbuffer to the framebuffer

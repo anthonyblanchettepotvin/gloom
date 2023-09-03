@@ -9,9 +9,9 @@ private:
 	ObjectID(unsigned int value);
 
 public:
-	static ObjectID Generate();
-
 	std::string ToString() const;
+
+	static ObjectID Generate();
 
 private:
 	const unsigned int m_Value;

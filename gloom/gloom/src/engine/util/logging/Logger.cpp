@@ -1,8 +1,8 @@
 #include "Logger.h"
 
-#include "Log.h"
+#include "../../EngineHelpers.h"
 
-#define INDEX_OUT_OF_RANGE "Index is out of range."
+#include "Log.h"
 
 Logger::Logger(const std::string& key, Log& log)
 	: m_Key(key), m_Log(log)
@@ -28,13 +28,13 @@ LogEntry Logger::GetEntry(EntryIndex entryIndex) const
 	return m_Log.GetEntry(entryIndexInLog);
 }
 
-std::vector<LogEntry> Logger::GetEntries(int flags) const
+std::vector<LogEntry> Logger::GetEntries(unsigned int flags) const
 {
 	std::vector<LogEntry> entries;
 
 	for (size_t i = 0; i < GetEntryCount(); i++)
 	{
-		auto entry = GetEntry(i);
+		LogEntry entry = GetEntry(i);
 		if (entry.Data.LogLevel & flags)
 		{
 			entries.push_back(entry);

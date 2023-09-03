@@ -1,8 +1,8 @@
 #include "Log.h"
 
 #include <cassert>
+#include <stdexcept>
 
-#define INDEX_OUT_OF_RANGE "Index is out of range."
 #define ENTRY_SECTION_SEPARATOR " | "
 
 Log::Log()
@@ -46,16 +46,16 @@ LogEntry Log::GetEntry(EntryIndex entryIndex) const
 	buffer->sgetn(&entry[0], entryData.GetSize());
 	buffer->pubseekoff(0, std::ios::end);
 
-	return LogEntry{ entry, entryData };
+	return LogEntry{ entryData, entry };
 }
 
-std::vector<LogEntry> Log::GetEntries(int flags) const
+std::vector<LogEntry> Log::GetEntries(unsigned int flags) const
 {
 	std::vector<LogEntry> entries;
 
 	for (size_t i = 0; i < GetEntryCount(); i++)
 	{
-		auto entry = GetEntry(i);
+		LogEntry entry = GetEntry(i);
 		if (entry.Data.LogLevel & flags)
 		{
 			entries.push_back(entry);

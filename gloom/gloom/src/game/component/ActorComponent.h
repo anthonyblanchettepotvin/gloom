@@ -9,8 +9,8 @@ class ActorComponent : public Object
 public:
 	virtual ~ActorComponent() = default;
 
-	void SetParent(Actor* parent) { this->parent = parent; };
+	void SetParent(Actor* parent) { m_Parent = parent; }
 
 protected:
-	Actor* parent;
+	Actor* m_Parent = nullptr;
 };

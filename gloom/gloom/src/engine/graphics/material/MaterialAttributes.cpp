@@ -1,11 +1,14 @@
 #include "MaterialAttributes.h"
 
+#include "../cubemap/Cubemap.h"
+#include "../texture/Texture.h"
+
 FloatMaterialAttribute::FloatMaterialAttribute(const std::string& name)
 	: MaterialAttribute(name)
 {
 }
 
-MaterialAttribute* FloatMaterialAttribute::CreateAttributeInstance() const
+MaterialAttribute* FloatMaterialAttribute::CreateAttributeInstance()
 {
 	return new FloatMaterialAttribute(m_Name);
 }
@@ -15,7 +18,7 @@ TextureMaterialAttribute::TextureMaterialAttribute(const std::string& name)
 {
 }
 
-MaterialAttribute* TextureMaterialAttribute::CreateAttributeInstance() const
+MaterialAttribute* TextureMaterialAttribute::CreateAttributeInstance()
 {
 	return new TextureMaterialAttribute(m_Name);
 }
@@ -25,7 +28,7 @@ CubemapMaterialAttribute::CubemapMaterialAttribute(const std::string& name)
 {
 }
 
-MaterialAttribute* CubemapMaterialAttribute::CreateAttributeInstance() const
+MaterialAttribute* CubemapMaterialAttribute::CreateAttributeInstance()
 {
 	return new CubemapMaterialAttribute(m_Name);
 }

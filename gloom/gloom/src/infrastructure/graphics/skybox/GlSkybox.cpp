@@ -1,6 +1,8 @@
 #include "GlSkybox.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
+
+#include "../../../engine/graphics/skybox/Skybox.h"
 
 GlSkybox::GlSkybox(const Skybox& skybox)
 	: m_Skybox(skybox)

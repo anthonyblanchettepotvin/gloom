@@ -1,20 +1,18 @@
 #pragma once
 
-#include <vector>
-
-#include "../../engine/graphics/model/Model.h"
-
 #include "RendererComponent.h"
+
+class Model;
 
 class ModelRendererComponent : public RendererComponent
 {
 public:
 	ModelRendererComponent(GraphicsEngine& graphicsEngine, Model* model);
 
-	Model* GetModel() const { return m_Model; };
-
 	void Render() override;
 
+	const Model* GetModel() const { return m_Model; }
+
 private:
-	Model* m_Model;
+	Model* m_Model = nullptr;
 };

@@ -18,14 +18,14 @@ public:
 	void Render();
 
 private:
+	void LoadFont();
+
+	void ApplyStyle();
+
 	ImGuiAdapterFactory m_AdapterFactory;
 
 	ImGuiAssetsTool m_AssetsTool;
 	ImGuiLogTool m_LogTool;
 	ImGuiPropertiesTool m_PropertiesTool;
 	ImGuiWorldTool m_WorldTool;
-
-	void LoadFont();
-	
-	void ApplyStyle();
 };

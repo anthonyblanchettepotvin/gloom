@@ -8,12 +8,12 @@ class ImGuiAdapterFactory;
 class ImGuiCubemapAdapter : public ImGuiAdapter
 {
 public:
-	ImGuiCubemapAdapter(const ImGuiAdapterFactory& adapterFactory, Cubemap& cubemap);
+	ImGuiCubemapAdapter(ImGuiAdapterFactory& adapterFactory, Cubemap& cubemap);
 
-	void Render() const override;
+	void Render() override;
 
 private:
-	const ImGuiAdapterFactory& m_AdapterFactory;
+	ImGuiAdapterFactory& m_AdapterFactory;
 
 	Cubemap& m_Cubemap;
 };

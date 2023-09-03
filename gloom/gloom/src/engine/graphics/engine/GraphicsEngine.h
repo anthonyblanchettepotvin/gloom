@@ -26,7 +26,7 @@ public:
 	virtual std::unique_ptr<Shader> CreateShader() = 0;
 	virtual std::unique_ptr<Shader> ImportShader(const std::string& filePath) = 0;
 
-	virtual GlobalData* CreateGlobalData(const std::string& name) const = 0;
+	virtual std::unique_ptr<GlobalData> CreateGlobalData(const std::string& name) = 0;
 
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference) = 0;
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::mat4& reference) = 0;
@@ -34,9 +34,9 @@ public:
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, DirectionalLight& reference) = 0;
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, PointLight& reference) = 0;
 
-	virtual void Render(const Mesh& mesh) = 0;
-	virtual void Render(const Skybox& skybox) = 0;
-	virtual void Render(const Sprite& sprite) = 0;
+	virtual void Render(Mesh& mesh) = 0;
+	virtual void Render(Skybox& skybox) = 0;
+	virtual void Render(Sprite& sprite) = 0;
 
 	virtual void* GetTextureId(const Texture& texture) = 0;
 };

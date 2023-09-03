@@ -3,36 +3,60 @@
 #include <glad/glad.h>
 
 #include "../../../engine/EngineGlobals.h"
+#include "../../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/material/Material.h"
+#include "../../../engine/graphics/material/MaterialAttribute.h"
+#include "../../../engine/graphics/material/MaterialAttributes.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
 #include "../../../engine/graphics/sprite/Sprite.h"
 #include "../../../engine/graphics/skybox/Skybox.h"
+#include "../../../engine/graphics/texture/Texture.h"
+#include "../../../engine/object/ObjectID.h"
 
+#include "GlFrame.h"
+#include "GlFramebuffer.h"
+#include "GlRenderbufferAttachment.h"
+#include "GlTextureAttachment.h"
+#include "../cubemap/GlCubemap.h"
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
 #include "../mesh/GlMesh.h"
-#include "../sprite/GlSprite.h"
+#include "../shader/GlShader.h"
+#include "../shader/GlShaderImporter.h"
 #include "../skybox/GlSkybox.h"
+#include "../sprite/GlSprite.h"
+#include "../texture/GlTexture.h"
 
-#define EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE "GlGraphicsEngine expects to be passed a GlGlobalData instance."
+#define EX_MSG_FRAMEBUFFER_IS_INCOMPLETE "Framebuffer is incomplete."
+#define ERR_MSG_EXPECTS_GL_GLOBAL_DATA "GlGraphicsEngine expects to be passed a GlGlobalData instance."
+#define ERR_MSG_EXPECTS_GL_SHADER "GlGraphicsEngine expects GlShader instance."
+#define ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED "Material attribute type is not supported."
+
+GlGraphicsEngine::GlGraphicsEngine()
+{
+}
+
+GlGraphicsEngine::~GlGraphicsEngine()
+{
+}
 
 void GlGraphicsEngine::Initialize(size_t width, size_t height)
 {
+	std::unique_ptr<GlShader> frameShader = GlShaderImporter().Import("..\\..\\assets\\shaders\\render.shader");
+	m_Frame = std::make_unique<GlFrame>(frameShader);
+
 	m_Framebuffer = std::make_unique<GlFramebuffer>(width, height);
 
-	Texture* texture = new Texture(width, height, 3, nullptr);
-	m_RenderTexture = std::make_unique<GlTexture>(*texture);
-	m_Renderbuffer = std::make_unique<GlRenderbuffer>(width, height);
+	m_RenderbufferAttachment = std::make_unique<GlRenderbufferAttachment>(width, height);
+	m_Framebuffer->AttachRenderbuffer(*m_RenderbufferAttachment);
 
-	m_Framebuffer->BindTexture(*m_RenderTexture);
-	m_Framebuffer->BindRenderbuffer(*m_Renderbuffer);
+	m_TextureAttachment = std::make_unique<GlTextureAttachment>(width, height);
+	m_Framebuffer->AttachTexture(*m_TextureAttachment);
 
-	if (!m_Framebuffer->CheckStatus())
+	if (!m_Framebuffer->IsComplete())
 	{
-		// TODO: Throw incomplete framebuffer
+		throw std::runtime_error(EX_MSG_FRAMEBUFFER_IS_INCOMPLETE);
 	}
-
-	m_RenderShader = std::move(GlShaderImporter().Import("..\\..\\assets\\shaders\\render.shader"));
-	m_RenderSurface = std::make_unique<GlRenderSurface>();
 
 	// --- Options ---
 
@@ -118,7 +142,7 @@ void GlGraphicsEngine::EndFrame()
 	//if (settingsComponent.GetDepthTestingEnabledReference())
 	glDisable(GL_DEPTH_TEST);
 
-	m_RenderSurface->RenderTexture(*m_RenderShader, *m_RenderTexture);
+	m_TextureAttachment->RenderToFrame(*m_Frame);
 }
 
 std::unique_ptr<Shader> GlGraphicsEngine::CreateShader()
@@ -131,9 +155,9 @@ std::unique_ptr<Shader> GlGraphicsEngine::ImportShader(const std::string& filePa
 	return GlShaderImporter().Import(filePath);
 }
 
-GlobalData* GlGraphicsEngine::CreateGlobalData(const std::string& name) const
+std::unique_ptr<GlobalData> GlGraphicsEngine::CreateGlobalData(const std::string& name)
 {
-	return new GlGlobalData(name);
+	return std::make_unique<GlGlobalData>(name);
 }
 
 void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference)
@@ -146,7 +170,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
+		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
 	}
 }
 
@@ -160,7 +184,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
+		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
 	}
 }
 
@@ -174,7 +198,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
+		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
 	}
 }
 
@@ -188,7 +212,7 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
+		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
 	}
 }
 
@@ -202,14 +226,16 @@ void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, cons
 	}
 	catch (std::bad_cast e)
 	{
-		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
+		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
 	}
 }
 
-void GlGraphicsEngine::Render(const Mesh& mesh)
+void GlGraphicsEngine::Render(Mesh& mesh)
 {
 	if (!mesh.GetMaterial() || !mesh.GetMaterial()->GetShader())
+	{
 		return;
+	}
 
 	ObjectID meshId = mesh.GetId();
 
@@ -230,10 +256,12 @@ void GlGraphicsEngine::Render(const Mesh& mesh)
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(const Skybox& skybox)
+void GlGraphicsEngine::Render(Skybox& skybox)
 {
 	if (!skybox.GetMaterial() || !skybox.GetMaterial()->GetShader())
+	{
 		return;
+	}
 
 	ObjectID skyboxId = skybox.GetId();
 
@@ -252,10 +280,12 @@ void GlGraphicsEngine::Render(const Skybox& skybox)
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(const Sprite& sprite)
+void GlGraphicsEngine::Render(Sprite& sprite)
 {
 	if (!sprite.GetMaterial() || !sprite.GetMaterial()->GetShader())
+	{
 		return;
+	}
 
 	ObjectID spriteId = sprite.GetId();
 
@@ -290,63 +320,50 @@ void* GlGraphicsEngine::GetTextureId(const Texture& texture)
 
 }
 
-void GlGraphicsEngine::ApplyMaterial(const Material& material)
+void GlGraphicsEngine::ApplyMaterial(Material& material)
 {
-	material.GetShader()->Use();
+	if (GlShader* glShader = dynamic_cast<GlShader*>(material.GetShader()))
+	{
+		glShader->Use();
 
-	for (const auto& attribute : material.GetAttributes())
-	{
-		ApplyMaterialAttributeToShader(*material.GetShader(), attribute);
-	}
-}
-
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, MaterialAttribute* attribute)
-{
-	if (TextureMaterialAttribute* textureAttribute = dynamic_cast<TextureMaterialAttribute*>(attribute))
-	{
-		ApplyMaterialAttributeToShader(shader, textureAttribute);
-	}
-	else if (CubemapMaterialAttribute* cubemapAttribute = dynamic_cast<CubemapMaterialAttribute*>(attribute))
-	{
-		ApplyMaterialAttributeToShader(shader, cubemapAttribute);
-	}
-	else if (FloatMaterialAttribute* floatAttribute = dynamic_cast<FloatMaterialAttribute*>(attribute))
-	{
-		ApplyMaterialAttributeToShader(shader, floatAttribute);
+		for (const auto& attribute : material.GetAttributes())
+		{
+			ApplyMaterialAttributeToShader(*glShader, attribute);
+		}
 	}
 	else
 	{
-		gLogErrorMessage("Material attribute type is not supported.");
+		gLogErrorMessage(ERR_MSG_EXPECTS_GL_SHADER);
 	}
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, TextureMaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute)
 {
-	Texture* texture = attribute->GetValue();
-	if (!texture)
-		return;
-
-	ObjectID textureId = texture->GetId();
-
-	auto it = m_GlTextures.find(textureId);
-	if (it == m_GlTextures.end())
+	if (const CubemapMaterialAttribute* cubemapAttribute = dynamic_cast<const CubemapMaterialAttribute*>(attribute))
 	{
-		m_GlTextures[textureId] = std::make_unique<GlTexture>(*texture);
+		ApplyMaterialAttributeToShader(shader, *cubemapAttribute);
 	}
-	
-	GlTexture& glTexture = *m_GlTextures[textureId];
-
-	glTexture.Use(m_SamplerIndex);
-	shader.SetInt(attribute->GetName(), m_SamplerIndex);
-
-	m_SamplerIndex++;
+	else if (const FloatMaterialAttribute* floatAttribute = dynamic_cast<const FloatMaterialAttribute*>(attribute))
+	{
+		ApplyMaterialAttributeToShader(shader, *floatAttribute);
+	}
+	else if (const TextureMaterialAttribute* textureAttribute = dynamic_cast<const TextureMaterialAttribute*>(attribute))
+	{
+		ApplyMaterialAttributeToShader(shader, *textureAttribute);
+	}
+	else
+	{
+		gLogErrorMessage(ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED);
+	}
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, CubemapMaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const CubemapMaterialAttribute& attribute)
 {
-	Cubemap* cubemap = attribute->GetValue();
+	const Cubemap* cubemap = attribute.GetValue();
 	if (!cubemap)
+	{
 		return;
+	}
 
 	ObjectID cubemapId = cubemap->GetId();
 
@@ -359,12 +376,36 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, CubemapMat
 	GlCubemap& glCubemap = *m_GlCubemaps[cubemapId];
 
 	glCubemap.Use(m_SamplerIndex);
-	shader.SetInt(attribute->GetName(), m_SamplerIndex);
+	shader.SetInt(attribute.GetName(), m_SamplerIndex);
 
 	m_SamplerIndex++;
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(Shader& shader, FloatMaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const FloatMaterialAttribute& attribute)
 {
-	shader.SetFloat(attribute->GetName(), attribute->GetValue());
+	shader.SetFloat(attribute.GetName(), attribute.GetValue());
+}
+
+void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const TextureMaterialAttribute& attribute)
+{
+	const Texture* texture = attribute.GetValue();
+	if (!texture)
+	{
+		return;
+	}
+
+	ObjectID textureId = texture->GetId();
+
+	auto it = m_GlTextures.find(textureId);
+	if (it == m_GlTextures.end())
+	{
+		m_GlTextures[textureId] = std::make_unique<GlTexture>(*texture);
+	}
+
+	GlTexture& glTexture = *m_GlTextures[textureId];
+
+	glTexture.Use(m_SamplerIndex);
+	shader.SetInt(attribute.GetName(), m_SamplerIndex);
+
+	m_SamplerIndex++;
 }

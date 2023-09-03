@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlTextureAttachment.cpp" />
     <ClCompile Include="src\engine\util\logging\LoggerRepository.cpp" />
     <ClCompile Include="src\ui\imgui\tool\ImGuiLogTool.cpp" />
     <ClCompile Include="src\engine\EngineGlobals.cpp" />
@@ -185,9 +186,9 @@
     <ClCompile Include="src\engine\object\ObjectID.cpp" />
     <ClCompile Include="src\engine\object\Object.cpp" />
     <ClCompile Include="src\infrastructure\asset\texture\TextureImporter.cpp" />
-    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbufferAttachment.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp" />
-    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\engine\GlFrame.cpp" />
     <ClCompile Include="src\infrastructure\graphics\skybox\GlSkybox.cpp" />
     <ClCompile Include="src\game\component\SkyboxRendererComponent.cpp" />
     <ClCompile Include="src\engine\graphics\skybox\Skybox.cpp" />
@@ -231,7 +232,7 @@
     <ClCompile Include="src\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\engine\graphics\mesh\Mesh.cpp" />
     <ClCompile Include="src\engine\graphics\model\Model.cpp" />
-    <ClCompile Include="src\game\camera\Camera.cpp" />
+    <ClCompile Include="src\engine\graphics\camera\Camera.cpp" />
     <ClCompile Include="src\engine\graphics\shader\Shader.cpp" />
     <ClCompile Include="src\vendor\glad\glad.c" />
     <ClCompile Include="src\Main.cpp" />
@@ -244,6 +245,8 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlTextureAttachment.h" />
+    <ClInclude Include="src\engine\EngineHelpers.h" />
     <ClInclude Include="src\engine\util\logging\LoggerRepository.h" />
     <ClInclude Include="src\ui\imgui\tool\ImGuiLogTool.h" />
     <ClInclude Include="src\engine\EngineGlobals.h" />
@@ -283,9 +286,9 @@
     <ClInclude Include="src\engine\object\ObjectID.h" />
     <ClInclude Include="src\engine\object\Object.h" />
     <ClInclude Include="src\infrastructure\asset\texture\TextureImporter.h" />
-    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h" />
+    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbufferAttachment.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h" />
-    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h" />
+    <ClInclude Include="src\infrastructure\graphics\engine\GlFrame.h" />
     <ClInclude Include="src\infrastructure\graphics\skybox\GlSkybox.h" />
     <ClInclude Include="src\game\component\SkyboxRendererComponent.h" />
     <ClInclude Include="src\engine\graphics\skybox\Skybox.h" />
@@ -331,7 +334,7 @@
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\engine\graphics\mesh\Mesh.h" />
     <ClInclude Include="src\engine\graphics\model\Model.h" />
-    <ClInclude Include="src\game\camera\Camera.h" />
+    <ClInclude Include="src\engine\graphics\camera\Camera.h" />
     <ClInclude Include="src\engine\graphics\shader\Shader.h" />
     <ClInclude Include="src\vendor\stbi\stb_image.h" />
     <ClInclude Include="src\engine\graphics\texture\Texture.h" />

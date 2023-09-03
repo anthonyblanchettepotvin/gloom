@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "../../../vendor/stbi/stb_image.h" // Image loading library by Sean Barrett.
+#include "../../../vendor/stbi/stb_image.h"
 
 #include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/texture/Texture.h"
@@ -18,21 +18,17 @@ std::unique_ptr<Object> TextureImporter::ImportObject(const std::string& assetNa
 	but images usually have 0.0 at the top of the y-axis. */
 	stbi_set_flip_vertically_on_load(true);
 
-	Texture* texture = nullptr;
-
 	/* Here, we load an image from a file. */
 	int width, height, channelCount;
 	unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channelCount, 0);
-	if (data)
-	{
-		texture = new Texture(width, height, channelCount, data, true);
-	}
-	else
+	if (!data)
 	{
 		std::stringstream ss;
 		ss << "Could not import texture " << filePath << ".";
 		gLogErrorMessage(ss.str());
+
+		return nullptr;
 	}
 
-	return std::unique_ptr<Texture>(texture);
+	return std::make_unique<Texture>(width, height, channelCount, data, true);
 }

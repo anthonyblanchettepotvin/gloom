@@ -24,7 +24,7 @@ class EngineGlobalsInstance
 public:
 	EngineGlobalsInstance(LoggingManager& loggingManager);
 
-	LoggingManager& GetLoggingManager() const { return m_LoggingManager; }
+	LoggingManager& GetLoggingManager() { return m_LoggingManager; }
 
 private:
 	LoggingManager& m_LoggingManager;
@@ -34,7 +34,7 @@ class EngineGlobals
 {
 public:
 	static void SetInstance(std::unique_ptr<EngineGlobalsInstance>& instance);
-	static const EngineGlobalsInstance& GetInstance();
+	static EngineGlobalsInstance& GetInstance();
 
 private:
 	static std::unique_ptr<EngineGlobalsInstance> m_Instance;

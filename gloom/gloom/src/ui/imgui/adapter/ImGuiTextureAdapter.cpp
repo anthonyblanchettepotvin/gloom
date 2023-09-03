@@ -12,7 +12,7 @@ ImGuiTextureAdapter::ImGuiTextureAdapter(GraphicsEngine& graphicsEngine, Texture
 {
 }
 
-void ImGuiTextureAdapter::Render() const
+void ImGuiTextureAdapter::Render()
 {
 	ImGui::Image(m_GraphicsEngine.GetTextureId(m_Texture), TEXTURE_PREVIEW_SIZE, GetTexturePreviewUvStart(), GetTexturePreviewUvEnd());
 

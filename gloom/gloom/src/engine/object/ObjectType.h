@@ -3,7 +3,7 @@
 #include <string>
 #include <typeindex>
 
-class ObjectType final
+class ObjectType
 {
 public:
 	ObjectType(const std::type_index& typeIndex);

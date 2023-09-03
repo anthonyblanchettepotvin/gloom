@@ -5,15 +5,16 @@
 #include "../../../vendor/imgui/imgui.h"
 
 #include "../../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
 #include "../ImGuiAdapterFactory.h"
 
-ImGuiCubemapAdapter::ImGuiCubemapAdapter(const ImGuiAdapterFactory& adapterFactory, Cubemap& cubemap)
+ImGuiCubemapAdapter::ImGuiCubemapAdapter(ImGuiAdapterFactory& adapterFactory, Cubemap& cubemap)
 	: m_AdapterFactory(adapterFactory), m_Cubemap(cubemap)
 {
 }
 
-void ImGuiCubemapAdapter::Render() const
+void ImGuiCubemapAdapter::Render()
 {
 	for (const auto& texture : m_Cubemap.GetTextures())
 	{

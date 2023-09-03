@@ -1,6 +1,6 @@
 #include "PointLightComponent.h"
 
 PointLightComponent::PointLightComponent(PointLight* pointLight)
-    : pointLight(pointLight)
+    : m_PointLight(pointLight)
 {
 }

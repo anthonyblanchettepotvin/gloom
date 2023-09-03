@@ -9,8 +9,8 @@
 #include "../../../engine/asset/AssetManager.h"
 #include "../../../engine/object/Object.h"
 #include "../../../engine/object/ObjectType.h"
-#include "../../../game/actor/Actor.h"
 #include "../../../game/GameManager.h"
+#include "../../../game/actor/Actor.h"
 #include "../../../game/world/World.h"
 
 #define WORLD_TOOL_NAME "World"
@@ -80,19 +80,13 @@ void ImGuiWorldTool::RenderLoadedWorldComboOption(World& world)
 	}
 }
 
-bool ImGuiWorldTool::IsWorldLoaded(const World& world) const
-{
-	if (m_GameManager.GetLoadedWorld() == nullptr)
-		return false;
-
-	return m_GameManager.GetLoadedWorld() == &world;
-}
-
 void ImGuiWorldTool::RenderActorsTree()
 {
 	World* loadedWorld = m_GameManager.GetLoadedWorld();
 	if (!loadedWorld)
+	{
 		return;
+	}
 
 	auto actors = loadedWorld->GetActors();
 	for (const auto& actor : actors)
@@ -128,10 +122,16 @@ void ImGuiWorldTool::RenderActorTree(Actor& actor)
 	}
 }
 
+bool ImGuiWorldTool::IsWorldLoaded(const World& world) const
+{
+	World* loadedWorld = m_GameManager.GetLoadedWorld();
+
+	return loadedWorld != nullptr && loadedWorld == &world;
+}
+
 bool ImGuiWorldTool::IsObjectSelected(const Object& object) const
 {
-	if (m_ApplicationManager.GetSelectedObject() == nullptr)
-		return false;
+	Object* selectedObject = m_ApplicationManager.GetSelectedObject();
 
-	return m_ApplicationManager.GetSelectedObject() == &object;
+	return selectedObject != nullptr && selectedObject == &object;
 }

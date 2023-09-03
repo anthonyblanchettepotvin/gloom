@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../engine/graphics/sprite/Sprite.h"
+class Sprite;
 
 class GlSprite
 {
@@ -10,10 +10,10 @@ public:
 	void Render();
 
 private:
+	void Initialize();
+
 	const Sprite& m_Sprite;
 
 	unsigned int m_Vao;
 	unsigned int m_Vbo;
-
-	void Initialize();
 };

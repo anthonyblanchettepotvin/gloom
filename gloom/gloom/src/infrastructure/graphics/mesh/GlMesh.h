@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../engine/graphics/mesh/Mesh.h"
+class Mesh;
 
 class GlMesh
 {
@@ -10,11 +10,11 @@ public:
 	void Render();
 
 private:
+	void Initialize();
+
 	const Mesh& m_Mesh;
 
 	unsigned int m_Vao;
 	unsigned int m_Vbo;
 	unsigned int m_Ebo;
-
-	void Initialize();
 };

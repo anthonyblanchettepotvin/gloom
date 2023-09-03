@@ -13,27 +13,23 @@ void AssetRegistry::DefineAsset(const AssetDescriptor& assetDescriptor, std::uni
 	ObjectType objectType = assetDescriptor.GetObjectType();
 
 	auto it = m_Entries.find(objectType);
-	if (it == m_Entries.end())
-	{
-		m_Entries.emplace(objectType, AssetRegistryEntry(assetDescriptor, assetFactory));
-	}
-	else
+	if (it != m_Entries.end())
 	{
 		throw std::runtime_error(ASSET_ALREADY_REGISTERED);
 	}
+
+	m_Entries.emplace(objectType, AssetRegistryEntry(assetDescriptor, assetFactory));
 }
 
-const AssetRegistryEntry& AssetRegistry::FindEntry(const ObjectType& objectType) const
+AssetRegistryEntry& AssetRegistry::FindEntry(const ObjectType& objectType)
 {
 	auto it = m_Entries.find(objectType);
-	if (it != m_Entries.end())
-	{
-		return m_Entries.at(objectType);
-	}
-	else
+	if (it == m_Entries.end())
 	{
 		throw std::runtime_error(ASSET_NOT_REGISTERED);
 	}
+
+	return m_Entries.at(objectType);
 }
 
 std::vector<AssetDescriptor> AssetRegistry::GetAssetDescriptors() const

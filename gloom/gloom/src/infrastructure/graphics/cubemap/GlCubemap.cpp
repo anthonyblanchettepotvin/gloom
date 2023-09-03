@@ -1,5 +1,10 @@
 #include "GlCubemap.h"
 
+#include <glad/glad.h>
+
+#include "../../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/texture/Texture.h"
+
 GlCubemap::GlCubemap(const Cubemap& cubemap)
 	: m_Cubemap(cubemap)
 {
@@ -8,7 +13,7 @@ GlCubemap::GlCubemap(const Cubemap& cubemap)
 
 	for (size_t i = 0; i < cubemap.GetTextures().size(); i++)
 	{
-		Texture* texture = cubemap.GetTextures()[i];
+		const Texture* texture = cubemap.GetTextures()[i];
 
 		GLenum format = ChannelCountToFormat(texture->GetChannelCount());
 
@@ -19,7 +24,6 @@ GlCubemap::GlCubemap(const Cubemap& cubemap)
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + (GLsizei)i, 0, format, (GLsizei)texture->GetWidth(), (GLsizei)texture->GetHeight(), 0, format, GL_UNSIGNED_BYTE, texture->GetData());
 	}
 
-	// TODO: Should be configurable.
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -41,6 +45,8 @@ void GlCubemap::Free()
 {
 	glActiveTexture(GL_TEXTURE0 + m_Index);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+	m_Index = 0;
 }
 
 GLenum GlCubemap::ChannelCountToFormat(size_t channelCount) const

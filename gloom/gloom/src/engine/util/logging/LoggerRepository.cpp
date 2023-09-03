@@ -3,6 +3,8 @@
 #include <cassert>
 #include <stdexcept>
 
+#include "../../EngineHelpers.h"
+
 #include "Logger.h"
 
 #define LOGGER_WITH_KEY_ALREADY_EXISTS "Logger with key already exists."
@@ -10,14 +12,49 @@
 
 void LoggerRepository::Insert(std::unique_ptr<Logger>& logger)
 {
-    assert(logger != nullptr);
+    if (!logger)
+    {
+        throw std::invalid_argument(ARGUMENT_IS_NULLPTR(logger));
+    }
 
-    if (DoesLoggerExists(logger->GetKey()))
+    std::string loggerKey = logger->GetKey();
+
+    if (DoesLoggerExists(loggerKey))
     {
         throw std::runtime_error(LOGGER_WITH_KEY_ALREADY_EXISTS);
     }
 
-    m_KeyToLoggerMapping.emplace(logger->GetKey(), std::move(logger));
+    m_KeyToLoggerMapping.emplace(loggerKey, std::move(logger));
+}
+
+template<class T, class Self>
+inline T& FindLoggerByKeyImpl(Self& self, const std::string& key)
+{
+    if (!self.DoesLoggerExists(key))
+    {
+        throw std::runtime_error(LOGGER_WITH_KEY_NOT_FOUND);
+    }
+
+    auto& logger = self.m_KeyToLoggerMapping.at(key);
+
+    assert(logger != nullptr);
+
+    return *logger;
+}
+
+Logger& LoggerRepository::FindLoggerByKey(const std::string& key)
+{
+    return FindLoggerByKeyImpl<Logger>(*this, key);
+}
+
+const Logger& LoggerRepository::FindLoggerByKey(const std::string& key) const
+{
+    return FindLoggerByKeyImpl<const Logger>(*this, key);
+}
+
+bool LoggerRepository::DoesLoggerExists(const std::string& key) const
+{
+    return m_KeyToLoggerMapping.find(key) != m_KeyToLoggerMapping.end();
 }
 
 std::vector<std::string> LoggerRepository::GetKeys() const
@@ -30,29 +67,4 @@ std::vector<std::string> LoggerRepository::GetKeys() const
     }
 
     return keys;
-}
-
-Logger& LoggerRepository::GetLogger(const std::string& key)
-{
-    if (!DoesLoggerExists(key))
-    {
-        throw std::runtime_error(LOGGER_WITH_KEY_NOT_FOUND);
-    }
-
-    return *m_KeyToLoggerMapping.at(key);
-}
-
-const Logger& LoggerRepository::GetLogger(const std::string& key) const
-{
-    if (!DoesLoggerExists(key))
-    {
-        throw std::runtime_error(LOGGER_WITH_KEY_NOT_FOUND);
-    }
-
-    return *m_KeyToLoggerMapping.at(key);
-}
-
-bool LoggerRepository::DoesLoggerExists(const std::string& key) const
-{
-    return m_KeyToLoggerMapping.find(key) != m_KeyToLoggerMapping.end();
 }

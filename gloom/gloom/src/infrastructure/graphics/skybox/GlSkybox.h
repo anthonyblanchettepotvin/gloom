@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../engine/graphics/skybox/Skybox.h"
+class Skybox;
 
 class GlSkybox
 {
@@ -10,10 +10,10 @@ public:
 	void Render();
 
 private:
+	void Initialize();
+
 	const Skybox& m_Skybox;
 
 	unsigned int m_Vao;
 	unsigned int m_Vbo;
-
-	void Initialize();
 };

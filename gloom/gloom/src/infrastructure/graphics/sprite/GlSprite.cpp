@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include "../../../engine/graphics/sprite/Sprite.h"
+
 GlSprite::GlSprite(const Sprite& sprite)
     : m_Sprite(sprite)
 {

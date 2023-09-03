@@ -10,7 +10,7 @@ LoggingManager::LoggingManager(LoggerRepository& loggerRepository)
 
 void LoggingManager::LogMessage(const std::string& key, LogLevel logLevel, const std::string& message)
 {
-    Logger& logger = GetOrCreateLogger(key);
+    Logger& logger = FindOrCreateLogger(key);
 
     logger.LogMessage(logLevel, message);
 }
@@ -20,23 +20,23 @@ std::vector<std::string> LoggingManager::GetKeys() const
     return m_LoggerRepository.GetKeys();
 }
 
-std::vector<LogEntry> LoggingManager::GetLogEntries(int flags) const
+std::vector<LogEntry> LoggingManager::GetLogEntries(unsigned int flags) const
 {
     return m_Log.GetEntries(flags);
 }
 
-std::vector<LogEntry> LoggingManager::GetLogEntriesByKey(const std::string& key, int flags) const
+std::vector<LogEntry> LoggingManager::GetLogEntriesByKey(const std::string& key, unsigned int flags) const
 {
-    const Logger& logger = m_LoggerRepository.GetLogger(key);
+    Logger& logger = m_LoggerRepository.FindLoggerByKey(key);
 
     return logger.GetEntries(flags);
 }
 
-Logger& LoggingManager::GetOrCreateLogger(const std::string& key)
+Logger& LoggingManager::FindOrCreateLogger(const std::string& key)
 {
     if (m_LoggerRepository.DoesLoggerExists(key))
     {
-        return m_LoggerRepository.GetLogger(key);
+        return m_LoggerRepository.FindLoggerByKey(key);
     }
 
     std::unique_ptr<Logger> logger = std::make_unique<Logger>(key, m_Log);

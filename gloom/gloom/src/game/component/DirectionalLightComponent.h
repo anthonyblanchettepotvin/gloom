@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../../engine/graphics/lighting/DirectionalLight.h"
-
 #include "LightComponent.h"
+
+class DirectionalLight;
 
 class DirectionalLightComponent : public LightComponent
 {
 public:
 	DirectionalLightComponent(DirectionalLight* directionalLight);
 
-	DirectionalLight* GetDirectionalLight() { return directionalLight; };
+	DirectionalLight* GetDirectionalLight() { return m_DirectionalLight; }
 
 private:
-	DirectionalLight* directionalLight;
+	DirectionalLight* m_DirectionalLight = nullptr;
 };

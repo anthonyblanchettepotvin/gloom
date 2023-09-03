@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <memory>
 #include <vector>
 
 #include "../../object/Object.h"
@@ -11,10 +11,14 @@ class Cubemap : public Object
 {
 public:
 	Cubemap() = default;
-	Cubemap(const std::vector<Texture*>& textures);
+	Cubemap(std::vector<std::unique_ptr<Texture>>& textures);
 	
-	std::vector<Texture*> GetTextures() const { return textures; }
+	std::vector<Texture*> GetTextures();
+	std::vector<const Texture*> GetTextures() const;
 
 protected:
-	std::vector<Texture*> textures;
+	std::vector<std::unique_ptr<Texture>> m_Textures;
+
+	template<class T, class Self>
+	friend std::vector<T*> GetTexturesImpl(Self& self);
 };

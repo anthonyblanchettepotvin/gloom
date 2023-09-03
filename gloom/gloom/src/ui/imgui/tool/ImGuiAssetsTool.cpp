@@ -38,7 +38,9 @@ ImGuiAssetsTool::ImGuiAssetsTool(ApplicationManager& applicationManager, AssetMa
 ImGuiAssetsTool::~ImGuiAssetsTool()
 {
     if (!m_NewAssetAssetDescriptor)
+    {
         return;
+    }
 
     delete m_NewAssetAssetDescriptor;
     m_NewAssetAssetDescriptor = nullptr;
@@ -127,7 +129,7 @@ void ImGuiAssetsTool::RenderAssetsTab(const std::string& label, const std::vecto
     }
 }
 
-void ImGuiAssetsTool::RenderAssetsTabRow(const Asset& asset)
+void ImGuiAssetsTool::RenderAssetsTabRow(Asset& asset)
 {
     ImGui::PushID(asset.GetId().ToString().c_str());
 
@@ -147,14 +149,6 @@ void ImGuiAssetsTool::RenderAssetsTabRow(const Asset& asset)
     ImGui::TextUnformatted(asset.GetDescriptor().GetDisplayName().c_str());
 
     ImGui::PopID();
-}
-
-bool ImGuiAssetsTool::IsAssetSelected(const Asset& asset) const
-{
-    if (m_ApplicationManager.GetSelectedObject() == nullptr || asset.GetObject() == nullptr)
-        return false;
-
-    return m_ApplicationManager.GetSelectedObject() == asset.GetObject();
 }
 
 void ImGuiAssetsTool::RenderCreateAssetButton()
@@ -193,15 +187,12 @@ void ImGuiAssetsTool::RenderCreateAssetOption(const AssetDescriptor& assetDescri
     }
 }
 
-void ImGuiAssetsTool::SetupCreateAssetModal(const AssetDescriptor& assetDescriptor)
-{
-    m_NewAssetAssetDescriptor = new AssetDescriptor(assetDescriptor);
-}
-
 void ImGuiAssetsTool::RenderCreateAssetModal()
 {
     if (!ShouldRenderCreateAssetModal())
+    {
         return;
+    }
 
     assert(m_NewAssetAssetDescriptor != nullptr);
 
@@ -237,19 +228,9 @@ void ImGuiAssetsTool::RenderCreateAssetModal()
     }
 }
 
-bool ImGuiAssetsTool::ShouldRenderCreateAssetModal()
+void ImGuiAssetsTool::SetupCreateAssetModal(const AssetDescriptor& assetDescriptor)
 {
-    return m_NewAssetAssetDescriptor != nullptr;
-}
-
-void ImGuiAssetsTool::CreateAndSelectAsset()
-{
-    std::string newAssetName(m_NewAssetNameBuffer);
-    Asset* newAsset = m_AssetManager.CreateBlankAsset(m_NewAssetAssetDescriptor->GetObjectType(), newAssetName);
-    if (!newAsset)
-        return;
-    
-    m_ApplicationManager.SelectObject(*newAsset->GetObject());
+    m_NewAssetAssetDescriptor = new AssetDescriptor(assetDescriptor);
 }
 
 void ImGuiAssetsTool::ClearCreateAssetModal()
@@ -257,8 +238,34 @@ void ImGuiAssetsTool::ClearCreateAssetModal()
     memset(m_NewAssetNameBuffer, NULL, NEW_ASSET_NAME_MAXIMUM_SIZE);
 
     if (!m_NewAssetAssetDescriptor)
+    {
         return;
+    }
 
     delete m_NewAssetAssetDescriptor;
     m_NewAssetAssetDescriptor = nullptr;
+}
+
+void ImGuiAssetsTool::CreateAndSelectAsset()
+{
+    std::string newAssetName(m_NewAssetNameBuffer);
+    Asset* newAsset = m_AssetManager.CreateBlankAsset(m_NewAssetAssetDescriptor->GetObjectType(), newAssetName);
+    if (!newAsset)
+    {
+        return;
+    }
+
+    m_ApplicationManager.SelectObject(*newAsset->GetObject());
+}
+
+bool ImGuiAssetsTool::IsAssetSelected(const Asset& asset) const
+{
+    Object* selectedObject = m_ApplicationManager.GetSelectedObject();
+
+    return selectedObject != nullptr && selectedObject == asset.GetObject();
+}
+
+bool ImGuiAssetsTool::ShouldRenderCreateAssetModal() const
+{
+    return m_NewAssetAssetDescriptor != nullptr;
 }

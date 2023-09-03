@@ -4,6 +4,9 @@
 
 #include <glad/glad.h>
 
+#include "GlRenderbufferAttachment.h"
+#include "GlTextureAttachment.h"
+
 GlFramebuffer::GlFramebuffer(size_t width, size_t height)
 {
 	// Framebuffer
@@ -25,29 +28,16 @@ void GlFramebuffer::Unbind()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-bool GlFramebuffer::CheckStatus()
+void GlFramebuffer::AttachRenderbuffer(const GlRenderbufferAttachment& renderbufferAttachment)
 {
 	Bind();
 
-	/* Check if all the conditions to a complete framebuffer are met.
-	The list of conditions can be found at https://learnopengl.com/Advanced-OpenGL/Framebuffers. */
-	bool isValid = glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE;
-
-	Unbind();
-
-	return isValid;
-}
-
-void GlFramebuffer::BindRenderbuffer(const GlRenderbuffer& renderbuffer)
-{
-	Bind();
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderbuffer.GetId());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderbufferAttachment.GetId());
 
 	Unbind();
 }
 
-void GlFramebuffer::BindTexture(const GlTexture& texture)
+void GlFramebuffer::AttachTexture(const GlTextureAttachment& textureAttachment)
 {
 	Bind();
 
@@ -55,7 +45,20 @@ void GlFramebuffer::BindTexture(const GlTexture& texture)
 	/* We attach the texture to the framebuffer
 	as a color attachment. Note that we can attach a texture as a depth and/or stencil attachment too.
 	In that case, we would need to change the texture's format accordingly. */
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.GetId(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureAttachment.GetId(), 0);
 
 	Unbind();
+}
+
+bool GlFramebuffer::IsComplete()
+{
+	Bind();
+
+	/* Check if all the conditions to a complete framebuffer are met.
+	The list of conditions can be found at https://learnopengl.com/Advanced-OpenGL/Framebuffers. */
+	bool isComplete = glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+
+	Unbind();
+
+	return isComplete;
 }

@@ -15,15 +15,16 @@ public:
 	void Render();
 
 private:
-	ApplicationManager& m_ApplicationManager;
-	AssetManager& m_AssetManager;
-	GameManager& m_GameManager;
-
 	void RenderLoadedWorldCombo();
 	void RenderLoadedWorldComboOption(World& world);
-	bool IsWorldLoaded(const World& world) const;
 
 	void RenderActorsTree();
 	void RenderActorTree(Actor& actor);
+
+	bool IsWorldLoaded(const World& world) const;
 	bool IsObjectSelected(const Object& object) const;
+
+	ApplicationManager& m_ApplicationManager;
+	AssetManager& m_AssetManager;
+	GameManager& m_GameManager;
 };

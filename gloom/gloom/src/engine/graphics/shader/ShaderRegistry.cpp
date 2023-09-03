@@ -1,17 +1,23 @@
 #include "ShaderRegistry.h"
 
-#include "../../../engine/graphics/shader/Shader.h"
+#include <stdexcept>
 
-void ShaderRegistry::Register(const ShadingModel& shadingModel, Shader& shader)
+#include "Shader.h"
+
+#define SHADER_FOR_SHADING_MODEL_NOT_FOUND "Shader for shading model not found."
+
+void ShaderRegistry::Register(ShadingModel shadingModel, Shader& shader)
 {
 	m_Shaders.emplace(shadingModel, shader);
 }
 
-Shader* ShaderRegistry::FindShader(const ShadingModel& shadingModel) const
+Shader& ShaderRegistry::FindShader(ShadingModel shadingModel)
 {
 	auto it = m_Shaders.find(shadingModel);
 	if (it == m_Shaders.end())
-		return nullptr;
+	{
+		throw std::runtime_error(SHADER_FOR_SHADING_MODEL_NOT_FOUND);
+	}
 
-	return &m_Shaders.at(shadingModel);
+	return it->second;
 }

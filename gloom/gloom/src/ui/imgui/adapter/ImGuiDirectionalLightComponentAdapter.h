@@ -9,7 +9,7 @@ class ImGuiDirectionalLightComponentAdapter : public ImGuiAdapter
 public:
 	ImGuiDirectionalLightComponentAdapter(DirectionalLightComponent& directionalLightComponent);
 
-	void Render() const override;
+	void Render() override;
 
 private:
 	DirectionalLightComponent& m_DirectionalLightComponent;

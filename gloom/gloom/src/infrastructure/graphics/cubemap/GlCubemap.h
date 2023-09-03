@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
+typedef unsigned int GLenum;
 
-#include "../../../engine/graphics/cubemap/Cubemap.h"
+class Cubemap;
 
 class GlCubemap
 {
@@ -15,10 +15,10 @@ public:
 	unsigned int GetId() const { return m_Id; }
 
 private:
+	GLenum ChannelCountToFormat(size_t channelCount) const;
+
 	const Cubemap& m_Cubemap;
 
 	unsigned int m_Id;
 	unsigned int m_Index = 0;
-
-	GLenum ChannelCountToFormat(size_t channelCount) const;
 };

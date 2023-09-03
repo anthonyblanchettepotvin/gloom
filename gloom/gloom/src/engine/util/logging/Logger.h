@@ -21,7 +21,7 @@ public:
 	std::string GetKey() const { return m_Key; }
 
 	LogEntry GetEntry(EntryIndex entryIndex) const;
-	std::vector<LogEntry> GetEntries(int flags) const;
+	std::vector<LogEntry> GetEntries(unsigned int flags) const;
 
 	size_t GetEntryCount() const { return m_EntriesIndexInLog.size(); }
 

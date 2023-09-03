@@ -1,6 +1,5 @@
 #include "GlShader.h"
 
-#include <iostream>
 #include <memory>
 #include <sstream>
 
@@ -12,16 +11,78 @@
 
 #include "../globaldata/GlGlobalData.h"
 
+#define MAX_UNIFORM_NAME_LENGTH 32
+
+#define MATERIAL_STRUCT_NAME "material"
+
+#define EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE "GlShader expects to be passed a GlGlobalData instance."
+
 GlShader::GlShader(const std::string& vertexShader, const std::string& fragmentShader)
 	: m_VertexShader(vertexShader), m_FragmentShader(fragmentShader)
 {
 	Initialize();
 }
 
+void GlShader::Use()
+{
+	glUseProgram(m_Id);
+}
+
+void GlShader::Free()
+{
+	glUseProgram(0);
+}
+
+void GlShader::SetBool(const std::string& name, bool value)
+{
+	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), (int)value);
+}
+
+void GlShader::SetInt(const std::string& name, int value)
+{
+	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), value);
+}
+
+void GlShader::SetFloat(const std::string& name, float value)
+{
+	glUniform1f(glGetUniformLocation(m_Id, name.c_str()), value);
+}
+
+void GlShader::SetFloatVec3(const std::string& name, const glm::vec3& value)
+{
+	glUniform3fv(glGetUniformLocation(m_Id, name.c_str()), 1, glm::value_ptr(value));
+}
+
+void GlShader::SetFloatMat3(const std::string& name, const glm::mat3& value)
+{
+	glUniformMatrix3fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void GlShader::SetFloatMat4(const std::string& name, const glm::mat4& value)
+{
+	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void GlShader::BindToGlobalData(GlobalData& globalData)
+{
+	try
+	{
+		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
+
+		glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, glGlobalData.GetName().c_str()), glGlobalData.GetIndex());
+	}
+	catch (std::bad_cast e)
+	{
+		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
+	}
+}
+
 void GlShader::InitializeMaterialTemplate()
 {
 	if (m_Id == 0)
+	{
 		return;
+	}
 
 	GLint nbUniforms;
 	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORMS, &nbUniforms);
@@ -68,55 +129,6 @@ void GlShader::InitializeMaterialTemplate()
 	}
 
 	m_IsMaterialTemplateInitialized = true;
-}
-
-void GlShader::Use()
-{
-	glUseProgram(m_Id);
-}
-
-void GlShader::SetBool(const std::string& name, bool value)
-{
-	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), (int)value);
-}
-
-void GlShader::SetInt(const std::string& name, int value)
-{
-	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), value);
-}
-
-void GlShader::SetFloat(const std::string& name, float value)
-{
-	glUniform1f(glGetUniformLocation(m_Id, name.c_str()), value);
-}
-
-void GlShader::SetFloatVec3(const std::string& name, glm::vec3 value)
-{
-	glUniform3fv(glGetUniformLocation(m_Id, name.c_str()), 1, glm::value_ptr(value));
-}
-
-void GlShader::SetFloatMat3(const std::string& name, glm::mat3 value)
-{
-	glUniformMatrix3fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
-}
-
-void GlShader::SetFloatMat4(const std::string& name, glm::mat4 value)
-{
-	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
-}
-
-void GlShader::BindToGlobalData(GlobalData& globalData)
-{
-	try
-	{
-		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-
-		glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, glGlobalData.GetName().c_str()), glGlobalData.GetIndex());
-	}
-	catch (std::bad_cast e)
-	{
-		gLogErrorMessage("GlShader expects to be passed a GlGlobalData instance.");
-	}
 }
 
 void GlShader::Initialize()

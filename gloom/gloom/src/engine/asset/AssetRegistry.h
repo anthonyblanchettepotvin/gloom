@@ -15,7 +15,7 @@ class AssetRegistry
 public:
 	void DefineAsset(const AssetDescriptor& assetDescriptor, std::unique_ptr<AssetFactory>& assetFactory);
 
-	const AssetRegistryEntry& FindEntry(const ObjectType& objectType) const;
+	AssetRegistryEntry& FindEntry(const ObjectType& objectType);
 
 	std::vector<AssetDescriptor> GetAssetDescriptors() const;
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
+typedef unsigned int GLenum;
 
-#include "../../../engine/graphics/texture/Texture.h"
+class Texture;
 
 class GlTexture
 {
@@ -15,10 +15,10 @@ public:
 	unsigned int GetId() const { return m_Id; }
 
 private:
+	GLenum ChannelCountToFormat(size_t channelCount) const;
+
 	const Texture& m_Texture;
 
 	unsigned int m_Id;
 	unsigned int m_Index = 0;
-
-	GLenum ChannelCountToFormat(size_t channelCount) const;
 };

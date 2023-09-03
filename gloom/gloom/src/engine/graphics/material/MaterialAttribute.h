@@ -7,7 +7,7 @@ class MaterialAttribute
 public:
 	MaterialAttribute(const std::string& name);
 
-	virtual MaterialAttribute* CreateAttributeInstance() const = 0;
+	virtual MaterialAttribute* CreateAttributeInstance() = 0;
 
 	std::string GetName() const { return m_Name; }
 

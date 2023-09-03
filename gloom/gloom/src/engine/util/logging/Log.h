@@ -4,15 +4,15 @@
 #include <sstream>
 #include <vector>
 
-#define ENUM_VALUE_UNKNOWN "Enum value is unknown."
+#include "../../EngineHelpers.h"
 
 typedef size_t EntryIndex;
 
 enum LogLevel
 {
-	ERROR = 1,
-	INFO = 2,
-	WARNING = 4,
+	ERROR = 0,
+	INFO = 1,
+	WARNING = 2,
 };
 
 constexpr const char* LogLevelToString(LogLevel logLevel)
@@ -26,7 +26,7 @@ constexpr const char* LogLevelToString(LogLevel logLevel)
 	case LogLevel::WARNING:
 		return "WARNING";
 	default:
-		throw std::invalid_argument(ENUM_VALUE_UNKNOWN);
+		throw std::invalid_argument(ENUM_VALUE_IS_UNKNOWN);
 	}
 }
 
@@ -42,9 +42,9 @@ struct LogEntryData
 
 struct LogEntry
 {
-	std::string Text;
-
 	LogEntryData Data;
+
+	std::string Text;
 };
 
 class Log
@@ -55,7 +55,7 @@ public:
 	EntryIndex LogMessageForKey(const std::string& key, LogLevel logLevel, const std::string& message);
 
 	LogEntry GetEntry(EntryIndex entryIndex) const;
-	std::vector<LogEntry> GetEntries(int flags) const;
+	std::vector<LogEntry> GetEntries(unsigned int flags) const;
 
 	size_t GetEntryCount() const { return m_EntriesData.size(); }
 

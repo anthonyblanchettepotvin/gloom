@@ -4,7 +4,7 @@
 
 #include "../../object/Object.h"
 
-#include "../material/Material.h"
+class Material;
 
 class Sprite : public Object
 {
@@ -14,7 +14,7 @@ public:
 	void SetTransform(const glm::mat4& transform) { m_Transform = transform; }
 	glm::mat4 GetTransform() const { return m_Transform; }
 
-	Material* GetMaterial() const { return m_Material; }
+	Material* GetMaterial() { return m_Material; }
 
 protected:
 	glm::mat4 m_Transform{ 0.0f };

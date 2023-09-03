@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../../engine/graphics/lighting/PointLight.h"
-
 #include "LightComponent.h"
+
+class PointLight;
 
 class PointLightComponent : public LightComponent
 {
 public:
 	PointLightComponent(PointLight* pointLight);
 
-	PointLight* GetPointLight() { return pointLight; };
+	PointLight* GetPointLight() { return m_PointLight; }
 
 private:
-	PointLight* pointLight;
+	PointLight* m_PointLight = nullptr;
 };

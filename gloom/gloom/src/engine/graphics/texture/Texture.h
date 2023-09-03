@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "../../object/Object.h"
 
 class Texture : public Object
@@ -19,9 +17,9 @@ public:
 	bool GetIsFlippedVertically() const { return m_IsFlippedVertically; }
 	bool GetIsFlippedHorizontally() const { return m_IsFlippedHorizontally; }
 
-	unsigned char* GetData() const { return m_Data; }
+	const unsigned char* GetData() const { return m_Data; }
 
-protected:
+private:
 	size_t m_Width = 0;
 	size_t m_Height = 0;
 	size_t m_ChannelCount = 0;
@@ -29,5 +27,5 @@ protected:
 	bool m_IsFlippedVertically = false;
 	bool m_IsFlippedHorizontally = false;
 
-	unsigned char* m_Data = nullptr;
+	const unsigned char* m_Data = nullptr;
 };

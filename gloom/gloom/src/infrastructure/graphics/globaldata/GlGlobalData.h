@@ -7,22 +7,29 @@
 
 #include "../../../engine/graphics/globaldata/GlobalData.h"
 
-#include "../globaldata/GlGlobalDataType.h"
+class GlGlobalDataType;
 
 class GlGlobalData : public GlobalData
 {
 public:
     GlGlobalData(const std::string& name);
 
-    std::string GetName() { return m_Name; }
-
-    unsigned int GetIndex() { return m_Index; }
+    void SendToDevice() override;
 
     void AddDataReference(const std::string& name, std::unique_ptr<GlGlobalDataType>& reference);
 
-    void SendToDevice() override;
+    std::string GetName() const { return m_Name; }
+
+    unsigned int GetIndex() const { return m_Index; }
 
 private:
+    void Allocate();
+    void Send();
+
+    unsigned int GetUniformBufferSize() const;
+
+    static unsigned int GetNextUniformBufferIndex();
+
     std::string m_Name;
 
     unsigned int m_Id;
@@ -32,11 +39,4 @@ private:
 
     std::unordered_map<std::string, std::unique_ptr<GlGlobalDataType>> m_References;
     std::vector<std::string> m_ReferencesNameOrdered;
-
-    void Allocate();
-    void Send();
-
-    unsigned int GetUniformBufferSize() const;
-
-    static unsigned int GetNextUniformBufferIndex();
 };
