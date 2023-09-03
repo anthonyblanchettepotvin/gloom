@@ -324,13 +324,14 @@ bool g_MyGlobalVariable = true;
 Function macros should be written using the camel case convention and should be prefixed with `g`.
 
 ```c++
-#define gMyFunctionMacro(x) // ...
+#define gMyFunctionMacro(x) // Call to something...
 ```
 
 Non-function macros should be written using the screaming snake case convention.
 
 ```c++
-#define MY_NON_FUNCTION_MACRO // ...
+#define MY_NON_FUNCTION_MACRO "Lorem ipsum..."
+#define MY_OTHER_NON_FUNCTION_MACRO(x) "Lorem ipsum " #x " ..."  
 ```
 
 ### Constants
@@ -399,7 +400,7 @@ T* GetImpl(Self& self, const std::string& arg)
     // GetImpl is called by a non-const implementation and a const implementation of Get. So, element may be non-const or const.
     auto element = self.GetElement();
 
-    return *element;
+    // Do something with element...
 }
 
 Object* Get(const std::string& arg)

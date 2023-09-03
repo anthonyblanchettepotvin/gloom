@@ -222,6 +222,22 @@ int main()
 	std::unique_ptr<EngineGlobalsInstance> engineGlobalsInstance = std::make_unique<EngineGlobalsInstance>(loggingManager);
 	EngineGlobals::SetInstance(engineGlobalsInstance);
 
+	gLogErrorMessageForKey("A", "Message from A.");
+	gLogInfoMessageForKey("A", "Message from A.");
+	gLogWarningMessageForKey("A", "Message from A.");
+
+	gLogErrorMessageForKey("B", "Message from B.");
+	gLogInfoMessageForKey("B", "Message from B.");
+	gLogWarningMessageForKey("B", "Message from B.");
+
+	gLogErrorMessageForKey("C", "Message from C.");
+	gLogInfoMessageForKey("C", "Message from C.");
+	gLogWarningMessageForKey("C", "Message from C.");
+
+	gLogErrorMessageForKey("D", "Message from D.");
+	gLogInfoMessageForKey("D", "Message from D.");
+	gLogWarningMessageForKey("D", "Message from D.");
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

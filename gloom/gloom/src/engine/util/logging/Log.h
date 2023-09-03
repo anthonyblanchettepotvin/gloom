@@ -10,9 +10,9 @@ typedef size_t EntryIndex;
 
 enum LogLevel
 {
-	ERROR = 0,
-	INFO = 1,
-	WARNING = 2,
+	ERROR = 1,
+	INFO = 2,
+	WARNING = 4,
 };
 
 constexpr const char* LogLevelToString(LogLevel logLevel)
