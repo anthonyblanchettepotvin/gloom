@@ -33,7 +33,9 @@ void ImGuiMain::LoadFont()
 	ImGuiIO& io = ImGui::GetIO();
 
 	if (!io.Fonts)
+	{
 		return;
+	}
 
 	io.Fonts->AddFontFromFileTTF(ROBOTO_REGULAR_TTF_PATH, 16);
 }

@@ -19,24 +19,27 @@ public:
     void Render();
 
 private:
-    ApplicationManager& m_ApplicationManager;
-    AssetManager& m_AssetManager;
-
-    char m_NewAssetNameBuffer[NEW_ASSET_NAME_MAXIMUM_SIZE] = "";
-    const AssetDescriptor* m_NewAssetAssetDescriptor = nullptr;
-
     void RenderAssetsTabs();
     void RenderAllAssetsTab();
     void RenderAssetsTab(const AssetDescriptor& assetDescriptor);
     void RenderAssetsTab(const std::string& label, const std::vector<Asset*>& assets);
     void RenderAssetsTabRow(Asset& asset);
-    bool IsAssetSelected(const Asset& asset) const;
 
     void RenderCreateAssetButton();
     void RenderCreateAssetOption(const AssetDescriptor& assetDescriptor);
-    void SetupCreateAssetModal(const AssetDescriptor& assetDescriptor);
     void RenderCreateAssetModal();
-    bool ShouldRenderCreateAssetModal();
-    void CreateAndSelectAsset();
+
+    void SetupCreateAssetModal(const AssetDescriptor& assetDescriptor);
     void ClearCreateAssetModal();
+
+    void CreateAndSelectAsset();
+
+    bool IsAssetSelected(const Asset& asset) const;
+    bool ShouldRenderCreateAssetModal() const;
+
+    ApplicationManager& m_ApplicationManager;
+    AssetManager& m_AssetManager;
+
+    char m_NewAssetNameBuffer[NEW_ASSET_NAME_MAXIMUM_SIZE] = "";
+    const AssetDescriptor* m_NewAssetAssetDescriptor = nullptr;
 };

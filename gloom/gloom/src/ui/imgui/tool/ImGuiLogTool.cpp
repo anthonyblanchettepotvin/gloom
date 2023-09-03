@@ -99,6 +99,22 @@ void ImGuiLogTool::RenderLog()
 	}
 }
 
+void ImGuiLogTool::RenderLogEntries(const std::vector<LogEntry>& logEntries)
+{
+	ImGuiListClipper clipper;
+	clipper.Begin(logEntries.size());
+	while (clipper.Step())
+	{
+		for (size_t i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+		{
+			auto logEntry = logEntries.at(i);
+
+			ImGui::TextColored(LogLevelToColor(logEntry.Data.LogLevel), logEntry.Text.c_str());
+		}
+	}
+	clipper.End();
+}
+
 int ImGuiLogTool::GetEntriesFlags() const
 {
 	int entriesFlags = 0;
@@ -119,22 +135,6 @@ int ImGuiLogTool::GetEntriesFlags() const
 	}
 
 	return entriesFlags;
-}
-
-void ImGuiLogTool::RenderLogEntries(const std::vector<LogEntry>& logEntries)
-{
-	ImGuiListClipper clipper;
-	clipper.Begin(logEntries.size());
-	while (clipper.Step())
-	{
-		for (size_t i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
-		{
-			auto logEntry = logEntries.at(i);
-
-			ImGui::TextColored(LogLevelToColor(logEntry.Data.LogLevel), logEntry.Text.c_str());
-		}
-	}
-	clipper.End();
 }
 
 constexpr ImVec4 ImGuiLogTool::LogLevelToColor(LogLevel logLevel)

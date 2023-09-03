@@ -11,13 +11,13 @@ class ImGuiTextureAdapter : public ImGuiAdapter
 public:
 	ImGuiTextureAdapter(GraphicsEngine& graphicsEngine, Texture& texture);
 
-	void Render() const override;
+	void Render() override;
 
 private:
+	ImVec2 GetTexturePreviewUvStart() const;
+	ImVec2 GetTexturePreviewUvEnd() const;
+
 	GraphicsEngine& m_GraphicsEngine;
 
 	Texture& m_Texture;
-
-	ImVec2 GetTexturePreviewUvStart() const;
-	ImVec2 GetTexturePreviewUvEnd() const;
 };

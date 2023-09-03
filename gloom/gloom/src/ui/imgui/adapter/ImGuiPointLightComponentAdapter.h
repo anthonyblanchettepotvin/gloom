@@ -9,7 +9,7 @@ class ImGuiPointLightComponentAdapter : public ImGuiAdapter
 public:
 	ImGuiPointLightComponentAdapter(PointLightComponent& pointLightComponent);
 
-	void Render() const override;
+	void Render() override;
 
 private:
 	PointLightComponent& m_PointLightComponent;

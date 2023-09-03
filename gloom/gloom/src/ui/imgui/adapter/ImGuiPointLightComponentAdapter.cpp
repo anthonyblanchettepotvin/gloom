@@ -5,7 +5,6 @@
 #include "../../../vendor/imgui/imgui.h"
 
 #include "../../../engine/graphics/lighting/PointLight.h"
-
 #include "../../../game/component/PointLightComponent.h"
 
 ImGuiPointLightComponentAdapter::ImGuiPointLightComponentAdapter(PointLightComponent& pointLightComponent)
@@ -13,7 +12,7 @@ ImGuiPointLightComponentAdapter::ImGuiPointLightComponentAdapter(PointLightCompo
 {
 }
 
-void ImGuiPointLightComponentAdapter::Render() const
+void ImGuiPointLightComponentAdapter::Render()
 {
 	if (m_PointLightComponent.GetPointLight())
 	{

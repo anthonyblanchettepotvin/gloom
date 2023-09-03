@@ -9,7 +9,7 @@ class ImGuiTransformComponentAdapter : public ImGuiAdapter
 public:
 	ImGuiTransformComponentAdapter(TransformComponent& transformComponent);
 
-	void Render() const override;
+	void Render() override;
 
 private:
 	TransformComponent& m_TransformComponent;

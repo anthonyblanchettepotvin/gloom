@@ -11,12 +11,12 @@
 
 #include "../ImGuiAdapterFactory.h"
 
-ImGuiActorAdapter::ImGuiActorAdapter(const ImGuiAdapterFactory& adapterFactory, Actor& actor)
+ImGuiActorAdapter::ImGuiActorAdapter(ImGuiAdapterFactory& adapterFactory, Actor& actor)
 	: m_AdapterFactory(adapterFactory), m_Actor(actor)
 {
 }
 
-void ImGuiActorAdapter::Render() const
+void ImGuiActorAdapter::Render()
 {
 	ImGui::Text(m_Actor.GetName().c_str());
 
@@ -26,7 +26,9 @@ void ImGuiActorAdapter::Render() const
 
 		std::unique_ptr<ImGuiAdapter> componentAdapter = m_AdapterFactory.CreateAdapter(component);
 		if (!componentAdapter)
+		{
 			continue;
+		}
 
 		if (ImGui::CollapsingHeader(component->GetObjectType().GetDisplayName().c_str()))
 		{

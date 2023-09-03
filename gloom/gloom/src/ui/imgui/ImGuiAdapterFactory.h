@@ -11,7 +11,7 @@ class ImGuiAdapterFactory
 public:
 	ImGuiAdapterFactory(GraphicsEngine& graphicsEngine);
 
-	std::unique_ptr<ImGuiAdapter> CreateAdapter(Object* object) const;
+	std::unique_ptr<ImGuiAdapter> CreateAdapter(Object* object);
 
 private:
 	GraphicsEngine& m_GraphicsEngine;

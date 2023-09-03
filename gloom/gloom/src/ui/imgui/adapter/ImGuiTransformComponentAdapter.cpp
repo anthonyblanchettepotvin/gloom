@@ -11,7 +11,7 @@ ImGuiTransformComponentAdapter::ImGuiTransformComponentAdapter(TransformComponen
 {
 }
 
-void ImGuiTransformComponentAdapter::Render() const
+void ImGuiTransformComponentAdapter::Render()
 {
 	ImGui::InputFloat3("Translation", glm::value_ptr(m_TransformComponent.GetTranslation()));
 	ImGui::InputFloat3("Scale", glm::value_ptr(m_TransformComponent.GetScale()));
