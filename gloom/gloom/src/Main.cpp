@@ -12,6 +12,8 @@
 #include "engine/graphics/globaldata/GlobalData.h"
 #include "engine/graphics/lighting/DirectionalLight.h"
 #include "engine/graphics/lighting/PointLight.h"
+#include "engine/graphics/material/Material.h"
+#include "engine/graphics/material/MaterialAttribute.h"
 #include "engine/graphics/material/MaterialAttributes.h"
 #include "engine/graphics/model/Model.h"
 #include "engine/graphics/shader/Shader.h"
@@ -41,6 +43,7 @@
 #include "infrastructure/asset/texture/TextureImporter.h"
 #include "infrastructure/asset/world/WorldAssetFactory.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
+#include "infrastructure/graphics/shader/GlShader.h"
 #include "infrastructure/graphics/shader/GlShaderImporter.h"
 #include "ui/imgui/ImGuiMain.h"
 
@@ -488,7 +491,7 @@ int main()
 	glm::mat4 viewTransform;
 	glm::mat4 skyboxTransform;
 	glm::mat4 projectionTransform;
-	std::unique_ptr<GlobalData> matricesGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_matrices"));
+	std::unique_ptr<GlobalData> matricesGlobalData = graphicsEngine.CreateGlobalData("ubo_matrices");
 	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
 	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
 	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
@@ -530,9 +533,9 @@ int main()
 	diffuse		vec3	16				32				12
 	specular	vec3	16				48				12
 	*/
-	std::unique_ptr<GlobalData> directionalLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_directionalLights"));
+	std::unique_ptr<GlobalData> directionalLightsGlobalData = graphicsEngine.CreateGlobalData("ubo_directionalLights");
 	graphicsEngine.AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
-	std::unique_ptr<GlobalData> pointLightsGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_pointLights"));
+	std::unique_ptr<GlobalData> pointLightsGlobalData = graphicsEngine.CreateGlobalData("ubo_pointLights");
 	graphicsEngine.AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
 
 	phongShader->BindToGlobalData(*directionalLightsGlobalData);
@@ -550,7 +553,7 @@ int main()
 	position	vec3	16				0				12
 	*/
 	glm::vec3 cameraPosition;
-	std::unique_ptr<GlobalData> cameraGlobalData = std::unique_ptr<GlobalData>(graphicsEngine.CreateGlobalData("ubo_camera"));
+	std::unique_ptr<GlobalData> cameraGlobalData = graphicsEngine.CreateGlobalData("ubo_camera");
 	graphicsEngine.AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
 
 	phongShader->BindToGlobalData(*cameraGlobalData);

@@ -9,6 +9,7 @@ public:
 	GlShader(const std::string& vertexShader, const std::string& fragmentShader);
 
 	void Use();
+	void Free();
 
 	void SetBool(const std::string& name, bool value) override;
 	void SetInt(const std::string& name, int value) override;

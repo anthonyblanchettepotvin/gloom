@@ -1,18 +1,29 @@
-#include "GlRenderSurface.h"
+#include "GlFrame.h"
+
+#include <stdexcept>
 
 #include <glad/glad.h>
+
+#include "../../../engine/EngineHelpers.h"
 
 #include "../shader/GlShader.h"
 #include "../texture/GlTexture.h"
 
-GlRenderSurface::GlRenderSurface()
+GlFrame::GlFrame(std::unique_ptr<GlShader>& shader)
 {
-	SetupSurface();
+	if (!shader)
+	{
+		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(shader));
+	}
+
+	m_Shader = std::move(shader);
+
+	Initialize();
 }
 
-void GlRenderSurface::RenderTexture(GlShader& shader, GlTexture& texture)
+void GlFrame::RenderTexture(GlTexture& texture)
 {
-	shader.Use();
+	m_Shader->Use();
 
 	glBindVertexArray(m_Vao);
 	texture.Use(0);
@@ -22,10 +33,10 @@ void GlRenderSurface::RenderTexture(GlShader& shader, GlTexture& texture)
 	texture.Free();
 	glBindVertexArray(0);
 
-	// TODO: Shader.Free();
+	m_Shader->Free();
 }
 
-void GlRenderSurface::SetupSurface()
+void GlFrame::Initialize()
 {
 	float vertices[] = {
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,

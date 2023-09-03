@@ -1,7 +1,7 @@
 #pragma once
 
-class GlRenderbuffer;
-class GlTexture;
+class GlRenderbufferAttachment;
+class GlTextureAttachment;
 
 class GlFramebuffer
 {
@@ -11,10 +11,10 @@ public:
 	void Bind();
 	void Unbind();
 
-	bool CheckStatus();
+	void AttachRenderbuffer(const GlRenderbufferAttachment& renderbufferAttachment);
+	void AttachTexture(const GlTextureAttachment& textureAttachment);
 
-	void BindRenderbuffer(const GlRenderbuffer& renderbuffer);
-	void BindTexture(const GlTexture& texture);
+	bool IsComplete();
 
 private:
 	unsigned int m_Id;

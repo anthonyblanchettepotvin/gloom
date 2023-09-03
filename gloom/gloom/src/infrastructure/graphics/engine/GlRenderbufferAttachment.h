@@ -1,9 +1,9 @@
 #pragma once
 
-class GlRenderbuffer
+class GlRenderbufferAttachment
 {
 public:
-	GlRenderbuffer(size_t width, size_t height);
+	GlRenderbufferAttachment(size_t width, size_t height);
 
 	unsigned int GetId() const { return m_Id; }
 

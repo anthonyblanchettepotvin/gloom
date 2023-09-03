@@ -26,7 +26,7 @@ public:
 	virtual std::unique_ptr<Shader> CreateShader() = 0;
 	virtual std::unique_ptr<Shader> ImportShader(const std::string& filePath) = 0;
 
-	virtual GlobalData* CreateGlobalData(const std::string& name) = 0;
+	virtual std::unique_ptr<GlobalData> CreateGlobalData(const std::string& name) = 0;
 
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference) = 0;
 	virtual void AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::mat4& reference) = 0;

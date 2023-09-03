@@ -132,13 +132,13 @@
     <ClCompile Include="src\game\component\SkyboxRendererComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderSurface.cpp">
+    <ClCompile Include="src\infrastructure\graphics\engine\GlFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\engine\GlFramebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbuffer.cpp">
+    <ClCompile Include="src\infrastructure\graphics\engine\GlRenderbufferAttachment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\graphics\material\MaterialTemplate.cpp">
@@ -303,6 +303,9 @@
     <ClCompile Include="src\engine\util\logging\LoggerRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlTextureAttachment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -425,13 +428,13 @@
     <ClInclude Include="src\game\component\SkyboxRendererComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderSurface.h">
+    <ClInclude Include="src\infrastructure\graphics\engine\GlFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\engine\GlFramebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbuffer.h">
+    <ClInclude Include="src\infrastructure\graphics\engine\GlRenderbufferAttachment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\graphics\material\MaterialTemplate.h">
@@ -597,6 +600,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\EngineHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlTextureAttachment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

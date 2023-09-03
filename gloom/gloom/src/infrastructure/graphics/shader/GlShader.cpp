@@ -28,6 +28,11 @@ void GlShader::Use()
 	glUseProgram(m_Id);
 }
 
+void GlShader::Free()
+{
+	glUseProgram(0);
+}
+
 void GlShader::SetBool(const std::string& name, bool value)
 {
 	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), (int)value);
