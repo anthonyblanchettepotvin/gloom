@@ -1,4 +1,4 @@
-# Coding Conventions For Gloom
+# Coding Convention
 
 ## Const-correctness
 
@@ -44,7 +44,25 @@ std::vector<T*> Get();
 
 ### Member functions
 
-TODO Member functions that modify the state of an external resource (e.g., OpenGL's state machine) should be non-const.
+Member functions that modify the state of an external resource (e.g., OpenGL's internal state machine) or produce a side effect should be non-const.
+
+```c++
+// Shader.h
+class Shader
+{
+public:
+    void Render();
+};
+```
+
+```c++
+// Shader.cpp
+void Shader::Render()
+{
+    // The following doesn't modify any members of Shader, but may modify the OpenGL's internal state machine.
+    // OpenGL calls...
+}
+```
 
 ## Return types
 
@@ -78,7 +96,7 @@ const HeavyObject* Get() const;
 
 Classes' member functions and member variables should follow this structure:
 
-1. Public, protected then private constructors (order by ascending number of parameters)
+1. Public, protected then private constructors (ordered by ascending number of parameters)
 1. Public, protected then private copy constructors
 1. Public, protected then private destructors
 1. Public member functions
@@ -99,9 +117,7 @@ Classes' member functions and member variables should follow this structure:
 1. Operator overloads
 1. Friends
 
-TODO Structure of forward declarations.
-
-Private member variables should be prefixed with `m_`.
+Private member variables' name should be prefixed with `m_`.
 
 ```c++
 class Foo
@@ -127,8 +143,6 @@ private:
 
 Getters/setters with more than one line should be defined in the .cpp.
 
-TODO Definition of static member variables in .cpp files should appear before any member function definitions.
-
 Given a member functions category, member functions are ordered by:  
 
 - ascending number of parameters
@@ -147,14 +161,14 @@ Given a member functions category, the getters/setters should be the last member
 public:
     void Foo();
 
+    void SetX(const T& x);
+    const T& GetX() const;
+
     virtual VirtualFoo();
 
     virtual PureVirtualFoo() = 0;
 
     static StaticFoo();
-
-    void SetX(const T& x);
-    const T& GetX() const;
 ```
 
 Given a member variable, its setter should come before its getter.
@@ -164,7 +178,42 @@ void SetX(const T& x);
 const T& GetX() const;
 ```
 
+Definition of static member variables in .cpp files should appear before all member functions' definition.
+
+```c++
+// Foo.h
+class Foo
+{
+public:
+    void DoA();
+    void DoB();
+
+private:
+    static std::string m_Bar;
+};
+```
+
+```c++
+// Foo.cpp
+// Includes...
+// Defines...
+
+std::string Foo::m_Bar;
+
+void Foo::DoA()
+{
+    // ...
+}
+
+void Foo::DoB()
+{
+    // ...
+}
+```
+
 ## Functions
+
+### Structure
 
 Use early exit when possible.
 
@@ -190,8 +239,121 @@ void Foo()
 }
 ```
 
-TODO Always use curly braces.
-## Includes and forward declarations
+Always use curly braces to define scopes, even for single-statement scopes.
+
+```c++
+// Good.
+if (!m_Foo)
+{
+    // ...
+}
+
+// Bad.
+if (!m_Foo)
+    // ...
+```
+
+## Includes, defines, forward declarations, constants and global variables
+
+### Structure
+
+Includes, defines, forward declarations, constants and global variables should follow this structure:
+
+1. `#pragma once`
+1. Includes
+    1. STL includes
+    1. Third party library includes
+    1. Different internal library includes
+    1. Current internal library includes
+1. Defines
+1. Forward declarations
+    1. typedefs
+    1. enums
+    1. structs
+    1. classes
+1. Constants
+1. Global variables
+
+```c++
+#pragma once
+
+// STL includes
+#include <vector>
+// ...
+
+// Third party library includes
+#include <glm/glm.hpp>
+// ...
+
+// Different internal library includes
+#include "../../../engine/graphics/mesh/Mesh.h"
+// ...
+
+// Current internal library includes
+#include "Foo.h"
+// ...
+
+// Defines
+#define FOO "I am foo!"
+// ...
+
+// Forward declarations
+typedef unsigned int MyTypedef;
+// ...
+
+enum MyEnum;
+// ...
+
+struct MyStruct;
+// ...
+
+class MyClass;
+// ...
+
+// Constants
+const std::string MY_CONSTANT = "Lorem ipsum...";
+// ...
+
+// Global variables
+bool g_MyGlobalVariable = true;
+// ...
+```
+
+### Defines
+
+Function macros should be written using the camel case convention and should be prefixed with `g`.
+
+```c++
+#define gMyFunctionMacro(x) // ...
+```
+
+Non-function macros should be written using the screaming snake case convention.
+
+```c++
+#define MY_NON_FUNCTION_MACRO // ...
+```
+
+### Constants
+
+Constants' name should be written using the screaming snake case convention.
+
+```c++
+const std::string MY_CONSTANT = "Lorem ipsum..."; // Good.
+const std::string MyConstant = "Lorem ipsum..."; // Bad.
+```
+
+### Global variables
+
+Global variables' name should be prefixed with `g_`.
+
+```c++
+bool g_IsGlobal = true;
+
+class Foo
+{
+    // ...
+};
+```
 
 ### Includes
 

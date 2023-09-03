@@ -1,3 +1,29 @@
+/* OpenGL functions location aren't known at compile-time.
+Normally, we need to fetch each function's location at run-time
+ourselves. GLAD simplify this process for us. */
+/* It's important that the include to glad.h is before any other
+header that require OpenGL, because it includes the required headers
+behind the scenes. */
+#include <glad/glad.h>
+/* The creation of windows is different for each OS and
+OpenGL tries to be as OS-independant as possible. So,
+it's our responsibility to create the windows based on
+the OS the application is running on. GLFW simplify this process for us. */
+#include <GLFW/glfw3.h>
+/* OpenGL Mathematics is a header-only library that implements a lot
+of the required mathematics constructs and operations that we need for
+graphics programming with OpenGL. */
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+/* UI library. */
+#include "vendor/imgui/imgui.h"
+#include "vendor/imgui/imgui_impl_glfw.h"
+#include "vendor/imgui/imgui_impl_opengl3.h"
+/* Image loading library. */
+#include "vendor/stbi/stb_image.h"
+
 #include "application/ApplicationManager.h"
 #include "engine/EngineGlobals.h"
 #include "engine/asset/Asset.h"
@@ -24,12 +50,12 @@
 #include "engine/util/logging/LoggerRepository.h"
 #include "engine/util/logging/LoggingManager.h"
 #include "game/actor/Actor.h"
-#include "game/component/TransformComponent.h"
+#include "game/component/DirectionalLightComponent.h"
 #include "game/component/ModelRendererComponent.h"
+#include "game/component/PointLightComponent.h"
 #include "game/component/SkyboxRendererComponent.h"
 #include "game/component/SpriteRendererComponent.h"
-#include "game/component/PointLightComponent.h"
-#include "game/component/DirectionalLightComponent.h"
+#include "game/component/TransformComponent.h"
 #include "game/GameManager.h"
 #include "game/world/World.h"
 #include "infrastructure/asset/cubemap/CubemapAssetFactory.h"
@@ -47,41 +73,19 @@
 #include "infrastructure/graphics/shader/GlShaderImporter.h"
 #include "ui/imgui/ImGuiMain.h"
 
-/* UI library. */
-#include "vendor/imgui/imgui.h"
-#include "vendor/imgui/imgui_impl_glfw.h"
-#include "vendor/imgui/imgui_impl_opengl3.h"
-/* Image loading library. */
-#include "vendor/stbi/stb_image.h"
-
-/* OpenGL functions location aren't known at compile-time.
-Normally, we need to fetch each function's location at run-time
-ourselves. GLAD simplify this process for us. */
-/* It's important that the include to glad.h is before any other
-header that require OpenGL, because it includes the required headers
-behind the scenes. */
-#include <glad/glad.h>
-/* The creation of windows is different for each OS and
-OpenGL tries to be as OS-independant as possible. So,
-it's our responsibility to create the windows based on
-the OS the application is running on. GLFW simplify this process for us. */
-#include <GLFW/glfw3.h>
-/* OpenGL Mathematics is a header-only library that implements a lot
-of the required mathematics constructs and operations that we need for
-graphics programming with OpenGL. */
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#define LOGGER_KEY "main"
+#define ERR_MSG_GLFW_WINDOW_CREATION_FAILED "Failed to create GLFW window."
+#define ERR_MSG_GLAD_INITIALIZATION_FAILED "Failed to initialize GLAD."
 
 const std::string LOGO_IMAGE_PATH = "..\\..\\assets\\images\\gloom_logo_g_64.png";
 
+const std::string CHROMATIC_ABERRATION_SHADER_PATH = "..\\..\\assets\\shaders\\chromatic_aberration.shader";
 const std::string PHONG_SHADER_PATH = "..\\..\\assets\\shaders\\phong.shader";
 const std::string REFLECTION_SHADER_PATH = "..\\..\\assets\\shaders\\reflection.shader";
 const std::string REFRACTION_SHADER_PATH = "..\\..\\assets\\shaders\\refraction.shader";
-const std::string SPRITE_SHADER_PATH = "..\\..\\assets\\shaders\\sprite.shader";
 const std::string RENDER_SHADER_PATH = "..\\..\\assets\\shaders\\render.shader";
 const std::string SKYBOX_SHADER_PATH = "..\\..\\assets\\shaders\\skybox.shader";
-const std::string CHROMATIC_ABERRATION_SHADER_PATH = "..\\..\\assets\\shaders\\chromatic_aberration.shader";
+const std::string SPRITE_SHADER_PATH = "..\\..\\assets\\shaders\\sprite.shader";
 
 const std::string BACKPACK_MODEL_PATH = "..\\..\\assets\\models\\backpack\\backpack.obj";
 const std::string CUBE_MODEL_PATH = "..\\..\\assets\\models\\cube\\cube.obj";
@@ -103,89 +107,112 @@ const size_t SCR_WIDTH = 1600;
 const size_t SCR_HEIGHT = 900;
 
 // Camera
-bool cameraMode = false;
-Camera camera(glm::vec3(0.0f, 0.0f, 15.0f), SCR_WIDTH, SCR_HEIGHT);
+bool g_CameraMode = false;
+Camera g_Camera(glm::vec3(0.0f, 0.0f, 15.0f), SCR_WIDTH, SCR_HEIGHT);
 
 // Mouse
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
+float g_MouseLastX = SCR_WIDTH / 2.0f;
+float g_MouseLastY = SCR_HEIGHT / 2.0f;
+bool g_MouseLastPositionInitialized = false;
 
 // Timing
-float deltaTime = 0.0f;	// Time between current frame and last frame.
-float lastFrame = 0.0f;
+float g_DeltaTime = 0.0f; // Time between current frame and last frame.
+float g_LastFrameTime = 0.0f;
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	// The OpenGL viewport is relative to the lower left corner of the window.
 	glViewport(0, 0, width, height);
 
-	camera.SetViewWidth(width);
-	camera.SetViewHeight(height);
+	g_Camera.SetViewWidth(width);
+	g_Camera.SetViewHeight(height);
 }
 
-void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
+void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 {
-	if (!cameraMode)
-		return;
-
-	float fxpos = static_cast<float>(xpos);
-	float fypos = static_cast<float>(ypos);
-
-	if (firstMouse)
+	if (!g_CameraMode)
 	{
-		lastX = fxpos;
-		lastY = fypos;
-		firstMouse = false;
+		return;
 	}
 
-	float xoffset = fxpos - lastX;
-	float yoffset = lastY - fypos; // Reversed since y-axis coordinates go from bottom to top.
+	float fxpos = (float)xpos;
+	float fypos = (float)ypos;
 
-	lastX = fxpos;
-	lastY = fypos;
+	if (!g_MouseLastPositionInitialized)
+	{
+		g_MouseLastX = fxpos;
+		g_MouseLastY = fypos;
+		g_MouseLastPositionInitialized = true;
+	}
 
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	float xoffset = fxpos - g_MouseLastX;
+	float yoffset = g_MouseLastY - fypos; // Reversed since y-axis coordinates go from bottom to top.
+
+	g_MouseLastX = fxpos;
+	g_MouseLastY = fypos;
+
+	g_Camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	if (!cameraMode)
+	if (!g_CameraMode)
+	{
 		return;
+	}
 
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
+	g_Camera.ProcessMouseScroll((float)yoffset);
 }
 
-void initImGui(GLFWwindow* window);
-void newImGuiFrame();
-void renderImGuiFrame();
-void shutdownImGui();
-
-void processInput(GLFWwindow* window)
+void ProcessInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
 
-	cameraMode = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
+	g_CameraMode = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
 
-	if (!cameraMode)
+	if (!g_CameraMode)
+	{
 		return;
+	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+	{
+		g_Camera.ProcessKeyboard(FORWARD, g_DeltaTime);
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	{
+		g_Camera.ProcessKeyboard(BACKWARD, g_DeltaTime);
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
+	{
+		g_Camera.ProcessKeyboard(LEFT, g_DeltaTime);
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+	{
+		g_Camera.ProcessKeyboard(RIGHT, g_DeltaTime);
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		camera.ProcessKeyboard(UP, deltaTime);
+	{
+		g_Camera.ProcessKeyboard(UP, g_DeltaTime);
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		camera.ProcessKeyboard(DOWN, deltaTime);
+	{
+		g_Camera.ProcessKeyboard(DOWN, g_DeltaTime);
+	}
 }
+
+void InitImGui(GLFWwindow* window);
+void NewImGuiFrame();
+void RenderImGuiFrame();
+void ShutdownImGui();
 
 int main()
 {
@@ -206,7 +233,7 @@ int main()
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Gloom", nullptr, nullptr);
 	if (!window)
 	{
-		gLogErrorMessageForKey("main", "Failed to create GLFW window.");
+		gLogErrorMessageForKey(LOGGER_KEY, ERR_MSG_GLFW_WINDOW_CREATION_FAILED);
 
 		glfwTerminate();
 
@@ -223,18 +250,18 @@ int main()
 	// glfwGetProcAddress gives us the correct OpenGL function pointers based on the OS.
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		gLogErrorMessageForKey("main", "Failed to initialize GLAD.");
+		gLogErrorMessageForKey(LOGGER_KEY, ERR_MSG_GLAD_INITIALIZATION_FAILED);
 
 		glfwTerminate();
 
 		return -1;
 	}
 
-	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-	glfwSetCursorPosCallback(window, cursorPosCallback);
-	glfwSetScrollCallback(window, scrollCallback);
+	glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+	glfwSetCursorPosCallback(window, CursorPosCallback);
+	glfwSetScrollCallback(window, ScrollCallback);
 
-	initImGui(window);
+	InitImGui(window);
 
 	// --- Graphics Engine ---
 
@@ -568,38 +595,42 @@ int main()
 		// --- Pre-frame stuff ---
 
 		// Update deltaTime and lastFrame.
-		float currentFrame = static_cast<float>(glfwGetTime());
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		float currentFrame = (float)glfwGetTime();
+		g_DeltaTime = currentFrame - g_LastFrameTime;
+		g_LastFrameTime = currentFrame;
 
 		/* Checks if any events are triggered (e.g., keyboard input, mouse mouvement),
 		updates the window state and calls the corresponding functions. */
 		glfwPollEvents();
 
-		processInput(window);
+		ProcessInput(window);
 
-		if (cameraMode)
+		if (g_CameraMode)
+		{
 			/* Tell GLFW that it should hide the cursor and capture it. Capturing a cursor
 			means that, once the application has focus, the mouse cursor stays within the
 			center of the window (unless the application loses focus or quits). */
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
 		else
+		{
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
 
-		newImGuiFrame();
+		NewImGuiFrame();
 
 		graphicsEngine.StartFrame();
 
 		// --- View and projection transformation matrices ---
 
 		/* Here, we update our matrices UBO data with the new matrices' data. */
-		viewTransform = camera.GetViewMatrix();
-		skyboxTransform = camera.GetSkyboxMatrix();
-		projectionTransform = camera.GetProjectionMatrix();
+		viewTransform = g_Camera.GetViewMatrix();
+		skyboxTransform = g_Camera.GetSkyboxMatrix();
+		projectionTransform = g_Camera.GetProjectionMatrix();
 		matricesGlobalData->SendToDevice();
 
 		/* Here, we update our camera UBO data with the new camera's data. */
-		cameraPosition = camera.GetPosition();
+		cameraPosition = g_Camera.GetPosition();
 		cameraGlobalData->SendToDevice();
 
 		/* Here, we update our lights UBO data with the new lights' data. */
@@ -627,7 +658,7 @@ int main()
 
 		// --- Post-frame stuff ---
 
-		renderImGuiFrame();
+		RenderImGuiFrame();
 
 		/* Rendering applications often have two buffers: the back and the front buffers.
 		The front buffer is what is currently displayed in the viewport and the back buffer
@@ -637,34 +668,34 @@ int main()
 		glfwSwapBuffers(window);
 	}
 
-	shutdownImGui();
+	ShutdownImGui();
 
 	glfwTerminate();
 
 	return 0;
 }
 
-void initImGui(GLFWwindow* window)
+void InitImGui(GLFWwindow* window)
 {
 	ImGui::CreateContext();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-void newImGuiFrame()
+void NewImGuiFrame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
 
-void renderImGuiFrame()
+void RenderImGuiFrame()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void shutdownImGui()
+void ShutdownImGui()
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
