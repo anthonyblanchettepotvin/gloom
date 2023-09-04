@@ -246,6 +246,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\util\ContainerUtils.hpp" />
+    <ClInclude Include="src\engine\util\FileUtils.hpp" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlTextureAttachment.h" />
     <ClInclude Include="src\engine\EngineHelpers.h" />
     <ClInclude Include="src\engine\util\logging\LoggerRepository.h" />

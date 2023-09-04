@@ -36,10 +36,6 @@ private:
 
 	std::string GenerateTextureName(const std::string& texturePath) const;
 
-	std::string ExtractDirectoryFromFilePath(const std::string& filePath) const;
-	std::string ExtractFileNameFromFilePath(const std::string& filePath) const;
-	std::string EraseFileExtensionFromFileName(const std::string& fileName) const;
-
 	TextureImporter& m_TextureImporter;
 	ShaderRegistry& m_ShaderRegistry;
 

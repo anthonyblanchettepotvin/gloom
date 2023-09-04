@@ -19,6 +19,7 @@
 #include "../../../engine/graphics/shader/Shader.h"
 #include "../../../engine/graphics/shader/ShaderRegistry.h"
 #include "../../../engine/graphics/texture/Texture.h"
+#include "../../../engine/util/FileUtils.hpp"
 
 #include "../texture/TextureImporter.h"
 
@@ -45,7 +46,7 @@ std::unique_ptr<Object> ModelImporter::ImportObject(const std::string& assetName
 		return nullptr;
 	}
 
-	m_Directory = ExtractDirectoryFromFilePath(filePath);
+	m_Directory = FileUtils::ExtractDirectoryFromFilePath(filePath);
 
 	std::vector<std::unique_ptr<Mesh>> meshes;
 
@@ -236,42 +237,9 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(const aiMaterial& ma
 
 std::string ModelImporter::GenerateTextureName(const std::string& texturePath) const
 {
-	std::string textureFileName = ExtractFileNameFromFilePath(texturePath);
-	std::string textureNameWithoutExtension = EraseFileExtensionFromFileName(textureFileName);
+	std::string textureFileName = FileUtils::ExtractFileNameFromFilePath(texturePath);
+	std::string textureNameWithoutExtension = FileUtils::EraseFileExtensionFromFileName(textureFileName);
 	std::string textureName = m_AssetName + "_" + textureNameWithoutExtension;
 
 	return textureName;
-}
-
-std::string ModelImporter::ExtractDirectoryFromFilePath(const std::string& filePath) const
-{
-	size_t lastSeparatorPosition = filePath.find_last_of("/\\");
-
-	return filePath.substr(0, lastSeparatorPosition);
-}
-
-std::string ModelImporter::ExtractFileNameFromFilePath(const std::string& filePath) const
-{
-	size_t lastSeparatorPosition = filePath.find_last_of("/\\");
-	if (lastSeparatorPosition != std::string::npos)
-	{
-		std::string fileName = filePath.substr(lastSeparatorPosition + 1);
-
-		return fileName;
-	}
-
-	return filePath;
-}
-
-std::string ModelImporter::EraseFileExtensionFromFileName(const std::string& fileName) const
-{
-	size_t lastDotPosition = fileName.find_last_of('.');
-	if (lastDotPosition != std::string::npos)
-	{
-		std::string fileNameWithoutFileExtension = fileName.substr(0, lastDotPosition);
-
-		return fileNameWithoutFileExtension;
-	}
-
-	return fileName;
 }
