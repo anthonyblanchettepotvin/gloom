@@ -1,7 +1,5 @@
 #include "ImGuiWorldTool.h"
 
-#include <cassert>
-
 #include "../../../vendor/imgui/imgui.h"
 
 #include "../../../application/ApplicationManager.h"
@@ -17,6 +15,7 @@
 
 #define LOADED_WORLD_COMBO_LABEL "Loaded World"
 #define LOADED_WORLD_COMBO_DEFAULT_PREVIEW_VALUE "None"
+#define LOADED_WORLD_COMBO_UNNAMED_PREVIEW_VALUE "Unnamed"
 
 ImGuiWorldTool::ImGuiWorldTool(ApplicationManager& applicationManager, AssetManager& assetManager, GameManager& gameManager)
 	: m_ApplicationManager(applicationManager), m_AssetManager(assetManager), m_GameManager(gameManager)
@@ -44,10 +43,14 @@ void ImGuiWorldTool::RenderLoadedWorldCombo()
 	if (loadedWorld)
 	{
 		Asset* worldAsset = m_AssetManager.FindAssetByObjectId(loadedWorld->GetId());
-
-		assert(worldAsset != nullptr);
-
-		comboPreviewValue = worldAsset->GetName();
+		if (worldAsset)
+		{
+			comboPreviewValue = worldAsset->GetName();
+		}
+		else
+		{
+			comboPreviewValue = LOADED_WORLD_COMBO_UNNAMED_PREVIEW_VALUE;
+		}
 	}
 
 	if (ImGui::BeginCombo(LOADED_WORLD_COMBO_LABEL, comboPreviewValue.c_str()))
@@ -55,26 +58,23 @@ void ImGuiWorldTool::RenderLoadedWorldCombo()
 		auto assets = m_AssetManager.FindAssetsByObjectType(ObjectType(typeid(World)));
 		for (const auto& asset : assets)
 		{
-			assert(asset != nullptr);
+			if (!asset)
+			{
+				continue;
+			}
 
-			World* world = dynamic_cast<World*>(asset->GetObject());
-
-			assert(world != nullptr);
-
-			RenderLoadedWorldComboOption(*world);
+			RenderLoadedWorldComboOption(*asset);
 		}
 
 		ImGui::EndCombo();
 	}
 }
 
-void ImGuiWorldTool::RenderLoadedWorldComboOption(World& world)
+void ImGuiWorldTool::RenderLoadedWorldComboOption(Asset& asset)
 {
-	Asset* worldAsset = m_AssetManager.FindAssetByObjectId(world.GetId());
+	World* world = dynamic_cast<World*>(asset.GetObject());
 
-	assert(worldAsset != nullptr);
-
-	if (ImGui::Selectable(worldAsset->GetName().c_str(), IsWorldLoaded(world)))
+	if (ImGui::Selectable(asset.GetName().c_str(), m_GameManager.IsWorldLoaded(world)))
 	{
 		m_GameManager.LoadWorld(world);
 	}
@@ -91,7 +91,10 @@ void ImGuiWorldTool::RenderActorsTree()
 	auto actors = loadedWorld->GetActors();
 	for (const auto& actor : actors)
 	{
-		assert(actor != nullptr);
+		if (!actor)
+		{
+			continue;
+		}
 
 		RenderActorTree(*actor);
 	}
@@ -104,7 +107,7 @@ void ImGuiWorldTool::RenderActorTree(Actor& actor)
 		| ImGuiTreeNodeFlags_SpanAvailWidth
 		| ImGuiTreeNodeFlags_Leaf;
 
-	if (IsObjectSelected(actor))
+	if (m_ApplicationManager.IsObjectSelected(&actor))
 	{
 		treeNodeFlag |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -113,25 +116,11 @@ void ImGuiWorldTool::RenderActorTree(Actor& actor)
 
 	if (ImGui::IsItemClicked())
 	{
-		m_ApplicationManager.SelectObject(actor);
+		m_ApplicationManager.SelectObject(&actor);
 	}
 
 	if (treeNodeOpened)
 	{
 		ImGui::TreePop();
 	}
-}
-
-bool ImGuiWorldTool::IsWorldLoaded(const World& world) const
-{
-	World* loadedWorld = m_GameManager.GetLoadedWorld();
-
-	return loadedWorld != nullptr && loadedWorld == &world;
-}
-
-bool ImGuiWorldTool::IsObjectSelected(const Object& object) const
-{
-	Object* selectedObject = m_ApplicationManager.GetSelectedObject();
-
-	return selectedObject != nullptr && selectedObject == &object;
 }

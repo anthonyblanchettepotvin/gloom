@@ -34,7 +34,6 @@ private:
 
     void CreateAndSelectAsset();
 
-    bool IsAssetSelected(const Asset& asset) const;
     bool ShouldRenderCreateAssetModal() const;
 
     ApplicationManager& m_ApplicationManager;

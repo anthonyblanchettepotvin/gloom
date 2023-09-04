@@ -1,6 +1,5 @@
 #include "ImGuiActorAdapter.h"
 
-#include <cassert>
 #include <memory>
 
 #include "../../../vendor/imgui/imgui.h"
@@ -22,8 +21,6 @@ void ImGuiActorAdapter::Render()
 
 	for (const auto& component : m_Actor.GetComponents())
 	{
-		assert(component != nullptr);
-
 		std::unique_ptr<ImGuiAdapter> componentAdapter = m_AdapterFactory.CreateAdapter(component);
 		if (!componentAdapter)
 		{

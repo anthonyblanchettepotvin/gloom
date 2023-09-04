@@ -21,15 +21,19 @@ void ImGuiPropertiesTool::Render()
 {
 	ImGui::Begin(PROPERTIES_TOOL_NAME);
 
-	Object* selectedObject = m_ApplicationManager.GetSelectedObject();
-	if (selectedObject)
-	{
-		std::unique_ptr<ImGuiAdapter> selectedObjectAdapter = m_AdapterFactory.CreateAdapter(selectedObject);
-		if (selectedObjectAdapter)
-		{
-			selectedObjectAdapter->Render();
-		}
-	}
+	RenderSelectedObjectProperties();
 
 	ImGui::End();
+}
+
+void ImGuiPropertiesTool::RenderSelectedObjectProperties()
+{
+	Object* selectedObject = m_ApplicationManager.GetSelectedObject();
+	std::unique_ptr<ImGuiAdapter> selectedObjectAdapter = m_AdapterFactory.CreateAdapter(selectedObject);
+	if (!selectedObjectAdapter)
+	{
+		return;
+	}
+
+	selectedObjectAdapter->Render();
 }

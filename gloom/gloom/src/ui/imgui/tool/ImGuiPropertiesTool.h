@@ -12,6 +12,8 @@ public:
 	void Render();
 
 private:
+	void RenderSelectedObjectProperties();
+
 	ImGuiAdapterFactory& m_AdapterFactory;
 
 	ApplicationManager& m_ApplicationManager;

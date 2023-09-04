@@ -516,7 +516,7 @@ int main()
 	world->SpawnActor(pointLightActor);
 	world->SpawnActor(directionalLightActor);
 
-	gameManager.LoadWorld(*world);
+	gameManager.LoadWorld(world);
 
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
 	block that matches a UBO and is bound to it will share its data. This is handy,

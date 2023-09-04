@@ -22,6 +22,11 @@ ImGuiAdapterFactory::ImGuiAdapterFactory(GraphicsEngine& graphicsEngine)
 
 std::unique_ptr<ImGuiAdapter> ImGuiAdapterFactory::CreateAdapter(Object* object)
 {
+	if (!object)
+	{
+		return nullptr;
+	}
+
 	if (Actor* actor = dynamic_cast<Actor*>(object))
 	{
 		return std::make_unique<ImGuiActorAdapter>(*this, *actor);

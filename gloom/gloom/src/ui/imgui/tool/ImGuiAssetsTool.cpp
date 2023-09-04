@@ -8,6 +8,7 @@
 #include "../../../engine/asset/Asset.h"
 #include "../../../engine/asset/AssetManager.h"
 #include "../../../engine/asset/AssetDescriptor.h"
+#include "../../../engine/util/ContainerUtils.hpp"
 
 #include "../ImGuiUtils.hpp"
 
@@ -107,13 +108,15 @@ void ImGuiAssetsTool::RenderAssetsTab(const std::string& label, const std::vecto
             ImGui::TableSetupScrollFreeze(0, 1); // Makes the headers row always visible.
             ImGui::TableHeadersRow();
 
+            std::vector<Asset*> sanitizedAssets = ContainerUtils::EraseNullptrOccurrencesFromVector(assets);
+
             ImGuiListClipper clipper;
-            clipper.Begin(assets.size());
+            clipper.Begin(sanitizedAssets.size());
             while (clipper.Step())
             {
                 for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++)
                 {
-                    auto asset = assets[row];
+                    auto asset = sanitizedAssets[row];
 
                     assert(asset != nullptr);
                     
@@ -135,11 +138,9 @@ void ImGuiAssetsTool::RenderAssetsTabRow(Asset& asset)
 
     ImGui::TableGetRowIndex();
     ImGui::TableNextColumn();
-    if (ImGui::Selectable(asset.GetId().ToString().c_str(), IsAssetSelected(asset), ImGuiSelectableFlags_SpanAllColumns))
+    if (ImGui::Selectable(asset.GetId().ToString().c_str(), m_ApplicationManager.IsObjectSelected(asset.GetObject()), ImGuiSelectableFlags_SpanAllColumns))
     {
-        assert(asset.GetObject() != nullptr);
-
-        m_ApplicationManager.SelectObject(*asset.GetObject());
+        m_ApplicationManager.SelectObject(asset.GetObject());
     }
 
     ImGui::TableNextColumn();
@@ -255,14 +256,7 @@ void ImGuiAssetsTool::CreateAndSelectAsset()
         return;
     }
 
-    m_ApplicationManager.SelectObject(*newAsset->GetObject());
-}
-
-bool ImGuiAssetsTool::IsAssetSelected(const Asset& asset) const
-{
-    Object* selectedObject = m_ApplicationManager.GetSelectedObject();
-
-    return selectedObject != nullptr && selectedObject == asset.GetObject();
+    m_ApplicationManager.SelectObject(newAsset->GetObject());
 }
 
 bool ImGuiAssetsTool::ShouldRenderCreateAssetModal() const

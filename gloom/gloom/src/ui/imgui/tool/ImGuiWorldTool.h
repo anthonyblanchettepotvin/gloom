@@ -2,6 +2,7 @@
 
 class Actor;
 class ApplicationManager;
+class Asset;
 class AssetManager;
 class GameManager;
 class Object;
@@ -16,13 +17,10 @@ public:
 
 private:
 	void RenderLoadedWorldCombo();
-	void RenderLoadedWorldComboOption(World& world);
+	void RenderLoadedWorldComboOption(Asset& world);
 
 	void RenderActorsTree();
 	void RenderActorTree(Actor& actor);
-
-	bool IsWorldLoaded(const World& world) const;
-	bool IsObjectSelected(const Object& object) const;
 
 	ApplicationManager& m_ApplicationManager;
 	AssetManager& m_AssetManager;

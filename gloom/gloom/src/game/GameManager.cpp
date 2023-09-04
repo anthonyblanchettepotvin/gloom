@@ -1,9 +1,11 @@
 #include "GameManager.h"
 
-void GameManager::LoadWorld(World& world)
+void GameManager::LoadWorld(World* world)
 {
-	if (m_LoadedWorld == &world)
-		return;
+	m_LoadedWorld = world;
+}
 
-	m_LoadedWorld = &world;
+bool GameManager::IsWorldLoaded(World* world)
+{
+	return m_LoadedWorld != nullptr && world != nullptr && m_LoadedWorld == world;
 }

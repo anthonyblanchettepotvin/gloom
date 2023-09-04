@@ -5,7 +5,9 @@ class Object;
 class ApplicationManager
 {
 public:
-	void SelectObject(Object& object);
+	void SelectObject(Object* object);
+
+	bool IsObjectSelected(Object* object);
 
 	Object* GetSelectedObject() { return m_SelectedObject; }
 

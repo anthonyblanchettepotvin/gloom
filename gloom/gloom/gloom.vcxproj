@@ -245,6 +245,7 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\util\ContainerUtils.hpp" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlTextureAttachment.h" />
     <ClInclude Include="src\engine\EngineHelpers.h" />
     <ClInclude Include="src\engine\util\logging\LoggerRepository.h" />
