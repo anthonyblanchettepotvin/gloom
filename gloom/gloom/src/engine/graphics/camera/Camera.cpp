@@ -2,6 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "../../math/Math.hpp"
+
 Camera::Camera(const glm::vec3& position, size_t viewWidth, size_t viewHeight)
     : m_Position(position), m_ViewWidth(viewWidth), m_ViewHeight(viewHeight)
 {
@@ -74,14 +76,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
     and also not below -89 degrees. */
     if (constrainPitch)
     {
-        if (m_Pitch < m_MinPitch)
-        {
-            m_Pitch = m_MinPitch;
-        }
-        else if (m_Pitch > m_MaxPitch)
-        {
-            m_Pitch = m_MaxPitch;
-        }
+        m_Pitch = Math::Clamp(m_Pitch, m_MinPitch, m_MaxPitch);
     }
 
     Update();
@@ -90,15 +85,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 void Camera::ProcessMouseScroll(float yoffset)
 {
     m_FieldOfView -= (float)yoffset;
-
-    if (m_FieldOfView < m_MinFieldOfView)
-    {
-        m_FieldOfView = m_MinFieldOfView;
-    }
-    else if (m_FieldOfView > m_MaxFieldOfView)
-    {
-        m_FieldOfView = m_MaxFieldOfView;
-    }
+    m_FieldOfView = Math::Clamp(m_FieldOfView, m_MinFieldOfView, m_MaxFieldOfView);
 }
 
 void Camera::Update()

@@ -245,6 +245,7 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\math\Math.hpp" />
     <ClInclude Include="src\engine\util\ContainerUtils.hpp" />
     <ClInclude Include="src\engine\util\FileUtils.hpp" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlTextureAttachment.h" />

@@ -1,8 +1,11 @@
 #include "GlGlobalData.h"
 
 #include <cassert>
+#include <stdexcept>
 
 #include <glad/glad.h>
+
+#include "../../../engine/EngineHelpers.h"
 
 #include "GlGlobalDataType.h"
 
@@ -27,6 +30,11 @@ void GlGlobalData::SendToDevice()
 
 void GlGlobalData::AddDataReference(const std::string& name, std::unique_ptr<GlGlobalDataType>& reference)
 {
+    if (!reference)
+    {
+        throw std::invalid_argument(ARGUMENT_IS_NULLPTR(reference));
+    }
+
     m_References[name] = std::move(reference);
     m_ReferencesNameOrdered.push_back(name);
 }
@@ -67,8 +75,7 @@ unsigned int GlGlobalData::GetUniformBufferSize() const
 
         assert(currentReference != nullptr);
 
-        unsigned int offset = currentReference->GetBaseAlignment() == 0 ? currentReference->GetBaseAlignment() : ceil(size / currentReference->GetBaseAlignment()) * currentReference->GetBaseAlignment();
-        size = offset + currentReference->GetSize();
+        currentReference->AddAlignedSizeToTotalSize(size);
     }
 
     return size;

@@ -4,6 +4,7 @@
 
 #include "../../../engine/graphics/lighting/DirectionalLight.h"
 #include "../../../engine/graphics/lighting/PointLight.h"
+#include "../../../engine/math/Math.hpp"
 
 GlGlobalDataMat4::GlGlobalDataMat4(glm::mat4& value)
 	: m_Value(value)
@@ -12,7 +13,7 @@ GlGlobalDataMat4::GlGlobalDataMat4(glm::mat4& value)
 
 void GlGlobalDataMat4::SendToDevice(unsigned int& offset)
 {
-	offset = GetBaseAlignment() == 0 ? GetBaseAlignment() : ceil((double)offset / GetBaseAlignment()) * GetBaseAlignment();
+	offset = Math::Align(offset, GetBaseAlignment());
 
 	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &m_Value);
 
@@ -36,7 +37,7 @@ GlGlobalDataVec3::GlGlobalDataVec3(glm::vec3& value)
 
 void GlGlobalDataVec3::SendToDevice(unsigned int& offset)
 {
-	offset = GetBaseAlignment() == 0 ? GetBaseAlignment() : ceil((double)offset / GetBaseAlignment()) * GetBaseAlignment();
+	offset = Math::Align(offset, GetBaseAlignment());
 
 	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &m_Value);
 
@@ -60,7 +61,7 @@ GlGlobalDataFloat::GlGlobalDataFloat(float& value)
 
 void GlGlobalDataFloat::SendToDevice(unsigned int& offset)
 {
-	offset = GetBaseAlignment() == 0 ? GetBaseAlignment() : ceil((double)offset / GetBaseAlignment()) * GetBaseAlignment();
+	offset = Math::Align(offset, GetBaseAlignment());
 
 	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &m_Value);
 
@@ -101,10 +102,13 @@ unsigned int GlGlobalDataDirectionalLight::GetBaseAlignment() const
 
 unsigned int GlGlobalDataDirectionalLight::GetSize() const
 {
-	return m_DirectionGlobalData.GetSize()
-		+ m_AmbientColorGlobalData.GetSize()
-		+ m_DiffuseColorGlobalData.GetSize()
-		+ m_SpecularColorGlobalData.GetSize() + 12; // FIXME: Avoid hard-coding the total alignment value
+	unsigned int size = 0;
+	m_DirectionGlobalData.AddAlignedSizeToTotalSize(size);
+	m_AmbientColorGlobalData.AddAlignedSizeToTotalSize(size);
+	m_DiffuseColorGlobalData.AddAlignedSizeToTotalSize(size);
+	m_SpecularColorGlobalData.AddAlignedSizeToTotalSize(size);
+
+	return size;
 }
 
 GlGlobalDataPointLight::GlGlobalDataPointLight(PointLight& value)
@@ -137,11 +141,14 @@ unsigned int GlGlobalDataPointLight::GetBaseAlignment() const
 
 unsigned int GlGlobalDataPointLight::GetSize() const
 {
-	return m_PositionGlobalData.GetSize()
-		+ m_AmbientColorGlobalData.GetSize()
-		+ m_DiffuseColorGlobalData.GetSize()
-		+ m_SpecularColorGlobalData.GetSize()
-		+ m_AttenuationConstantGlobalData.GetSize()
-		+ m_AttenuationLinearGlobalData.GetSize()
-		+ m_AttenuationQuadraticGlobalData.GetSize() + 12; // FIXME: Avoid hard-coding the total alignment value
+	unsigned int size = 0;
+	m_PositionGlobalData.AddAlignedSizeToTotalSize(size);
+	m_AmbientColorGlobalData.AddAlignedSizeToTotalSize(size);
+	m_DiffuseColorGlobalData.AddAlignedSizeToTotalSize(size);
+	m_SpecularColorGlobalData.AddAlignedSizeToTotalSize(size);
+	m_AttenuationConstantGlobalData.AddAlignedSizeToTotalSize(size);
+	m_AttenuationLinearGlobalData.AddAlignedSizeToTotalSize(size);
+	m_AttenuationQuadraticGlobalData.AddAlignedSizeToTotalSize(size);
+
+	return size;
 }
