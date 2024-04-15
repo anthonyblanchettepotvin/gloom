@@ -2,6 +2,8 @@
 
 #include "../../../engine/graphics/shader/Shader.h"
 
+class GlGlobalData;
+
 class GlShader : public Shader
 {
 public:
@@ -18,7 +20,7 @@ public:
 	void SetFloatMat3(const std::string& name, const glm::mat3& value) override;
 	void SetFloatMat4(const std::string& name, const glm::mat4& value) override;
 
-	void BindToGlobalData(GlobalData& globalData) override;
+	void BindToUniformBuffer(GlGlobalData& globalData);
 
 	void InitializeMaterialTemplate() override;
 

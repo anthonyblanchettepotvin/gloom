@@ -1,30 +1,33 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 
 #include "../../../engine/graphics/engine/GraphicsEngine.h"
 #include "../../../engine/object/ObjectID.h"
 
-class Material;
-class MaterialAttribute;
+class Camera;
 class CubemapMaterialAttribute;
+class DirectionalLight;
 class FloatMaterialAttribute;
+class GlCameraUniformBuffer;
 class GlCubemap;
+class GlDirectionalLightsUniformBuffer;
 class GlFrame;
 class GlFramebuffer;
+class GlMatricesUniformBuffer;
 class GlMesh;
+class GlPointLightsUniformBuffer;
 class GlRenderbufferAttachment;
 class GlShader;
 class GlSkybox;
 class GlSprite;
 class GlTexture;
 class GlTextureAttachment;
+class Material;
+class MaterialAttribute;
+class PointLight;
 class TextureMaterialAttribute;
-
-class GlMatricesUniformBuffer;
-class GlDirectionalLightsUniformBuffer;
-class GlPointLightsUniformBuffer;
-class GlCameraUniformBuffer;
 
 class GlGraphicsEngine : public GraphicsEngine
 {
@@ -40,14 +43,19 @@ public:
 	std::unique_ptr<Shader> CreateShader() override;
 	std::unique_ptr<Shader> ImportShader(const std::string& filePath) override;
 
-	void Render(Mesh& mesh) override;
-	void Render(Skybox& skybox) override;
-	void Render(Sprite& sprite) override;
+	void RegisterLight(DirectionalLight& directionalLight) override;
+	void RegisterLight(PointLight& pointLight) override;
+
+	void Render(const Camera&, Mesh& mesh) override;
+	void Render(const Camera&, Skybox& skybox) override;
+	void Render(const Camera&, Sprite& sprite) override;
 	
 	void* GetTextureId(const Texture& texture) override;
 
 private:
 	void InitializeGlobalData();
+	void BindShaderToUniformBuffers(GlShader& shader);
+	void UpdateGlobalData(const Camera& camera);
 
 	void ApplyMaterial(Material& material);
 	void ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute);
@@ -64,6 +72,9 @@ private:
 	std::unique_ptr<GlDirectionalLightsUniformBuffer> m_DirectionalLightsUniformBuffer = nullptr;
 	std::unique_ptr<GlPointLightsUniformBuffer> m_PointLightsUniformBuffer = nullptr;
 	std::unique_ptr<GlCameraUniformBuffer> m_CameraUniformBuffer = nullptr;
+
+	std::vector<DirectionalLight*> m_DirectionalLights;
+	std::vector<PointLight*> m_PointLights;
 
 	std::unordered_map<ObjectID, std::unique_ptr<GlCubemap>> m_GlCubemaps;
 	std::unordered_map<ObjectID, std::unique_ptr<GlMesh>> m_GlMeshes;

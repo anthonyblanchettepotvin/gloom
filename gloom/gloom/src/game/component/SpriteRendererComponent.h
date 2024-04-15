@@ -9,7 +9,7 @@ class SpriteRendererComponent : public RendererComponent
 public:
 	SpriteRendererComponent(GraphicsEngine& graphicsEngine, Sprite* sprite);
 
-	void Render() override;
+	void Render(const Camera& camera) override;
 
 	const Sprite* GetSprite() const { return m_Sprite; }
 

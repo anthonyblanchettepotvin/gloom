@@ -10,6 +10,8 @@ void World::SpawnActor(Actor& actor)
 	if (it == m_Actors.end())
 	{
 		m_Actors.push_back(&actor);
+
+		actor.OnSpawned();
 	}
 	else
 	{

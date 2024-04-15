@@ -9,13 +9,16 @@
 #include "../../engine/object/Object.h"
 
 class ActorComponent;
+class Camera;
 
 class Actor : public Object
 {
 public:
 	Actor(const std::string& name);
 
-	void Render();
+	void OnSpawned();
+
+	void Render(const Camera& camera);
 
 	void AddComponent(std::unique_ptr<ActorComponent>& component);
 

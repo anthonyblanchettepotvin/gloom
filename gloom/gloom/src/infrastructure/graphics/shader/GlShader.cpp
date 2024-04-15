@@ -15,8 +15,6 @@
 
 #define MATERIAL_STRUCT_NAME "material"
 
-#define EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE "GlShader expects to be passed a GlGlobalData instance."
-
 GlShader::GlShader(const std::string& vertexShader, const std::string& fragmentShader)
 	: m_VertexShader(vertexShader), m_FragmentShader(fragmentShader)
 {
@@ -63,18 +61,9 @@ void GlShader::SetFloatMat4(const std::string& name, const glm::mat4& value)
 	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void GlShader::BindToGlobalData(GlobalData& globalData)
+void GlShader::BindToUniformBuffer(GlGlobalData& globalData)
 {
-	try
-	{
-		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-
-		glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, glGlobalData.GetName().c_str()), glGlobalData.GetIndex());
-	}
-	catch (std::bad_cast e)
-	{
-		gLogErrorMessage(EXPECTS_GL_GLOBAL_DATA_ERROR_MESSAGE);
-	}
+	glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, globalData.GetName().c_str()), globalData.GetIndex());
 }
 
 void GlShader::InitializeMaterialTemplate()

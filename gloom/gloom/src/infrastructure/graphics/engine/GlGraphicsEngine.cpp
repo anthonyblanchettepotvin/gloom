@@ -3,7 +3,10 @@
 #include <glad/glad.h>
 
 #include "../../../engine/EngineGlobals.h"
+#include "../../../engine/graphics/camera/Camera.h"
 #include "../../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/lighting/DirectionalLight.h"
+#include "../../../engine/graphics/lighting/PointLight.h"
 #include "../../../engine/graphics/material/Material.h"
 #include "../../../engine/graphics/material/MaterialAttribute.h"
 #include "../../../engine/graphics/material/MaterialAttributes.h"
@@ -32,6 +35,8 @@
 #include "../texture/GlTexture.h"
 
 #define EX_MSG_FRAMEBUFFER_IS_INCOMPLETE "Framebuffer is incomplete."
+#define ERR_MSG_DIRECTIONAL_LIGHT_ALREADY_REGISTERED "Directional light already registered."
+#define ERR_MSG_POINT_LIGHT_ALREADY_REGISTERED "Point light already registered."
 #define ERR_MSG_EXPECTS_GL_GLOBAL_DATA "GlGraphicsEngine expects to be passed a GlGlobalData instance."
 #define ERR_MSG_EXPECTS_GL_SHADER "GlGraphicsEngine expects GlShader instance."
 #define ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED "Material attribute type is not supported."
@@ -161,7 +166,33 @@ std::unique_ptr<Shader> GlGraphicsEngine::ImportShader(const std::string& filePa
 	return GlShaderImporter().Import(filePath);
 }
 
-void GlGraphicsEngine::Render(Mesh& mesh)
+void GlGraphicsEngine::RegisterLight(DirectionalLight& directionalLight)
+{
+	auto it = std::find(m_DirectionalLights.begin(), m_DirectionalLights.end(), &directionalLight);
+	if (it == m_DirectionalLights.end())
+	{
+		m_DirectionalLights.push_back(&directionalLight);
+	}
+	else
+	{
+		gLogErrorMessage(ERR_MSG_DIRECTIONAL_LIGHT_ALREADY_REGISTERED);
+	}
+}
+
+void GlGraphicsEngine::RegisterLight(PointLight& pointLight)
+{
+	auto it = std::find(m_PointLights.begin(), m_PointLights.end(), &pointLight);
+	if (it == m_PointLights.end())
+	{
+		m_PointLights.push_back(&pointLight);
+	}
+	else
+	{
+		gLogErrorMessage(ERR_MSG_POINT_LIGHT_ALREADY_REGISTERED);
+	}
+}
+
+void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh)
 {
 	if (!mesh.GetMaterial() || !mesh.GetMaterial()->GetShader())
 	{
@@ -182,12 +213,14 @@ void GlGraphicsEngine::Render(Mesh& mesh)
 
 	mesh.GetMaterial()->GetShader()->SetFloatMat4("modelXform", mesh.GetTransform());
 
+	BindShaderToUniformBuffers(*(GlShader*)mesh.GetMaterial()->GetShader());
+	UpdateGlobalData(camera);
 	glMesh.Render();
 
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(Skybox& skybox)
+void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox)
 {
 	if (!skybox.GetMaterial() || !skybox.GetMaterial()->GetShader())
 	{
@@ -206,12 +239,14 @@ void GlGraphicsEngine::Render(Skybox& skybox)
 
 	ApplyMaterial(*skybox.GetMaterial());
 
+	BindShaderToUniformBuffers(*(GlShader*)skybox.GetMaterial()->GetShader());
+	UpdateGlobalData(camera);
 	glSkybox.Render();
 
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(Sprite& sprite)
+void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite)
 {
 	if (!sprite.GetMaterial() || !sprite.GetMaterial()->GetShader())
 	{
@@ -232,6 +267,8 @@ void GlGraphicsEngine::Render(Sprite& sprite)
 
 	sprite.GetMaterial()->GetShader()->SetFloatMat4("modelXform", sprite.GetTransform());
 
+	BindShaderToUniformBuffers(*(GlShader*)sprite.GetMaterial()->GetShader());
+	UpdateGlobalData(camera);
 	glSprite.Render();
 
 	m_SamplerIndex = 0;
@@ -343,8 +380,101 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const Te
 
 void GlGraphicsEngine::InitializeGlobalData()
 {
+	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
+	block that matches a UBO and is bound to it will share its data. This is handy,
+	since we no longer have to update the uniforms of each shader individually.
+	We can only change the data in the UBO and all the shaders' uniform blocks bound
+	to it will contain the updated data. */
+
+	// Matrices UBO (128 bytes)
+	/*
+	MATRIX		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
+	View		mat4	16				0				64
+	Skybox		mat4	16				64				64
+	Projection	mat4	16				128				64
+	*/
 	m_MatricesUniformBuffer = std::make_unique<GlMatricesUniformBuffer>();
+
+	// Lights UBO (384 bytes)
+	/*
+	ELEMENT			TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
+	Point1			struct	16				0				72
+	Point2			struct	16				80				72
+	Point3			struct	16				160				72
+	Point4			struct	16				240				72
+	Directional		struct	16				320				60
+	*/
+
+	// PointLight struct (72 bytes)
+	/*
+	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
+	position	vec3	16				0				12
+	ambient		vec3	16				16				12
+	diffuse		vec3	16				32				12
+	specular	vec3	16				48				12
+	constant	float	4				60				4
+	linear		float	4				64				4
+	quadratic	float	4				68				4
+	*/
+
+	// DirectionalLight struct (60 bytes)
+	/*
+	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
+	direction	vec3	16				0				12
+	ambient		vec3	16				16				12
+	diffuse		vec3	16				32				12
+	specular	vec3	16				48				12
+	*/
 	m_DirectionalLightsUniformBuffer = std::make_unique<GlDirectionalLightsUniformBuffer>();
 	m_PointLightsUniformBuffer = std::make_unique<GlPointLightsUniformBuffer>();
+
+	// Camera UBO (12 bytes)
+	/*
+	ELEMENT		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
+	camera		struct	16				0				12
+	*/
+
+	// Camera struct (12 bytes)
+	/*
+	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
+	position	vec3	16				0				12
+	*/
 	m_CameraUniformBuffer = std::make_unique<GlCameraUniformBuffer>();
+}
+
+void GlGraphicsEngine::BindShaderToUniformBuffers(GlShader& shader)
+{
+	// TODO: Have the shaders bind themselves to only the necessary UBOs.
+	shader.BindToUniformBuffer(*m_MatricesUniformBuffer);
+	shader.BindToUniformBuffer(*m_DirectionalLightsUniformBuffer);
+	shader.BindToUniformBuffer(*m_PointLightsUniformBuffer);
+	shader.BindToUniformBuffer(*m_CameraUniformBuffer);
+}
+
+void GlGraphicsEngine::UpdateGlobalData(const Camera& camera)
+{
+	/* Here, we update our matrices UBO data with the new matrices' data. */
+	m_MatricesUniformBuffer->SetViewTransform(camera.GetViewMatrix());
+	m_MatricesUniformBuffer->SetSkyboxTransform(camera.GetSkyboxMatrix());
+	m_MatricesUniformBuffer->SetProjectionTransform(camera.GetProjectionMatrix());
+	m_MatricesUniformBuffer->SendToDevice();
+
+	/* Here, we update our lights UBO data with the new lights' data. */
+	// TODO: Support multiple directional lights.
+	if (m_DirectionalLights.size() != 0)
+	{
+		m_DirectionalLightsUniformBuffer->SetDirectionalLight(*m_DirectionalLights[0]);
+	}
+	m_DirectionalLightsUniformBuffer->SendToDevice();
+
+	// TODO: Support multiple point lights.
+	if (m_PointLights.size() != 0)
+	{
+		m_PointLightsUniformBuffer->SetPointLight(*m_PointLights[0]);
+	}
+	m_PointLightsUniformBuffer->SendToDevice();
+
+	/* Here, we update our camera UBO data with the new camera's data. */
+	m_CameraUniformBuffer->SetCameraPosition(camera.GetPosition());
+	m_CameraUniformBuffer->SendToDevice();
 }
