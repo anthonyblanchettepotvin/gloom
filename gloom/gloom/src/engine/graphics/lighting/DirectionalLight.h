@@ -9,15 +9,19 @@ public:
 
 	void SetDirection(const glm::vec3& direction) { m_Direction = direction; }
 	glm::vec3& GetDirection() { return m_Direction; }
+	const glm::vec3& GetDirection() const { return m_Direction; }
 
 	void SetAmbientColor(const glm::vec3& ambientColor) { m_AmbientColor = ambientColor; }
 	glm::vec3& GetAmbientColor() { return m_AmbientColor; }
+	const glm::vec3& GetAmbientColor() const { return m_AmbientColor; }
 
 	void SetDiffuseColor(const glm::vec3& diffuseColor) { m_DiffuseColor = diffuseColor; }
 	glm::vec3& GetDiffuseColor() { return m_DiffuseColor; }
+	const glm::vec3& GetDiffuseColor() const { return m_DiffuseColor; }
 
 	void SetSpecularColor(const glm::vec3& specularColor) { m_SpecularColor = specularColor; }
 	glm::vec3& GetSpecularColor() { return m_SpecularColor; }
+	const glm::vec3& GetSpecularColor() const { return m_SpecularColor; }
 
 private:
 	glm::vec3 m_Direction{ -1.0f };

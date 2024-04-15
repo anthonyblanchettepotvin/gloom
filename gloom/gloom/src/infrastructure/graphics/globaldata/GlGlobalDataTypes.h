@@ -7,80 +7,67 @@
 class DirectionalLight;
 class PointLight;
 
-class GlGlobalDataMat4 : public GlGlobalDataType
+class GlGlobalDataMat4 : public GlGlobalDataType<glm::mat4>
 {
 public:
-	GlGlobalDataMat4(glm::mat4& value);
+	GlGlobalDataMat4();
 
-	void SendToDevice(unsigned int& offset) override;
+	void SendToDevice(const glm::mat4& value, unsigned int& offset) override;
 
 	unsigned int GetBaseAlignment() const override;
 	unsigned int GetSize() const override;
-
-private:
-	glm::mat4& m_Value;
 };
 
-class GlGlobalDataVec3 : public GlGlobalDataType
+class GlGlobalDataVec3 : public GlGlobalDataType<glm::vec3>
 {
 public:
-	GlGlobalDataVec3(glm::vec3& value);
+	GlGlobalDataVec3();
 
-	void SendToDevice(unsigned int& offset) override;
+	void SendToDevice(const glm::vec3& value, unsigned int& offset) override;
 
 	unsigned int GetBaseAlignment() const override;
 	unsigned int GetSize() const override;
-
-private:
-	glm::vec3& m_Value;
 };
 
-class GlGlobalDataFloat : public GlGlobalDataType
+class GlGlobalDataFloat : public GlGlobalDataType<float>
 {
 public:
-	GlGlobalDataFloat(float& value);
+	GlGlobalDataFloat();
 
-	void SendToDevice(unsigned int& offset) override;
+	void SendToDevice(const float& value, unsigned int& offset) override;
 
 	unsigned int GetBaseAlignment() const override;
 	unsigned int GetSize() const override;
-
-private:
-	float& m_Value;
 };
 
-class GlGlobalDataDirectionalLight : public GlGlobalDataType
+class GlGlobalDataDirectionalLight : public GlGlobalDataType<DirectionalLight>
 {
 public:
-	GlGlobalDataDirectionalLight(DirectionalLight& value);
+	GlGlobalDataDirectionalLight();
 
-	void SendToDevice(unsigned int& offset) override;
+	void SendToDevice(const DirectionalLight& value, unsigned int& offset) override;
 
 	unsigned int GetBaseAlignment() const override;
 	unsigned int GetSize() const override;
 
 private:
-	DirectionalLight& m_Value;
-
 	GlGlobalDataVec3 m_DirectionGlobalData;
 	GlGlobalDataVec3 m_AmbientColorGlobalData;
 	GlGlobalDataVec3 m_DiffuseColorGlobalData;
 	GlGlobalDataVec3 m_SpecularColorGlobalData;
 };
 
-class GlGlobalDataPointLight : public GlGlobalDataType
+class GlGlobalDataPointLight : public GlGlobalDataType<PointLight>
 {
 public:
-	GlGlobalDataPointLight(PointLight& value);
-
-	void SendToDevice(unsigned int& offset) override;
+	GlGlobalDataPointLight();
+	
+	void SendToDevice(const PointLight& value, unsigned int& offset) override;
 
 	unsigned int GetBaseAlignment() const override;
 	unsigned int GetSize() const override;
 
 private:
-	PointLight& m_Value;
-
 	GlGlobalDataVec3 m_PositionGlobalData;
 	GlGlobalDataVec3 m_AmbientColorGlobalData;
 	GlGlobalDataVec3 m_DiffuseColorGlobalData;

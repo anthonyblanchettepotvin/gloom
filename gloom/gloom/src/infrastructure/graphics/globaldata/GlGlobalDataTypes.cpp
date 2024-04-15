@@ -6,16 +6,16 @@
 #include "../../../engine/graphics/lighting/PointLight.h"
 #include "../../../engine/math/Math.hpp"
 
-GlGlobalDataMat4::GlGlobalDataMat4(glm::mat4& value)
-	: m_Value(value)
+GlGlobalDataMat4::GlGlobalDataMat4()
 {
 }
 
-void GlGlobalDataMat4::SendToDevice(unsigned int& offset)
+void GlGlobalDataMat4::SendToDevice(const glm::mat4& value, unsigned int& offset)
 {
 	offset = Math::Align(offset, GetBaseAlignment());
 
-	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &m_Value);
+	// TODO: Might need to store the value since in takes a pointer.
+	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &value);
 
 	offset += GetSize();
 }
@@ -30,16 +30,16 @@ unsigned int GlGlobalDataMat4::GetSize() const
 	return sizeof(glm::mat4);
 }
 
-GlGlobalDataVec3::GlGlobalDataVec3(glm::vec3& value)
-	: m_Value(value)
+GlGlobalDataVec3::GlGlobalDataVec3()
 {
 }
 
-void GlGlobalDataVec3::SendToDevice(unsigned int& offset)
+void GlGlobalDataVec3::SendToDevice(const glm::vec3& value, unsigned int& offset)
 {
 	offset = Math::Align(offset, GetBaseAlignment());
 
-	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &m_Value);
+	// TODO: Might need to store the value since in takes a pointer.
+	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &value);
 
 	offset += GetSize();
 }
@@ -54,16 +54,16 @@ unsigned int GlGlobalDataVec3::GetSize() const
 	return sizeof(glm::vec3);
 }
 
-GlGlobalDataFloat::GlGlobalDataFloat(float& value)
-	: m_Value(value)
+GlGlobalDataFloat::GlGlobalDataFloat()
 {
 }
 
-void GlGlobalDataFloat::SendToDevice(unsigned int& offset)
+void GlGlobalDataFloat::SendToDevice(const float& value, unsigned int& offset)
 {
 	offset = Math::Align(offset, GetBaseAlignment());
 
-	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &m_Value);
+	// TODO: Might need to store the value since in takes a pointer.
+	glBufferSubData(GL_UNIFORM_BUFFER, offset, GetSize(), &value);
 
 	offset += GetSize();
 }
@@ -78,21 +78,16 @@ unsigned int GlGlobalDataFloat::GetSize() const
 	return sizeof(float);
 }
 
-GlGlobalDataDirectionalLight::GlGlobalDataDirectionalLight(DirectionalLight& value)
-	: m_Value(value)
-	, m_DirectionGlobalData(value.GetDirection())
-	, m_AmbientColorGlobalData(value.GetAmbientColor())
-	, m_DiffuseColorGlobalData(value.GetDiffuseColor())
-	, m_SpecularColorGlobalData(value.GetSpecularColor())
+GlGlobalDataDirectionalLight::GlGlobalDataDirectionalLight()
 {
 }
 
-void GlGlobalDataDirectionalLight::SendToDevice(unsigned int& offset)
+void GlGlobalDataDirectionalLight::SendToDevice(const DirectionalLight& value, unsigned int& offset)
 {
-	m_DirectionGlobalData.SendToDevice(offset);
-	m_AmbientColorGlobalData.SendToDevice(offset);
-	m_DiffuseColorGlobalData.SendToDevice(offset);
-	m_SpecularColorGlobalData.SendToDevice(offset);
+	m_DirectionGlobalData.SendToDevice(value.GetDirection(), offset);
+	m_AmbientColorGlobalData.SendToDevice(value.GetAmbientColor(), offset);
+	m_DiffuseColorGlobalData.SendToDevice(value.GetDiffuseColor(), offset);
+	m_SpecularColorGlobalData.SendToDevice(value.GetSpecularColor(), offset);
 }
 
 unsigned int GlGlobalDataDirectionalLight::GetBaseAlignment() const
@@ -111,27 +106,19 @@ unsigned int GlGlobalDataDirectionalLight::GetSize() const
 	return size;
 }
 
-GlGlobalDataPointLight::GlGlobalDataPointLight(PointLight& value)
-	: m_Value(value)
-	, m_PositionGlobalData(value.GetPosition())
-	, m_AmbientColorGlobalData(value.GetAmbientColor())
-	, m_DiffuseColorGlobalData(value.GetDiffuseColor())
-	, m_SpecularColorGlobalData(value.GetSpecularColor())
-	, m_AttenuationConstantGlobalData(value.GetAttenuation().Constant)
-	, m_AttenuationLinearGlobalData(value.GetAttenuation().Linear)
-	, m_AttenuationQuadraticGlobalData(value.GetAttenuation().Quadratic)
+GlGlobalDataPointLight::GlGlobalDataPointLight()
 {
 }
 
-void GlGlobalDataPointLight::SendToDevice(unsigned int& offset)
+void GlGlobalDataPointLight::SendToDevice(const PointLight& value, unsigned int& offset)
 {
-	m_PositionGlobalData.SendToDevice(offset);
-	m_AmbientColorGlobalData.SendToDevice(offset);
-	m_DiffuseColorGlobalData.SendToDevice(offset);
-	m_SpecularColorGlobalData.SendToDevice(offset);
-	m_AttenuationConstantGlobalData.SendToDevice(offset);
-	m_AttenuationLinearGlobalData.SendToDevice(offset);
-	m_AttenuationQuadraticGlobalData.SendToDevice(offset);
+	m_PositionGlobalData.SendToDevice(value.GetPosition(), offset);
+	m_AmbientColorGlobalData.SendToDevice(value.GetAmbientColor(), offset);
+	m_DiffuseColorGlobalData.SendToDevice(value.GetDiffuseColor(), offset);
+	m_SpecularColorGlobalData.SendToDevice(value.GetSpecularColor(), offset);
+	m_AttenuationConstantGlobalData.SendToDevice(value.GetAttenuation().Constant, offset);
+	m_AttenuationLinearGlobalData.SendToDevice(value.GetAttenuation().Linear, offset);
+	m_AttenuationQuadraticGlobalData.SendToDevice(value.GetAttenuation().Quadratic, offset);
 }
 
 unsigned int GlGlobalDataPointLight::GetBaseAlignment() const

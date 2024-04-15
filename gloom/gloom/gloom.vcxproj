@@ -146,6 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\graphics\globaldata\GlMatricesUniformBuffer.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\globaldata\GlDirectionalLightsUniformBuffer.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\globaldata\GlPointLightsUniformBuffer.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\globaldata\GlCameraUniformBuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlTextureAttachment.cpp" />
     <ClCompile Include="src\engine\util\logging\LoggerRepository.cpp" />
     <ClCompile Include="src\ui\imgui\tool\ImGuiLogTool.cpp" />
@@ -245,6 +249,10 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\graphics\globaldata\GlMatricesUniformBuffer.h" />
+    <ClInclude Include="src\infrastructure\graphics\globaldata\GlDirectionalLightsUniformBuffer.h" />
+    <ClInclude Include="src\infrastructure\graphics\globaldata\GlPointLightsUniformBuffer.h" />
+    <ClInclude Include="src\infrastructure\graphics\globaldata\GlCameraUniformBuffer.h" />
     <ClInclude Include="src\engine\math\Math.hpp" />
     <ClInclude Include="src\engine\util\ContainerUtils.hpp" />
     <ClInclude Include="src\engine\util\FileUtils.hpp" />

@@ -18,8 +18,12 @@
 #include "GlRenderbufferAttachment.h"
 #include "GlTextureAttachment.h"
 #include "../cubemap/GlCubemap.h"
+#include "../globaldata/GlCameraUniformBuffer.h"
+#include "../globaldata/GlDirectionalLightsUniformBuffer.h"
 #include "../globaldata/GlGlobalData.h"
 #include "../globaldata/GlGlobalDataTypes.h"
+#include "../globaldata/GlMatricesUniformBuffer.h"
+#include "../globaldata/GlPointLightsUniformBuffer.h"
 #include "../mesh/GlMesh.h"
 #include "../shader/GlShader.h"
 #include "../shader/GlShaderImporter.h"
@@ -109,6 +113,8 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 	glCullFace(GL_BACK);
 	/* Tells OpenGL which winding order identifies front-faced triangles. GL_CCW is the default setting. */
 	glFrontFace(GL_CCW);
+
+	InitializeGlobalData();
 }
 
 void GlGraphicsEngine::StartFrame()
@@ -153,81 +159,6 @@ std::unique_ptr<Shader> GlGraphicsEngine::CreateShader()
 std::unique_ptr<Shader> GlGraphicsEngine::ImportShader(const std::string& filePath)
 {
 	return GlShaderImporter().Import(filePath);
-}
-
-std::unique_ptr<GlobalData> GlGraphicsEngine::CreateGlobalData(const std::string& name)
-{
-	return std::make_unique<GlGlobalData>(name);
-}
-
-void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, float& reference)
-{
-	try
-	{
-		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataFloat>(reference);
-		glGlobalData.AddDataReference(name, glReference);
-	}
-	catch (std::bad_cast e)
-	{
-		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
-	}
-}
-
-void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::mat4& reference)
-{
-	try
-	{
-		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataMat4>(reference);
-		glGlobalData.AddDataReference(name, glReference);
-	}
-	catch (std::bad_cast e)
-	{
-		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
-	}
-}
-
-void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, glm::vec3& reference)
-{
-	try
-	{
-		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataVec3>(reference);
-		glGlobalData.AddDataReference(name, glReference);
-	}
-	catch (std::bad_cast e)
-	{
-		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
-	}
-}
-
-void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, DirectionalLight& reference)
-{
-	try
-	{
-		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataDirectionalLight>(reference);
-		glGlobalData.AddDataReference(name, glReference);
-	}
-	catch (std::bad_cast e)
-	{
-		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
-	}
-}
-
-void GlGraphicsEngine::AddDataReferenceToGlobalData(GlobalData& globalData, const std::string& name, PointLight& reference)
-{
-	try
-	{
-		GlGlobalData& glGlobalData = dynamic_cast<GlGlobalData&>(globalData);
-		std::unique_ptr<GlGlobalDataType> glReference = std::make_unique<GlGlobalDataPointLight>(reference);
-		glGlobalData.AddDataReference(name, glReference);
-	}
-	catch (std::bad_cast e)
-	{
-		gLogErrorMessage(ERR_MSG_EXPECTS_GL_GLOBAL_DATA);
-	}
 }
 
 void GlGraphicsEngine::Render(Mesh& mesh)
@@ -408,4 +339,12 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const Te
 	shader.SetInt(attribute.GetName(), m_SamplerIndex);
 
 	m_SamplerIndex++;
+}
+
+void GlGraphicsEngine::InitializeGlobalData()
+{
+	m_MatricesUniformBuffer = std::make_unique<GlMatricesUniformBuffer>();
+	m_DirectionalLightsUniformBuffer = std::make_unique<GlDirectionalLightsUniformBuffer>();
+	m_PointLightsUniformBuffer = std::make_unique<GlPointLightsUniformBuffer>();
+	m_CameraUniformBuffer = std::make_unique<GlCameraUniformBuffer>();
 }

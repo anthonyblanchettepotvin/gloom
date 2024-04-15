@@ -1,13 +1,8 @@
 #pragma once
 
-#include <memory>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 #include "../../../engine/graphics/globaldata/GlobalData.h"
-
-class GlGlobalDataType;
 
 class GlGlobalData : public GlobalData
 {
@@ -16,17 +11,17 @@ public:
 
     void SendToDevice() override;
 
-    void AddDataReference(const std::string& name, std::unique_ptr<GlGlobalDataType>& reference);
-
     std::string GetName() const { return m_Name; }
 
     unsigned int GetIndex() const { return m_Index; }
 
+protected:
+    virtual void Send() = 0;
+
+    virtual unsigned int GetUniformBufferSize() const = 0;
+
 private:
     void Allocate();
-    void Send();
-
-    unsigned int GetUniformBufferSize() const;
 
     static unsigned int GetNextUniformBufferIndex();
 
@@ -36,7 +31,4 @@ private:
     unsigned int m_Index;
 
     bool m_IsAllocated = false;
-
-    std::unordered_map<std::string, std::unique_ptr<GlGlobalDataType>> m_References;
-    std::vector<std::string> m_ReferencesNameOrdered;
 };

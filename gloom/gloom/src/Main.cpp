@@ -531,20 +531,20 @@ int main()
 	Skybox		mat4	16				64				64
 	Projection	mat4	16				128				64
 	*/
-	glm::mat4 viewTransform;
+	/*glm::mat4 viewTransform;
 	glm::mat4 skyboxTransform;
 	glm::mat4 projectionTransform;
 	std::unique_ptr<GlobalData> matricesGlobalData = graphicsEngine.CreateGlobalData("ubo_matrices");
 	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
 	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
-	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
+	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);*/
 
 	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO. */
-	phongShader->BindToGlobalData(*matricesGlobalData);
+	/*phongShader->BindToGlobalData(*matricesGlobalData);
 	reflectionShader->BindToGlobalData(*matricesGlobalData);
 	refractionShader->BindToGlobalData(*matricesGlobalData);
 	skyboxShader->BindToGlobalData(*matricesGlobalData);
-	spriteShader->BindToGlobalData(*matricesGlobalData);
+	spriteShader->BindToGlobalData(*matricesGlobalData);*/
 
 	// Lights UBO (384 bytes)
 	/*
@@ -576,13 +576,13 @@ int main()
 	diffuse		vec3	16				32				12
 	specular	vec3	16				48				12
 	*/
-	std::unique_ptr<GlobalData> directionalLightsGlobalData = graphicsEngine.CreateGlobalData("ubo_directionalLights");
+	/*std::unique_ptr<GlobalData> directionalLightsGlobalData = graphicsEngine.CreateGlobalData("ubo_directionalLights");
 	graphicsEngine.AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
 	std::unique_ptr<GlobalData> pointLightsGlobalData = graphicsEngine.CreateGlobalData("ubo_pointLights");
 	graphicsEngine.AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
 
 	phongShader->BindToGlobalData(*directionalLightsGlobalData);
-	phongShader->BindToGlobalData(*pointLightsGlobalData);
+	phongShader->BindToGlobalData(*pointLightsGlobalData);*/
 
 	// Camera UBO (12 bytes)
 	/*
@@ -595,13 +595,13 @@ int main()
 	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
 	position	vec3	16				0				12
 	*/
-	glm::vec3 cameraPosition;
+	/*glm::vec3 cameraPosition;
 	std::unique_ptr<GlobalData> cameraGlobalData = graphicsEngine.CreateGlobalData("ubo_camera");
 	graphicsEngine.AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
 
 	phongShader->BindToGlobalData(*cameraGlobalData);
 	reflectionShader->BindToGlobalData(*cameraGlobalData);
-	refractionShader->BindToGlobalData(*cameraGlobalData);
+	refractionShader->BindToGlobalData(*cameraGlobalData);*/
 
 	ImGuiMain ui(applicationManager, assetManager, gameManager, graphicsEngine);
 
@@ -640,18 +640,18 @@ int main()
 		// --- View and projection transformation matrices ---
 
 		/* Here, we update our matrices UBO data with the new matrices' data. */
-		viewTransform = g_Camera.GetViewMatrix();
+		/*viewTransform = g_Camera.GetViewMatrix();
 		skyboxTransform = g_Camera.GetSkyboxMatrix();
 		projectionTransform = g_Camera.GetProjectionMatrix();
-		matricesGlobalData->SendToDevice();
+		matricesGlobalData->SendToDevice();*/
 
 		/* Here, we update our camera UBO data with the new camera's data. */
-		cameraPosition = g_Camera.GetPosition();
-		cameraGlobalData->SendToDevice();
+		/*cameraPosition = g_Camera.GetPosition();
+		cameraGlobalData->SendToDevice();*/
 
 		/* Here, we update our lights UBO data with the new lights' data. */
-		directionalLightsGlobalData->SendToDevice();
-		pointLightsGlobalData->SendToDevice();
+		/*directionalLightsGlobalData->SendToDevice();
+		pointLightsGlobalData->SendToDevice();*/
 
 		// --- Draw actors ---
 
