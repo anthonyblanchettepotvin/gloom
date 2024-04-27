@@ -2,10 +2,10 @@
 
 #include <glm/glm.hpp>
 
-#include "GlGlobalData.h"
-#include "GlGlobalDataTypes.h"
+#include "GlUniformBuffer.h"
+#include "GlUniformBufferDataTypes.h"
 
-class GlCameraUniformBuffer : public GlGlobalData
+class GlCameraUniformBuffer : public GlUniformBuffer
 {
 public:
 	GlCameraUniformBuffer();
@@ -20,5 +20,5 @@ protected:
 private:
 	glm::vec3 m_CameraPosition{ glm::vec3() };
 
-	GlGlobalDataVec3 m_CameraPositionData;
+	GlUniformBufferDataVec3 m_CameraPositionData;
 };

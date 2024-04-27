@@ -1,9 +1,7 @@
 #include "GlMatricesUniformBuffer.h"
 
-#include "GlGlobalDataTypes.h"
-
 GlMatricesUniformBuffer::GlMatricesUniformBuffer()
-	: GlGlobalData("ubo_matrices")
+	: GlUniformBuffer("ubo_matrices")
 {
 }
 

@@ -21,12 +21,12 @@
 #include "GlRenderbufferAttachment.h"
 #include "GlTextureAttachment.h"
 #include "../cubemap/GlCubemap.h"
-#include "../globaldata/GlCameraUniformBuffer.h"
-#include "../globaldata/GlDirectionalLightsUniformBuffer.h"
-#include "../globaldata/GlGlobalData.h"
-#include "../globaldata/GlGlobalDataTypes.h"
-#include "../globaldata/GlMatricesUniformBuffer.h"
-#include "../globaldata/GlPointLightsUniformBuffer.h"
+#include "../uniformbuffer/GlCameraUniformBuffer.h"
+#include "../uniformbuffer/GlDirectionalLightsUniformBuffer.h"
+#include "../uniformbuffer/GlMatricesUniformBuffer.h"
+#include "../uniformbuffer/GlPointLightsUniformBuffer.h"
+#include "../uniformbuffer/GlUniformBuffer.h"
+#include "../uniformbuffer/GlUniformBufferDataTypes.h"
 #include "../mesh/GlMesh.h"
 #include "../shader/GlShader.h"
 #include "../shader/GlShaderImporter.h"
@@ -37,7 +37,6 @@
 #define EX_MSG_FRAMEBUFFER_IS_INCOMPLETE "Framebuffer is incomplete."
 #define ERR_MSG_DIRECTIONAL_LIGHT_ALREADY_REGISTERED "Directional light already registered."
 #define ERR_MSG_POINT_LIGHT_ALREADY_REGISTERED "Point light already registered."
-#define ERR_MSG_EXPECTS_GL_GLOBAL_DATA "GlGraphicsEngine expects to be passed a GlGlobalData instance."
 #define ERR_MSG_EXPECTS_GL_SHADER "GlGraphicsEngine expects GlShader instance."
 #define ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED "Material attribute type is not supported."
 
@@ -119,7 +118,7 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 	/* Tells OpenGL which winding order identifies front-faced triangles. GL_CCW is the default setting. */
 	glFrontFace(GL_CCW);
 
-	InitializeGlobalData();
+	InitializeUniformBuffers();
 }
 
 void GlGraphicsEngine::StartFrame()
@@ -214,7 +213,7 @@ void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh)
 	mesh.GetMaterial()->GetShader()->SetFloatMat4("modelXform", mesh.GetTransform());
 
 	BindShaderToUniformBuffers(*(GlShader*)mesh.GetMaterial()->GetShader());
-	UpdateGlobalData(camera);
+	UpdateUniformBuffers(camera);
 	glMesh.Render();
 
 	m_SamplerIndex = 0;
@@ -240,7 +239,7 @@ void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox)
 	ApplyMaterial(*skybox.GetMaterial());
 
 	BindShaderToUniformBuffers(*(GlShader*)skybox.GetMaterial()->GetShader());
-	UpdateGlobalData(camera);
+	UpdateUniformBuffers(camera);
 	glSkybox.Render();
 
 	m_SamplerIndex = 0;
@@ -268,7 +267,7 @@ void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite)
 	sprite.GetMaterial()->GetShader()->SetFloatMat4("modelXform", sprite.GetTransform());
 
 	BindShaderToUniformBuffers(*(GlShader*)sprite.GetMaterial()->GetShader());
-	UpdateGlobalData(camera);
+	UpdateUniformBuffers(camera);
 	glSprite.Render();
 
 	m_SamplerIndex = 0;
@@ -378,7 +377,7 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const Te
 	m_SamplerIndex++;
 }
 
-void GlGraphicsEngine::InitializeGlobalData()
+void GlGraphicsEngine::InitializeUniformBuffers()
 {
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
 	block that matches a UBO and is bound to it will share its data. This is handy,
@@ -451,7 +450,7 @@ void GlGraphicsEngine::BindShaderToUniformBuffers(GlShader& shader)
 	shader.BindToUniformBuffer(*m_CameraUniformBuffer);
 }
 
-void GlGraphicsEngine::UpdateGlobalData(const Camera& camera)
+void GlGraphicsEngine::UpdateUniformBuffers(const Camera& camera)
 {
 	/* Here, we update our matrices UBO data with the new matrices' data. */
 	m_MatricesUniformBuffer->SetViewTransform(camera.GetViewMatrix());

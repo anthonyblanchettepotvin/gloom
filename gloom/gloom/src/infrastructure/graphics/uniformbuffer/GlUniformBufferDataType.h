@@ -3,7 +3,7 @@
 #include "../../../engine/math/Math.hpp"
 
 template<typename T>
-class GlGlobalDataType
+class GlUniformBufferDataType
 {
 public:
 	void AddAlignedSizeToTotalSize(unsigned int& totalSize) const;
@@ -15,7 +15,7 @@ public:
 };
 
 template<typename T>
-void GlGlobalDataType<T>::AddAlignedSizeToTotalSize(unsigned int& totalSize) const
+void GlUniformBufferDataType<T>::AddAlignedSizeToTotalSize(unsigned int& totalSize) const
 {
 	totalSize = Math::Align(totalSize, GetBaseAlignment()) + GetSize();
 }

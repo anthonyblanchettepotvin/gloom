@@ -2,10 +2,10 @@
 
 #include <glm/glm.hpp>
 
-#include "GlGlobalData.h"
-#include "GlGlobalDataTypes.h"
+#include "GlUniformBuffer.h"
+#include "GlUniformBufferDataTypes.h"
 
-class GlMatricesUniformBuffer : public GlGlobalData
+class GlMatricesUniformBuffer : public GlUniformBuffer
 {
 public:
 	GlMatricesUniformBuffer();
@@ -24,7 +24,7 @@ private:
 	glm::mat4 m_SkyboxTransform{ glm::mat4() };
 	glm::mat4 m_ProjectionTransform{ glm::mat4() };
 
-	GlGlobalDataMat4 m_ViewTransformData;
-	GlGlobalDataMat4 m_SkyboxTransformData;
-	GlGlobalDataMat4 m_ProjectionTransformData;
+	GlUniformBufferDataMat4 m_ViewTransformData;
+	GlUniformBufferDataMat4 m_SkyboxTransformData;
+	GlUniformBufferDataMat4 m_ProjectionTransformData;
 };

@@ -2,14 +2,12 @@
 
 #include <string>
 
-#include "../../../engine/graphics/globaldata/GlobalData.h"
-
-class GlGlobalData : public GlobalData
+class GlUniformBuffer
 {
 public:
-    GlGlobalData(const std::string& name);
+    GlUniformBuffer(const std::string& name);
 
-    void SendToDevice() override;
+    void SendToDevice();
 
     std::string GetName() const { return m_Name; }
 

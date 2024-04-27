@@ -9,7 +9,7 @@
 #include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/material/MaterialAttributes.h"
 
-#include "../globaldata/GlGlobalData.h"
+#include "../uniformbuffer/GlUniformBuffer.h"
 
 #define MAX_UNIFORM_NAME_LENGTH 32
 
@@ -61,9 +61,9 @@ void GlShader::SetFloatMat4(const std::string& name, const glm::mat4& value)
 	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void GlShader::BindToUniformBuffer(GlGlobalData& globalData)
+void GlShader::BindToUniformBuffer(GlUniformBuffer& uniformBuffer)
 {
-	glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, globalData.GetName().c_str()), globalData.GetIndex());
+	glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, uniformBuffer.GetName().c_str()), uniformBuffer.GetIndex());
 }
 
 void GlShader::InitializeMaterialTemplate()

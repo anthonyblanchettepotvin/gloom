@@ -35,7 +35,6 @@ graphics programming with OpenGL. */
 #include "engine/graphics/camera/Camera.h"
 #include "engine/graphics/cubemap/Cubemap.h"
 #include "engine/graphics/engine/GraphicsEngine.h"
-#include "engine/graphics/globaldata/GlobalData.h"
 #include "engine/graphics/lighting/DirectionalLight.h"
 #include "engine/graphics/lighting/PointLight.h"
 #include "engine/graphics/material/Material.h"

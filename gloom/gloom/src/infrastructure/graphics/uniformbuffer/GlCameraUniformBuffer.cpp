@@ -1,7 +1,7 @@
 #include "GlCameraUniformBuffer.h"
 
 GlCameraUniformBuffer::GlCameraUniformBuffer()
-	: GlGlobalData("ubo_camera")
+	: GlUniformBuffer("ubo_camera")
 {
 }
 

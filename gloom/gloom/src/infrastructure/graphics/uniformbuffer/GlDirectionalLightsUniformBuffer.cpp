@@ -1,11 +1,9 @@
 #include "GlDirectionalLightsUniformBuffer.h"
 
-#include "GlGlobalDataTypes.h"
-
 #include "../../../engine/graphics/lighting/DirectionalLight.h"
 
 GlDirectionalLightsUniformBuffer::GlDirectionalLightsUniformBuffer()
-	: GlGlobalData("ubo_directionalLights")
+	: GlUniformBuffer("ubo_directionalLights")
 {
 }
 

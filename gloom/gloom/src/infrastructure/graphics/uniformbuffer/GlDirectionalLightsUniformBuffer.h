@@ -1,11 +1,11 @@
 #pragma once
 
-#include "GlGlobalData.h"
-#include "GlGlobalDataTypes.h"
+#include "GlUniformBuffer.h"
+#include "GlUniformBufferDataTypes.h"
 
 class DirectionalLight;
 
-class GlDirectionalLightsUniformBuffer : public GlGlobalData
+class GlDirectionalLightsUniformBuffer : public GlUniformBuffer
 {
 public:
 	GlDirectionalLightsUniformBuffer();
@@ -20,5 +20,5 @@ protected:
 private:
 	const DirectionalLight* m_DirectionalLight{ nullptr }; // TODO: Support multiple directional lights.
 
-	GlGlobalDataDirectionalLight m_DirectionalLightData;
+	GlUniformBufferDataDirectionalLight m_DirectionalLightData;
 };

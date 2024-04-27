@@ -53,9 +53,9 @@ public:
 	void* GetTextureId(const Texture& texture) override;
 
 private:
-	void InitializeGlobalData();
+	void InitializeUniformBuffers();
 	void BindShaderToUniformBuffers(GlShader& shader);
-	void UpdateGlobalData(const Camera& camera);
+	void UpdateUniformBuffers(const Camera& camera);
 
 	void ApplyMaterial(Material& material);
 	void ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute);

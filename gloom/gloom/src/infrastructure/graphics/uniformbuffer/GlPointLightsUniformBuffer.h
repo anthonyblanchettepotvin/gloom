@@ -1,11 +1,11 @@
 #pragma once
 
-#include "GlGlobalData.h"
-#include "GlGlobalDataTypes.h"
+#include "GlUniformBuffer.h"
+#include "GlUniformBufferDataTypes.h"
 
 class PointLight;
 
-class GlPointLightsUniformBuffer : public GlGlobalData
+class GlPointLightsUniformBuffer : public GlUniformBuffer
 {
 public:
 	GlPointLightsUniformBuffer();
@@ -20,5 +20,5 @@ protected:
 private:
 	const PointLight* m_PointLight{ nullptr }; // TODO: Support multiple point lights.
 
-	GlGlobalDataPointLight m_PointLightData;
+	GlUniformBufferDataPointLight m_PointLightData;
 };

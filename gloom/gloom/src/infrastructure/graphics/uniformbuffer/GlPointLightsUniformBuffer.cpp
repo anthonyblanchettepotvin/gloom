@@ -1,11 +1,9 @@
 #include "GlPointLightsUniformBuffer.h"
 
-#include "GlGlobalDataTypes.h"
-
 #include "../../../engine/graphics/lighting/PointLight.h"
 
 GlPointLightsUniformBuffer::GlPointLightsUniformBuffer()
-	: GlGlobalData("ubo_pointLights")
+	: GlUniformBuffer("ubo_pointLights")
 {
 }
 

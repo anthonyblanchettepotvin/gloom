@@ -2,7 +2,7 @@
 
 #include "../../../engine/graphics/shader/Shader.h"
 
-class GlGlobalData;
+class GlUniformBuffer;
 
 class GlShader : public Shader
 {
@@ -20,7 +20,7 @@ public:
 	void SetFloatMat3(const std::string& name, const glm::mat3& value) override;
 	void SetFloatMat4(const std::string& name, const glm::mat4& value) override;
 
-	void BindToUniformBuffer(GlGlobalData& globalData);
+	void BindToUniformBuffer(GlUniformBuffer& uniformBuffer);
 
 	void InitializeMaterialTemplate() override;
 
