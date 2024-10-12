@@ -6,6 +6,8 @@
 #include "../../../engine/graphics/engine/GraphicsEngine.h"
 #include "../../../engine/object/ObjectID.h"
 
+#include "../uniformbuffer/GlUniformBufferRegistry.h"
+
 class Camera;
 class CubemapMaterialAttribute;
 class DirectionalLight;
@@ -24,6 +26,7 @@ class GlSkybox;
 class GlSprite;
 class GlTexture;
 class GlTextureAttachment;
+class GlUniformBufferRegistry;
 class Material;
 class MaterialAttribute;
 class PointLight;
@@ -54,8 +57,8 @@ public:
 
 private:
 	void InitializeUniformBuffers();
-	void BindShaderToUniformBuffers(GlShader& shader);
 	void UpdateUniformBuffers(const Camera& camera);
+	void SendUniformBuffersToDevice();
 
 	void ApplyMaterial(Material& material);
 	void ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute);
@@ -68,10 +71,7 @@ private:
 	std::unique_ptr<GlRenderbufferAttachment> m_RenderbufferAttachment = nullptr;
 	std::unique_ptr<GlTextureAttachment> m_TextureAttachment = nullptr;
 
-	std::unique_ptr<GlMatricesUniformBuffer> m_MatricesUniformBuffer = nullptr;
-	std::unique_ptr<GlDirectionalLightsUniformBuffer> m_DirectionalLightsUniformBuffer = nullptr;
-	std::unique_ptr<GlPointLightsUniformBuffer> m_PointLightsUniformBuffer = nullptr;
-	std::unique_ptr<GlCameraUniformBuffer> m_CameraUniformBuffer = nullptr;
+	GlUniformBufferRegistry m_UniformBufferRegistry;
 
 	std::vector<DirectionalLight*> m_DirectionalLights;
 	std::vector<PointLight*> m_PointLights;
@@ -83,4 +83,8 @@ private:
 	std::unordered_map<ObjectID, std::unique_ptr<GlTexture>> m_GlTextures;
 
 	size_t m_SamplerIndex = 0;
+
+	// TODO: Should not have to do this. Move m_DirectionalLights and m_PointLights in GlGraphicsContext.
+	friend GlDirectionalLightsUniformBuffer;
+	friend GlPointLightsUniformBuffer;
 };

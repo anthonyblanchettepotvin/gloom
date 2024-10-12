@@ -2,6 +2,8 @@
 
 #include "../../../engine/graphics/lighting/PointLight.h"
 
+#include "../engine/GlGraphicsEngine.h"
+
 GlPointLightsUniformBuffer::GlPointLightsUniformBuffer()
 	: GlUniformBuffer("ubo_pointLights")
 {
@@ -10,6 +12,15 @@ GlPointLightsUniformBuffer::GlPointLightsUniformBuffer()
 void GlPointLightsUniformBuffer::SetPointLight(const PointLight& pointLight)
 {
 	m_PointLight = &pointLight;
+}
+
+void GlPointLightsUniformBuffer::Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine)
+{
+	// TODO: Support multiple point lights.
+	if (graphicsEngine.m_PointLights.size() != 0)
+	{
+		SetPointLight(*graphicsEngine.m_PointLights[0]);
+	}
 }
 
 void GlPointLightsUniformBuffer::Send()

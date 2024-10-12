@@ -207,13 +207,17 @@ void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh)
 	}
 
 	GlMesh& glMesh = *m_GlMeshes[meshId];
+	Material* material = mesh.GetMaterial();
 
-	ApplyMaterial(*mesh.GetMaterial());
+	ApplyMaterial(*material);
 
-	mesh.GetMaterial()->GetShader()->SetFloatMat4("modelXform", mesh.GetTransform());
+	GlShader& glShader = *(GlShader*)material->GetShader(); // TODO: Having to cast the shader to GlShader is sad.
+	glShader.SetFloatMat4("modelXform", mesh.GetTransform());
+	glShader.BindToUniformBuffers(m_UniformBufferRegistry);
 
-	BindShaderToUniformBuffers(*(GlShader*)mesh.GetMaterial()->GetShader());
 	UpdateUniformBuffers(camera);
+	SendUniformBuffersToDevice();
+
 	glMesh.Render();
 
 	m_SamplerIndex = 0;
@@ -235,11 +239,16 @@ void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox)
 	}
 	
 	GlSkybox& glSkybox = *m_GlSkyboxes[skyboxId];
+	Material* material = skybox.GetMaterial();
 
-	ApplyMaterial(*skybox.GetMaterial());
+	ApplyMaterial(*material);
 
-	BindShaderToUniformBuffers(*(GlShader*)skybox.GetMaterial()->GetShader());
+	GlShader& glShader = *(GlShader*)material->GetShader(); // TODO: Having to cast the shader to GlShader is sad.
+	glShader.BindToUniformBuffers(m_UniformBufferRegistry);
+	
 	UpdateUniformBuffers(camera);
+	SendUniformBuffersToDevice();
+
 	glSkybox.Render();
 
 	m_SamplerIndex = 0;
@@ -261,13 +270,17 @@ void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite)
 	}
 	
 	GlSprite& glSprite = *m_GlSprites[spriteId];
+	Material* material = sprite.GetMaterial();
 
-	ApplyMaterial(*sprite.GetMaterial());
+	ApplyMaterial(*material);
 
-	sprite.GetMaterial()->GetShader()->SetFloatMat4("modelXform", sprite.GetTransform());
+	GlShader& glShader = *(GlShader*)material->GetShader(); // TODO: Having to cast the shader to GlShader is sad.
+	glShader.SetFloatMat4("modelXform", sprite.GetTransform());
+	glShader.BindToUniformBuffers(m_UniformBufferRegistry);
 
-	BindShaderToUniformBuffers(*(GlShader*)sprite.GetMaterial()->GetShader());
 	UpdateUniformBuffers(camera);
+	SendUniformBuffersToDevice();
+
 	glSprite.Render();
 
 	m_SamplerIndex = 0;
@@ -385,95 +398,32 @@ void GlGraphicsEngine::InitializeUniformBuffers()
 	We can only change the data in the UBO and all the shaders' uniform blocks bound
 	to it will contain the updated data. */
 
-	// Matrices UBO (128 bytes)
-	/*
-	MATRIX		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
-	View		mat4	16				0				64
-	Skybox		mat4	16				64				64
-	Projection	mat4	16				128				64
-	*/
-	m_MatricesUniformBuffer = std::make_unique<GlMatricesUniformBuffer>();
+	// TODO: Registration should be done outside of GlGraphicsEngine.
+	std::unique_ptr<GlUniformBuffer> matricesUniformBuffer = std::make_unique<GlMatricesUniformBuffer>();
+	m_UniformBufferRegistry.Insert(matricesUniformBuffer);
 
-	// Lights UBO (384 bytes)
-	/*
-	ELEMENT			TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
-	Point1			struct	16				0				72
-	Point2			struct	16				80				72
-	Point3			struct	16				160				72
-	Point4			struct	16				240				72
-	Directional		struct	16				320				60
-	*/
+	std::unique_ptr<GlUniformBuffer> directionalLightsUniformBuffer = std::make_unique<GlDirectionalLightsUniformBuffer>();
+	m_UniformBufferRegistry.Insert(directionalLightsUniformBuffer);
 
-	// PointLight struct (72 bytes)
-	/*
-	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
-	position	vec3	16				0				12
-	ambient		vec3	16				16				12
-	diffuse		vec3	16				32				12
-	specular	vec3	16				48				12
-	constant	float	4				60				4
-	linear		float	4				64				4
-	quadratic	float	4				68				4
-	*/
+	std::unique_ptr<GlUniformBuffer> pointLightsUniformBuffer = std::make_unique<GlPointLightsUniformBuffer>();
+	m_UniformBufferRegistry.Insert(pointLightsUniformBuffer);
 
-	// DirectionalLight struct (60 bytes)
-	/*
-	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
-	direction	vec3	16				0				12
-	ambient		vec3	16				16				12
-	diffuse		vec3	16				32				12
-	specular	vec3	16				48				12
-	*/
-	m_DirectionalLightsUniformBuffer = std::make_unique<GlDirectionalLightsUniformBuffer>();
-	m_PointLightsUniformBuffer = std::make_unique<GlPointLightsUniformBuffer>();
-
-	// Camera UBO (12 bytes)
-	/*
-	ELEMENT		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
-	camera		struct	16				0				12
-	*/
-
-	// Camera struct (12 bytes)
-	/*
-	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
-	position	vec3	16				0				12
-	*/
-	m_CameraUniformBuffer = std::make_unique<GlCameraUniformBuffer>();
-}
-
-void GlGraphicsEngine::BindShaderToUniformBuffers(GlShader& shader)
-{
-	// TODO: Have the shaders bind themselves to only the necessary UBOs.
-	shader.BindToUniformBuffer(*m_MatricesUniformBuffer);
-	shader.BindToUniformBuffer(*m_DirectionalLightsUniformBuffer);
-	shader.BindToUniformBuffer(*m_PointLightsUniformBuffer);
-	shader.BindToUniformBuffer(*m_CameraUniformBuffer);
+	std::unique_ptr<GlUniformBuffer> cameraUniformBuffer = std::make_unique<GlCameraUniformBuffer>();
+	m_UniformBufferRegistry.Insert(cameraUniformBuffer);
 }
 
 void GlGraphicsEngine::UpdateUniformBuffers(const Camera& camera)
 {
-	/* Here, we update our matrices UBO data with the new matrices' data. */
-	m_MatricesUniformBuffer->SetViewTransform(camera.GetViewMatrix());
-	m_MatricesUniformBuffer->SetSkyboxTransform(camera.GetSkyboxMatrix());
-	m_MatricesUniformBuffer->SetProjectionTransform(camera.GetProjectionMatrix());
-	m_MatricesUniformBuffer->SendToDevice();
-
-	/* Here, we update our lights UBO data with the new lights' data. */
-	// TODO: Support multiple directional lights.
-	if (m_DirectionalLights.size() != 0)
+	for (const auto& uniformBuffer : m_UniformBufferRegistry.GetUniformBuffers())
 	{
-		m_DirectionalLightsUniformBuffer->SetDirectionalLight(*m_DirectionalLights[0]);
+		uniformBuffer->Update(camera, *this);
 	}
-	m_DirectionalLightsUniformBuffer->SendToDevice();
+}
 
-	// TODO: Support multiple point lights.
-	if (m_PointLights.size() != 0)
+void GlGraphicsEngine::SendUniformBuffersToDevice()
+{
+	for (const auto& uniformBuffer : m_UniformBufferRegistry.GetUniformBuffers())
 	{
-		m_PointLightsUniformBuffer->SetPointLight(*m_PointLights[0]);
+		uniformBuffer->SendToDevice();
 	}
-	m_PointLightsUniformBuffer->SendToDevice();
-
-	/* Here, we update our camera UBO data with the new camera's data. */
-	m_CameraUniformBuffer->SetCameraPosition(camera.GetPosition());
-	m_CameraUniformBuffer->SendToDevice();
 }

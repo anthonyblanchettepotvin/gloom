@@ -12,6 +12,8 @@ public:
 
 	void SetDirectionalLight(const DirectionalLight& directionalLight);
 
+	void Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine) override;
+
 protected:
 	void Send() override;
 

@@ -1,8 +1,11 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "../../../engine/graphics/shader/Shader.h"
 
-class GlUniformBuffer;
+class GlUniformBufferRegistry;
 
 class GlShader : public Shader
 {
@@ -20,12 +23,13 @@ public:
 	void SetFloatMat3(const std::string& name, const glm::mat3& value) override;
 	void SetFloatMat4(const std::string& name, const glm::mat4& value) override;
 
-	void BindToUniformBuffer(GlUniformBuffer& uniformBuffer);
+	void BindToUniformBuffers(const GlUniformBufferRegistry& uniformBuffer);
 
 	void InitializeMaterialTemplate() override;
 
 private:
 	void Initialize();
+	void InitializeUniformBufferNames();
 
 	unsigned int CompileVertexShader();
 	unsigned int CompileFragmentShader();
@@ -36,4 +40,6 @@ private:
 
 	std::string m_VertexShader;
 	std::string m_FragmentShader;
+
+	std::vector<std::string> m_UniformBufferNames;
 };

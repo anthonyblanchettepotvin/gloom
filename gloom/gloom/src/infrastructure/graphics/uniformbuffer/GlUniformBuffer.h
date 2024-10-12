@@ -2,6 +2,9 @@
 
 #include <string>
 
+class Camera;
+class GlGraphicsEngine;
+
 class GlUniformBuffer
 {
 public:
@@ -12,6 +15,8 @@ public:
     std::string GetName() const { return m_Name; }
 
     unsigned int GetIndex() const { return m_Index; }
+
+    virtual void Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine) = 0; // TODO: Pass object of type GlGraphicsContext instead.
 
 protected:
     virtual void Send() = 0;

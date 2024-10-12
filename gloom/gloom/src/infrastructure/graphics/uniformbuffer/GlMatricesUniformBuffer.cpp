@@ -1,5 +1,7 @@
 #include "GlMatricesUniformBuffer.h"
 
+#include "../../../engine/graphics/camera/Camera.h"
+
 GlMatricesUniformBuffer::GlMatricesUniformBuffer()
 	: GlUniformBuffer("ubo_matrices")
 {
@@ -18,6 +20,13 @@ void GlMatricesUniformBuffer::SetSkyboxTransform(const glm::mat4& skyboxTransfor
 void GlMatricesUniformBuffer::SetProjectionTransform(const glm::mat4& projectionTransform)
 {
 	m_ProjectionTransform = projectionTransform;
+}
+
+void GlMatricesUniformBuffer::Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine)
+{
+	SetViewTransform(camera.GetViewMatrix());
+	SetSkyboxTransform(camera.GetSkyboxMatrix());
+	SetProjectionTransform(camera.GetProjectionMatrix());
 }
 
 void GlMatricesUniformBuffer::Send()

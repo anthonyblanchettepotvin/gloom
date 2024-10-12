@@ -1,5 +1,7 @@
 #include "GlCameraUniformBuffer.h"
 
+#include "../../../engine/graphics/camera/Camera.h"
+
 GlCameraUniformBuffer::GlCameraUniformBuffer()
 	: GlUniformBuffer("ubo_camera")
 {
@@ -8,6 +10,11 @@ GlCameraUniformBuffer::GlCameraUniformBuffer()
 void GlCameraUniformBuffer::SetCameraPosition(const glm::vec3& cameraPosition)
 {
 	m_CameraPosition = cameraPosition;
+}
+
+void GlCameraUniformBuffer::Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine)
+{
+	SetCameraPosition(camera.GetPosition());
 }
 
 void GlCameraUniformBuffer::Send()

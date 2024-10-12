@@ -10,8 +10,10 @@
 #include "../../../engine/graphics/material/MaterialAttributes.h"
 
 #include "../uniformbuffer/GlUniformBuffer.h"
+#include "../uniformbuffer/GlUniformBufferRegistry.h"
 
-#define MAX_UNIFORM_NAME_LENGTH 32
+#define MAX_UNIFORM_NAME_BUF_LENGTH 32
+#define MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH 32
 
 #define MATERIAL_STRUCT_NAME "material"
 
@@ -61,9 +63,22 @@ void GlShader::SetFloatMat4(const std::string& name, const glm::mat4& value)
 	glUniformMatrix4fv(glGetUniformLocation(m_Id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void GlShader::BindToUniformBuffer(GlUniformBuffer& uniformBuffer)
+void GlShader::BindToUniformBuffers(const GlUniformBufferRegistry& uniformBufferRegistry)
 {
-	glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, uniformBuffer.GetName().c_str()), uniformBuffer.GetIndex());
+	for (const auto& uniformBufferName : m_UniformBufferNames)
+	{
+		const GlUniformBuffer* uniformBuffer = uniformBufferRegistry.FindUniformBufferByName(uniformBufferName);
+		if (!uniformBuffer)
+		{
+			std::stringstream ss;
+			ss << "Binding to uniform buffer failed:\n" << uniformBufferName << " was not found in the uniform buffer registry.";
+			gLogErrorMessage(ss.str());
+
+			continue;
+		}
+
+		glUniformBlockBinding(m_Id, glGetUniformBlockIndex(m_Id, uniformBuffer->GetName().c_str()), uniformBuffer->GetIndex());
+	}
 }
 
 void GlShader::InitializeMaterialTemplate()
@@ -79,14 +94,14 @@ void GlShader::InitializeMaterialTemplate()
 	GLenum uniformType;
 	GLint uniformSize;
 
-	GLchar uniformName[MAX_UNIFORM_NAME_LENGTH];
-	GLsizei uniformNameLength;
+	GLchar uniformNameBuf[MAX_UNIFORM_NAME_BUF_LENGTH];
+	GLsizei uniformNameBufLength;
 
 	for (size_t i = 0; i < nbUniforms; i++)
 	{
-		glGetActiveUniform(m_Id, (GLint)i, MAX_UNIFORM_NAME_LENGTH, &uniformNameLength, &uniformSize, &uniformType, uniformName);
+		glGetActiveUniform(m_Id, (GLint)i, MAX_UNIFORM_NAME_BUF_LENGTH, &uniformNameBufLength, &uniformSize, &uniformType, uniformNameBuf);
 
-		std::string attributeName = (std::string)uniformName;
+		std::string attributeName = (std::string)uniformNameBuf;
 
 		std::string structName = attributeName.substr(0, attributeName.find_first_of('.'));
 		if (structName == MATERIAL_STRUCT_NAME)
@@ -129,6 +144,31 @@ void GlShader::Initialize()
 
 	glDeleteShader(vertexShaderId);
 	glDeleteShader(fragmentShaderId);
+
+	InitializeUniformBufferNames();
+}
+
+void GlShader::InitializeUniformBufferNames()
+{
+	if (m_Id == 0)
+	{
+		return;
+	}
+
+	GLint nbUniformBlocks;
+	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORM_BLOCKS, &nbUniformBlocks);
+
+	GLchar uniformBlockNameBuf[MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH];
+	GLsizei uniformBlockNameBufLength;
+
+	for (size_t i = 0; i < nbUniformBlocks; i++)
+	{
+		glGetActiveUniformBlockName(m_Id, (GLint)i, MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH, &uniformBlockNameBufLength, uniformBlockNameBuf);
+
+		std::string uniformBlockName = (std::string)uniformBlockNameBuf;
+
+		m_UniformBufferNames.push_back(uniformBlockName);
+	}
 }
 
 unsigned int GlShader::CompileVertexShader()

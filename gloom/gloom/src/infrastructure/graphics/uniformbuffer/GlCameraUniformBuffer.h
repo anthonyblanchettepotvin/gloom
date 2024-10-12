@@ -12,6 +12,8 @@ public:
 
 	void SetCameraPosition(const glm::vec3& cameraPosition);
 
+	void Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine) override;
+
 protected:
 	void Send() override;
 
