@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-class GlUniformBuffer;
+#include "GlUniformBuffer.h" // TODO: Shouldn't have to include that (see AssetRepository).
 
 class GlUniformBufferRegistry // TODO: Eliminate code duplication with AssetRepository.
 {

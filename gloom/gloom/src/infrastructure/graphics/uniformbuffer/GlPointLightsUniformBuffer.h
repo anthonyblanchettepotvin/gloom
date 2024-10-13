@@ -12,7 +12,7 @@ public:
 
 	void SetPointLight(const PointLight& pointLight);
 
-	void Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine) override;
+	void Update(const Camera& camera, const GlGraphicsData& graphicsData) override;
 
 protected:
 	void Send() override;

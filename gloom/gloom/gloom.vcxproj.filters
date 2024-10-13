@@ -318,6 +318,9 @@
     <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -636,6 +639,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

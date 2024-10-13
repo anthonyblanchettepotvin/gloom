@@ -14,7 +14,7 @@ public:
 	void SetSkyboxTransform(const glm::mat4& skyboxTransform);
 	void SetProjectionTransform(const glm::mat4& projectionTransform);
 
-	void Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine) override;
+	void Update(const Camera& camera, const GlGraphicsData& graphicsData) override;
 
 protected:
 	void Send() override;

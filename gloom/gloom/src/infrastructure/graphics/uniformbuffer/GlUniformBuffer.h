@@ -3,7 +3,7 @@
 #include <string>
 
 class Camera;
-class GlGraphicsEngine;
+class GlGraphicsData;
 
 class GlUniformBuffer
 {
@@ -16,7 +16,7 @@ public:
 
     unsigned int GetIndex() const { return m_Index; }
 
-    virtual void Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine) = 0; // TODO: Pass object of type GlGraphicsContext instead.
+    virtual void Update(const Camera& camera, const GlGraphicsData& graphicsData) = 0; // TODO: Move Camera in GlGraphicsData?
 
 protected:
     virtual void Send() = 0;

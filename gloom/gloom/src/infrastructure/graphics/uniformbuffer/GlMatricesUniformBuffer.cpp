@@ -22,7 +22,7 @@ void GlMatricesUniformBuffer::SetProjectionTransform(const glm::mat4& projection
 	m_ProjectionTransform = projectionTransform;
 }
 
-void GlMatricesUniformBuffer::Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine)
+void GlMatricesUniformBuffer::Update(const Camera& camera, const GlGraphicsData& graphicsData)
 {
 	SetViewTransform(camera.GetViewMatrix());
 	SetSkyboxTransform(camera.GetSkyboxMatrix());

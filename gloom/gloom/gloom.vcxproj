@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsData.cpp" />
     <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.cpp" />
     <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlMatricesUniformBuffer.cpp" />
     <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlDirectionalLightsUniformBuffer.cpp" />
@@ -249,6 +250,7 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsData.h" />
     <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.h" />
     <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlMatricesUniformBuffer.h" />
     <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlDirectionalLightsUniformBuffer.h" />

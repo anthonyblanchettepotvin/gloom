@@ -2,7 +2,7 @@
 
 #include "../../../engine/graphics/lighting/DirectionalLight.h"
 
-#include "../engine/GlGraphicsEngine.h"
+#include "../engine/GlGraphicsData.h"
 
 GlDirectionalLightsUniformBuffer::GlDirectionalLightsUniformBuffer()
 	: GlUniformBuffer("ubo_directionalLights")
@@ -14,12 +14,12 @@ void GlDirectionalLightsUniformBuffer::SetDirectionalLight(const DirectionalLigh
 	m_DirectionalLight = &directionalLight;
 }
 
-void GlDirectionalLightsUniformBuffer::Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine)
+void GlDirectionalLightsUniformBuffer::Update(const Camera& camera, const GlGraphicsData& graphicsData)
 {
 	// TODO: Support multiple directional lights.
-	if (graphicsEngine.m_DirectionalLights.size() != 0)
+	if (graphicsData.GetDirectionalLights().size() != 0)
 	{
-		SetDirectionalLight(*graphicsEngine.m_DirectionalLights[0]);
+		SetDirectionalLight(*graphicsData.GetDirectionalLights()[0]);
 	}
 }
 

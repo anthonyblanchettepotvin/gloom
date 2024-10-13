@@ -12,7 +12,7 @@ void GlCameraUniformBuffer::SetCameraPosition(const glm::vec3& cameraPosition)
 	m_CameraPosition = cameraPosition;
 }
 
-void GlCameraUniformBuffer::Update(const Camera& camera, const GlGraphicsEngine& graphicsEngine)
+void GlCameraUniformBuffer::Update(const Camera& camera, const GlGraphicsData& graphicsData)
 {
 	SetCameraPosition(camera.GetPosition());
 }

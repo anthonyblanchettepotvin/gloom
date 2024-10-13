@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-GlRenderbufferAttachment::GlRenderbufferAttachment(size_t width, size_t height)
+void GlRenderbufferAttachment::Initialize(size_t width, size_t height)
 {
 	// Renderbuffer attachment
 	/* We create a renderbuffer the size of our viewport and we attach the renderbuffer to the framebuffer
