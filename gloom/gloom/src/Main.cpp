@@ -39,7 +39,6 @@ graphics programming with OpenGL. */
 #include "engine/graphics/lighting/PointLight.h"
 #include "engine/graphics/material/Material.h"
 #include "engine/graphics/material/MaterialAttribute.h"
-#include "engine/graphics/material/MaterialAttributes.h"
 #include "engine/graphics/model/Model.h"
 #include "engine/graphics/shader/Shader.h"
 #include "engine/graphics/shader/ShaderRegistry.h"
@@ -69,7 +68,6 @@ graphics programming with OpenGL. */
 #include "infrastructure/asset/world/WorldAssetFactory.h"
 #include "infrastructure/graphics/engine/GlGraphicsEngine.h"
 #include "infrastructure/graphics/shader/GlShader.h"
-#include "infrastructure/graphics/shader/GlShaderImporter.h"
 #include "ui/imgui/ImGuiMain.h"
 
 #define LOGGER_KEY "main"
@@ -288,9 +286,9 @@ int main()
 
 	CubemapImporter cubemapImporter(assetManager);
 	TextureImporter textureImporter(assetManager);
-	ShaderImporter shaderImporter(assetManager, graphicsEngine);
+	ShaderImporter shaderImporter(assetManager);
 	ShaderRegistry shaderRegistry;
-	ModelImporter modelImporter(assetManager, textureImporter, shaderRegistry);
+	ModelImporter modelImporter(assetManager, textureImporter, shaderRegistry, graphicsEngine);
 
 	// --- Asset Descriptors ---
 
@@ -315,7 +313,7 @@ int main()
 	assetRegistry.DefineAsset(cubemapAssetDescriptor, cubemapAssetFactory);
 
 	// Shader
-	AssetDescriptor shaderAssetDescriptor(ObjectType(typeid(GlShader)), "Shader");
+	AssetDescriptor shaderAssetDescriptor(ObjectType(typeid(Shader)), "Shader");
 	std::unique_ptr<AssetFactory> shaderAssetFactory = std::make_unique<ShaderAssetFactory>(graphicsEngine);
 	assetRegistry.DefineAsset(shaderAssetDescriptor, shaderAssetFactory);
 
@@ -368,21 +366,23 @@ int main()
 	Asset* suzanneModelAsset = modelImporter.Import("Suzanne", SUZANNE_MODEL_PATH);
 	Model* suzanneModel = (Model*)suzanneModelAsset->GetObject();
 
-	Material* testModelMaterial = phongShader->CreateMaterialInstance();
+	Asset* testModelMaterialAsset = assetManager.CreateBlankAsset(ObjectType(typeid(Material)), "Test Model Material");
+	Material* testModelMaterial = (Material*)testModelMaterialAsset->GetObject();
+	testModelMaterial->SetMaterialTemplate(graphicsEngine.GetMaterialTemplate(*phongShader));
 
-	TextureMaterialAttribute* testDiffuseAttribute = testModelMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_diffuse1");
+	MaterialAttribute<Texture*>* testDiffuseAttribute = testModelMaterial->FindAttribute<MaterialAttribute<Texture*>>("material.texture_diffuse1");
 	if (testDiffuseAttribute)
 	{
 		testDiffuseAttribute->SetValue(pointLightTexture);
 	}
 
-	TextureMaterialAttribute* testSpecularAttribute = testModelMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_specular1");
+	MaterialAttribute<Texture*>* testSpecularAttribute = testModelMaterial->FindAttribute<MaterialAttribute<Texture*>>("material.texture_specular1");
 	if (testSpecularAttribute)
 	{
 		testSpecularAttribute->SetValue(pointLightTexture);
 	}
 
-	FloatMaterialAttribute* testShininessAttribute = testModelMaterial->FindAttribute<FloatMaterialAttribute>("material.shininess");
+	MaterialAttribute<float>* testShininessAttribute = testModelMaterial->FindAttribute<MaterialAttribute<float>>("material.shininess");
 	if (testShininessAttribute)
 	{
 		testShininessAttribute->SetValue(4.0f);
@@ -390,10 +390,16 @@ int main()
 
 	testModel->SetMaterial(testModelMaterial);
 
-	Material* reflectionMaterial = reflectionShader->CreateMaterialInstance();
+	Asset* reflectionMaterialAsset = assetManager.CreateBlankAsset(ObjectType(typeid(Material)), "Reflection Material");
+	Material* reflectionMaterial = (Material*)reflectionMaterialAsset->GetObject();
+	reflectionMaterial->SetMaterialTemplate(graphicsEngine.GetMaterialTemplate(*reflectionShader));
+
 	cubeModel->SetMaterial(reflectionMaterial);
 
-	Material* refractionMaterial = refractionShader->CreateMaterialInstance();
+	Asset* refractionMaterialAsset = assetManager.CreateBlankAsset(ObjectType(typeid(Material)), "Refraction Material");
+	Material* refractionMaterial = (Material*)refractionMaterialAsset->GetObject();
+	refractionMaterial->SetMaterialTemplate(graphicsEngine.GetMaterialTemplate(*refractionShader));
+
 	suzanneModel->SetMaterial(refractionMaterial);
 
 	// --- Cubemaps ---
@@ -403,9 +409,11 @@ int main()
 
 	// --- Skyboxes ---
 
-	Material* skyboxMaterial = skyboxShader->CreateMaterialInstance();
+	Asset* skyboxMaterialAsset = assetManager.CreateBlankAsset(ObjectType(typeid(Material)), "Skybox Material");
+	Material* skyboxMaterial = (Material*)skyboxMaterialAsset->GetObject();
+	skyboxMaterial->SetMaterialTemplate(graphicsEngine.GetMaterialTemplate(*skyboxShader));
 
-	CubemapMaterialAttribute* skyboxCubemapAttribute = skyboxMaterial->FindAttribute<CubemapMaterialAttribute>("material.cubemap_skybox");
+	MaterialAttribute<Cubemap*>* skyboxCubemapAttribute = skyboxMaterial->FindAttribute<MaterialAttribute<Cubemap*>>("material.cubemap_skybox");
 	if (skyboxCubemapAttribute)
 	{
 		skyboxCubemapAttribute->SetValue(cubemap);
@@ -415,9 +423,11 @@ int main()
 
 	// --- Sprite ---
 
-	Material* pointLightSpriteMaterial = spriteShader->CreateMaterialInstance();
+	Asset* pointLightSpriteMaterialAsset = assetManager.CreateBlankAsset(ObjectType(typeid(Material)), "Point Light Sprite Material");
+	Material* pointLightSpriteMaterial = (Material*)pointLightSpriteMaterialAsset->GetObject();
+	pointLightSpriteMaterial->SetMaterialTemplate(graphicsEngine.GetMaterialTemplate(*spriteShader));
 
-	TextureMaterialAttribute* pointLightTextureAttribute = pointLightSpriteMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_sprite");
+	MaterialAttribute<Texture*>* pointLightTextureAttribute = pointLightSpriteMaterial->FindAttribute<MaterialAttribute<Texture*>>("material.texture_sprite");
 	if (pointLightTextureAttribute)
 	{
 		pointLightTextureAttribute->SetValue(pointLightTexture);

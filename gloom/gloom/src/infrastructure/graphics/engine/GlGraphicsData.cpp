@@ -5,12 +5,12 @@
 #include "../../../engine/EngineGlobals.h"
 #include "../../../engine/graphics/cubemap/Cubemap.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
+#include "../../../engine/graphics/shader/Shader.h"
 #include "../../../engine/graphics/skybox/Skybox.h"
 #include "../../../engine/graphics/sprite/Sprite.h"
 #include "../../../engine/graphics/texture/Texture.h"
 
 #include "../shader/GlShader.h"
-#include "../shader/GlShaderImporter.h"
 #include "../uniformbuffer/GlCameraUniformBuffer.h"
 #include "../uniformbuffer/GlDirectionalLightsUniformBuffer.h"
 #include "../uniformbuffer/GlMatricesUniformBuffer.h"
@@ -23,8 +23,7 @@
 
 void GlGraphicsData::Initialize(size_t width, size_t height)
 {
-	std::unique_ptr<GlShader> frameShader = GlShaderImporter().Import("..\\..\\assets\\shaders\\render.shader"); // TODO: Hate this.
-	m_Frame.Initialize(frameShader);
+	m_Frame.Initialize();
 	m_Framebuffer.Initialize();
 	m_RenderbufferAttachment.Initialize(width, height);
 	m_TextureAttachment.Initialize(width, height);
@@ -142,6 +141,19 @@ GlMesh& GlGraphicsData::GetOrCreateMesh(const Mesh& mesh)
 	}
 
 	return m_GlMeshes.at(meshId);
+}
+
+GlShader& GlGraphicsData::GetOrCreateShader(const Shader& shader)
+{
+	ObjectID shaderId = shader.GetId();
+
+	auto it = m_GlShaders.find(shaderId);
+	if (it == m_GlShaders.end())
+	{
+		m_GlShaders.emplace(shaderId, shader);
+	}
+
+	return m_GlShaders.at(shaderId);
 }
 
 GlSkybox& GlGraphicsData::GetOrCreateSkybox(const Skybox& skybox)

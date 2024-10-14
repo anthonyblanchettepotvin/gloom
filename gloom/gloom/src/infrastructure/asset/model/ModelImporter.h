@@ -13,6 +13,7 @@ struct aiMesh;
 struct aiNode;
 struct aiScene;
 
+class GraphicsEngine;
 class Material;
 class Mesh;
 class ShaderRegistry;
@@ -22,7 +23,7 @@ class TextureImporter;
 class ModelImporter : public AssetImporter<const std::string&>
 {
 public:
-	ModelImporter(AssetManager& assetManager, TextureImporter& textureLoader, ShaderRegistry& shaderRegistry);
+	ModelImporter(AssetManager& assetManager, TextureImporter& textureLoader, ShaderRegistry& shaderRegistry, GraphicsEngine& graphicsEngine);
 
 protected:
 	std::unique_ptr<Object> ImportObject(const std::string& assetName, const std::string& filePath) override;
@@ -38,6 +39,7 @@ private:
 
 	TextureImporter& m_TextureImporter;
 	ShaderRegistry& m_ShaderRegistry;
+	GraphicsEngine& m_GraphicsEngine;
 
 	std::string m_AssetName;
 

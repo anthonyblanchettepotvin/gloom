@@ -5,16 +5,14 @@
 
 #include "../../EngineHelpers.h"
 
-#include "Material.h"
-
 #define ATTRIBUTE_ALREADY_IN_TEMPLATE "Attribute is already in the template."
 
-MaterialTemplate::MaterialTemplate(Shader& shader)
+MaterialTemplate::MaterialTemplate(const Shader& shader)
 	: m_Shader(shader)
 {
 }
 
-void MaterialTemplate::AddAttribute(std::unique_ptr<MaterialAttribute>& attribute)
+void MaterialTemplate::AddAttribute(std::unique_ptr<MaterialAttributeTemplateBase>& attribute)
 {
 	if (!attribute)
 	{
@@ -27,19 +25,19 @@ void MaterialTemplate::AddAttribute(std::unique_ptr<MaterialAttribute>& attribut
 		throw std::runtime_error(ATTRIBUTE_ALREADY_IN_TEMPLATE);
 	}
 
-	m_Attributes.push_back(std::move(attribute));
+	m_Attributes.emplace_back(std::move(attribute));
 }
 
-Material* MaterialTemplate::CreateMaterialInstance()
+std::vector<const MaterialAttributeTemplateBase*> MaterialTemplate::GetAttributes() const
 {
-	std::vector<std::unique_ptr<MaterialAttribute>> attributes;
+	std::vector<const MaterialAttributeTemplateBase*> attributes;
 
 	for (const auto& attribute : m_Attributes)
 	{
 		assert(attribute != nullptr);
 
-		attributes.push_back(std::unique_ptr<MaterialAttribute>(attribute->CreateAttributeInstance()));
+		attributes.push_back(attribute.get());
 	}
 
-	return new Material(&m_Shader, attributes);
+	return attributes;
 }

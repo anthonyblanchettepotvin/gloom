@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "GlUniformBuffer.h" // TODO: Shouldn't have to include that (see AssetRepository).
+#include "GlUniformBuffer.h"
 
 class GlUniformBufferRegistry // TODO: Eliminate code duplication with AssetRepository.
 {
@@ -14,7 +14,6 @@ public:
 	GlUniformBuffer* FindUniformBufferByName(const std::string& uniformBufferName);
 	const GlUniformBuffer* FindUniformBufferByName(const std::string& uniformBufferName) const;
 
-	// TODO: It's weird that GetUniformBuffers returns a list of pointers. Why not a list of references?
 	std::vector<GlUniformBuffer*> GetUniformBuffers();
 	std::vector<const GlUniformBuffer*> GetUniformBuffers() const;
 
