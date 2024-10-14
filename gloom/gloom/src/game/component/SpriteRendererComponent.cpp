@@ -12,7 +12,7 @@ SpriteRendererComponent::SpriteRendererComponent(GraphicsEngine& graphicsEngine,
 {
 }
 
-void SpriteRendererComponent::Render()
+void SpriteRendererComponent::Render(const Camera& camera)
 {
 	if (!m_Parent || !m_Sprite)
 	{
@@ -27,5 +27,5 @@ void SpriteRendererComponent::Render()
 
 	m_Sprite->SetTransform(transformComponent->GetTransform());
 
-	m_GraphicsEngine.Render(*m_Sprite);
+	m_GraphicsEngine.Render(camera, *m_Sprite);
 }

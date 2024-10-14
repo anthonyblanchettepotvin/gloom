@@ -15,18 +15,23 @@ public:
 
 	void SetPosition(const glm::vec3& position) { m_Position = position; }
 	glm::vec3& GetPosition() { return m_Position; }
+	const glm::vec3& GetPosition() const { return m_Position; }
 
 	void SetAmbientColor(const glm::vec3& ambientColor) { m_AmbientColor = ambientColor; }
 	glm::vec3& GetAmbientColor() { return m_AmbientColor; }
+	const glm::vec3& GetAmbientColor() const { return m_AmbientColor; }
 
 	void SetDiffuseColor(const glm::vec3& diffuseColor) { m_DiffuseColor = diffuseColor; }
 	glm::vec3& GetDiffuseColor() { return m_DiffuseColor; }
+	const glm::vec3& GetDiffuseColor() const { return m_DiffuseColor; }
 
 	void SetSpecularColor(const glm::vec3& specularColor) { m_SpecularColor = specularColor; }
 	glm::vec3& GetSpecularColor() { return m_SpecularColor; }
+	const glm::vec3& GetSpecularColor() const { return m_SpecularColor; }
 
 	void SetAttenuation(const PointLightAttenuation& attenuation) { m_Attenuation = attenuation; }
 	PointLightAttenuation& GetAttenuation() { return m_Attenuation; }
+	const PointLightAttenuation& GetAttenuation() const { return m_Attenuation; }
 
 private:
 	glm::vec3 m_Position{ 2.0f };

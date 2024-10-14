@@ -1,18 +1,19 @@
 #pragma once
 
-#include "../texture/GlTexture.h"
+#include <memory>
 
 class GlFrame;
+class GlTexture;
 
 class GlTextureAttachment
 {
 public:
-	GlTextureAttachment(size_t width, size_t height);
+	void Initialize(size_t width, size_t height);
 
 	void RenderToFrame(GlFrame& frame);
 
-	unsigned int GetId() const { return m_Texture.GetId(); }
+	unsigned int GetId() const;
 
 private:
-	GlTexture m_Texture;
+	std::unique_ptr<GlTexture> m_Texture = nullptr;
 };

@@ -105,19 +105,7 @@
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalDataTypes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalDataType.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\globaldata\GlGlobalData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\graphics\globaldata\GlobalData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\graphics\engine\GraphicsEngine.cpp">
@@ -306,6 +294,33 @@
     <ClCompile Include="src\infrastructure\graphics\engine\GlTextureAttachment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlMatricesUniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlDirectionalLightsUniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlPointLightsUniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlCameraUniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferDataTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferDataType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stbi\stb_image.h">
@@ -401,19 +416,7 @@
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalDataTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalDataType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\globaldata\GlGlobalData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\graphics\globaldata\GlobalData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\graphics\engine\GraphicsEngine.h">
@@ -612,6 +615,33 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\math\Math.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlMatricesUniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlDirectionalLightsUniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlPointLightsUniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlCameraUniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferDataTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferDataType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

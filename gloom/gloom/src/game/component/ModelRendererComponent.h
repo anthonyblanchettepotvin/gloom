@@ -9,7 +9,7 @@ class ModelRendererComponent : public RendererComponent
 public:
 	ModelRendererComponent(GraphicsEngine& graphicsEngine, Model* model);
 
-	void Render() override;
+	void Render(const Camera& camera) override;
 
 	const Model* GetModel() const { return m_Model; }
 

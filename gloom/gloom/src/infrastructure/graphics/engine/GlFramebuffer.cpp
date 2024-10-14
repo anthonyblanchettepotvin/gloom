@@ -7,7 +7,7 @@
 #include "GlRenderbufferAttachment.h"
 #include "GlTextureAttachment.h"
 
-GlFramebuffer::GlFramebuffer(size_t width, size_t height)
+void GlFramebuffer::Initialize()
 {
 	// Framebuffer
 	/* Framebuffers are useful for post-rendering effects or fancy effects like mirrors or portals.

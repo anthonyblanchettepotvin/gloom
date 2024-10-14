@@ -6,7 +6,7 @@ class GlTextureAttachment;
 class GlFramebuffer
 {
 public:
-	GlFramebuffer(size_t width, size_t height);
+	void Initialize();
 
 	void Bind();
 	void Unbind();

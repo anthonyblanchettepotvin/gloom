@@ -8,8 +8,6 @@
 
 #include "../material/MaterialTemplate.h"
 
-class GlobalData;
-
 class Shader : public Object
 {
 public:
@@ -21,8 +19,6 @@ public:
 	virtual void SetFloatVec3(const std::string& name, const glm::vec3& value) = 0;
 	virtual void SetFloatMat3(const std::string& name, const glm::mat3& value) = 0;
 	virtual void SetFloatMat4(const std::string& name, const glm::mat4& value) = 0;
-
-	virtual void BindToGlobalData(GlobalData& globalData) = 0;
 
 	virtual void InitializeMaterialTemplate() = 0;
 	virtual Material* CreateMaterialInstance();

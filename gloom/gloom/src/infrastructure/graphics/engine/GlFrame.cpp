@@ -9,18 +9,6 @@
 #include "../shader/GlShader.h"
 #include "../texture/GlTexture.h"
 
-GlFrame::GlFrame(std::unique_ptr<GlShader>& shader)
-{
-	if (!shader)
-	{
-		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(shader));
-	}
-
-	m_Shader = std::move(shader);
-
-	Initialize();
-}
-
 void GlFrame::RenderTexture(GlTexture& texture)
 {
 	m_Shader->Use();
@@ -36,8 +24,15 @@ void GlFrame::RenderTexture(GlTexture& texture)
 	m_Shader->Free();
 }
 
-void GlFrame::Initialize()
+void GlFrame::Initialize(std::unique_ptr<GlShader>& shader)
 {
+	if (!shader)
+	{
+		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(shader));
+	}
+
+	m_Shader = std::move(shader);
+
 	float vertices[] = {
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,

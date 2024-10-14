@@ -12,7 +12,7 @@ ModelRendererComponent::ModelRendererComponent(GraphicsEngine& graphicsEngine, M
 {
 }
 
-void ModelRendererComponent::Render()
+void ModelRendererComponent::Render(const Camera& camera)
 {
 	if (!m_Parent || !m_Model)
 	{
@@ -29,6 +29,6 @@ void ModelRendererComponent::Render()
 
 	for (const auto& mesh : m_Model->GetMeshes())
 	{
-		m_GraphicsEngine.Render(*mesh);
+		m_GraphicsEngine.Render(camera, *mesh);
 	}
 }

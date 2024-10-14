@@ -9,6 +9,8 @@ class ActorComponent : public Object
 public:
 	virtual ~ActorComponent() = default;
 
+	virtual void OnParentSpawned();
+
 	void SetParent(Actor* parent) { m_Parent = parent; }
 
 protected:

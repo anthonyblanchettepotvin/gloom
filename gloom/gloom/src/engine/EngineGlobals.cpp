@@ -6,8 +6,9 @@
 
 std::unique_ptr<EngineGlobalsInstance> EngineGlobals::m_Instance;
 
-EngineGlobalsInstance::EngineGlobalsInstance(LoggingManager& loggingManager)
-	: m_LoggingManager(loggingManager)
+EngineGlobalsInstance::EngineGlobalsInstance(GraphicsEngine& graphicsEngine, LoggingManager& loggingManager)
+	: m_GraphicsEngine(graphicsEngine)
+	, m_LoggingManager(loggingManager)
 {
 }
 

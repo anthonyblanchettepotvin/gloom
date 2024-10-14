@@ -35,7 +35,6 @@ graphics programming with OpenGL. */
 #include "engine/graphics/camera/Camera.h"
 #include "engine/graphics/cubemap/Cubemap.h"
 #include "engine/graphics/engine/GraphicsEngine.h"
-#include "engine/graphics/globaldata/GlobalData.h"
 #include "engine/graphics/lighting/DirectionalLight.h"
 #include "engine/graphics/lighting/PointLight.h"
 #include "engine/graphics/material/Material.h"
@@ -216,28 +215,6 @@ void ShutdownImGui();
 
 int main()
 {
-	LoggerRepository loggerRepository;
-	LoggingManager loggingManager(loggerRepository);
-
-	std::unique_ptr<EngineGlobalsInstance> engineGlobalsInstance = std::make_unique<EngineGlobalsInstance>(loggingManager);
-	EngineGlobals::SetInstance(engineGlobalsInstance);
-
-	gLogErrorMessageForKey("A", "Message from A.");
-	gLogInfoMessageForKey("A", "Message from A.");
-	gLogWarningMessageForKey("A", "Message from A.");
-
-	gLogErrorMessageForKey("B", "Message from B.");
-	gLogInfoMessageForKey("B", "Message from B.");
-	gLogWarningMessageForKey("B", "Message from B.");
-
-	gLogErrorMessageForKey("C", "Message from C.");
-	gLogInfoMessageForKey("C", "Message from C.");
-	gLogWarningMessageForKey("C", "Message from C.");
-
-	gLogErrorMessageForKey("D", "Message from D.");
-	gLogInfoMessageForKey("D", "Message from D.");
-	gLogWarningMessageForKey("D", "Message from D.");
-
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -279,10 +256,18 @@ int main()
 
 	InitImGui(window);
 
+	LoggerRepository loggerRepository;
+	LoggingManager loggingManager(loggerRepository);
+
 	// --- Graphics Engine ---
 
 	GlGraphicsEngine graphicsEngine;
 	graphicsEngine.Initialize(SCR_WIDTH, SCR_HEIGHT);
+
+	// --- Engine Globals ---
+
+	std::unique_ptr<EngineGlobalsInstance> engineGlobalsInstance = std::make_unique<EngineGlobalsInstance>(graphicsEngine, loggingManager);
+	EngineGlobals::SetInstance(engineGlobalsInstance);
 
 	// --- Application Manager ---
 
@@ -518,91 +503,6 @@ int main()
 
 	gameManager.LoadWorld(world);
 
-	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform
-	block that matches a UBO and is bound to it will share its data. This is handy,
-	since we no longer have to update the uniforms of each shader individually.
-	We can only change the data in the UBO and all the shaders' uniform blocks bound
-	to it will contain the updated data. */
-
-	// Matrices UBO (128 bytes)
-	/*
-	MATRIX		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
-	View		mat4	16				0				64
-	Skybox		mat4	16				64				64
-	Projection	mat4	16				128				64
-	*/
-	glm::mat4 viewTransform;
-	glm::mat4 skyboxTransform;
-	glm::mat4 projectionTransform;
-	std::unique_ptr<GlobalData> matricesGlobalData = graphicsEngine.CreateGlobalData("ubo_matrices");
-	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "view", viewTransform);
-	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "skybox", skyboxTransform);
-	graphicsEngine.AddDataReferenceToGlobalData(*matricesGlobalData, "projection", projectionTransform);
-
-	/* Here, we bind the corresponding uniform block of each of our shaders to the matrices UBO. */
-	phongShader->BindToGlobalData(*matricesGlobalData);
-	reflectionShader->BindToGlobalData(*matricesGlobalData);
-	refractionShader->BindToGlobalData(*matricesGlobalData);
-	skyboxShader->BindToGlobalData(*matricesGlobalData);
-	spriteShader->BindToGlobalData(*matricesGlobalData);
-
-	// Lights UBO (384 bytes)
-	/*
-	ELEMENT			TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
-	Point1			struct	16				0				72
-	Point2			struct	16				80				72
-	Point3			struct	16				160				72
-	Point4			struct	16				240				72
-	Directional		struct	16				320				60
-	*/
-
-	// PointLight struct (72 bytes)
-	/*
-	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
-	position	vec3	16				0				12
-	ambient		vec3	16				16				12
-	diffuse		vec3	16				32				12
-	specular	vec3	16				48				12
-	constant	float	4				60				4
-	linear		float	4				64				4
-	quadratic	float	4				68				4
-	*/
-
-	// DirectionalLight struct (60 bytes)
-	/*
-	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
-	direction	vec3	16				0				12
-	ambient		vec3	16				16				12
-	diffuse		vec3	16				32				12
-	specular	vec3	16				48				12
-	*/
-	std::unique_ptr<GlobalData> directionalLightsGlobalData = graphicsEngine.CreateGlobalData("ubo_directionalLights");
-	graphicsEngine.AddDataReferenceToGlobalData(*directionalLightsGlobalData, "directionalLight1", directionalLight);
-	std::unique_ptr<GlobalData> pointLightsGlobalData = graphicsEngine.CreateGlobalData("ubo_pointLights");
-	graphicsEngine.AddDataReferenceToGlobalData(*pointLightsGlobalData, "pointLight1", pointLight);
-
-	phongShader->BindToGlobalData(*directionalLightsGlobalData);
-	phongShader->BindToGlobalData(*pointLightsGlobalData);
-
-	// Camera UBO (12 bytes)
-	/*
-	ELEMENT		TYPE	BASE ALIGNMENT	ALIGNED OFFSET	SIZE
-	camera		struct	16				0				12
-	*/
-
-	// Camera struct (12 bytes)
-	/*
-	COMPONENT	TYPE	BASE ALIGMENT	ALIGNED OFFSET	SIZE
-	position	vec3	16				0				12
-	*/
-	glm::vec3 cameraPosition;
-	std::unique_ptr<GlobalData> cameraGlobalData = graphicsEngine.CreateGlobalData("ubo_camera");
-	graphicsEngine.AddDataReferenceToGlobalData(*cameraGlobalData, "camera", cameraPosition);
-
-	phongShader->BindToGlobalData(*cameraGlobalData);
-	reflectionShader->BindToGlobalData(*cameraGlobalData);
-	refractionShader->BindToGlobalData(*cameraGlobalData);
-
 	ImGuiMain ui(applicationManager, assetManager, gameManager, graphicsEngine);
 
 	// This is the render loop.
@@ -637,36 +537,20 @@ int main()
 
 		graphicsEngine.StartFrame();
 
-		// --- View and projection transformation matrices ---
-
-		/* Here, we update our matrices UBO data with the new matrices' data. */
-		viewTransform = g_Camera.GetViewMatrix();
-		skyboxTransform = g_Camera.GetSkyboxMatrix();
-		projectionTransform = g_Camera.GetProjectionMatrix();
-		matricesGlobalData->SendToDevice();
-
-		/* Here, we update our camera UBO data with the new camera's data. */
-		cameraPosition = g_Camera.GetPosition();
-		cameraGlobalData->SendToDevice();
-
-		/* Here, we update our lights UBO data with the new lights' data. */
-		directionalLightsGlobalData->SendToDevice();
-		pointLightsGlobalData->SendToDevice();
-
 		// --- Draw actors ---
 
-		backpackActor.Render();
-		cubeActor.Render();
-		testActor.Render();
-		suzanneActor.Render();
+		backpackActor.Render(g_Camera);
+		cubeActor.Render(g_Camera);
+		testActor.Render(g_Camera);
+		suzanneActor.Render(g_Camera);
 		/* We could've render the skybox first, but we would render fragments that might be overridden
 		by the rest of the scene. Knowing that, we render it last and by exploiting depth testing - see
 		comments in the skybox vertex shader -, still make it look like it's behind everything. Plus,
 		using this neat little trick, we don't have to call glDepthMask with GL_FALSE before rendering the
 		skybox and then call it again with GL_TRUE. */
-		skyboxActor.Render();
+		skyboxActor.Render(g_Camera);
 		/* We need to render the actors with transparency last. */
-		pointLightActor.Render();
+		pointLightActor.Render(g_Camera);
 
 		graphicsEngine.EndFrame();
 

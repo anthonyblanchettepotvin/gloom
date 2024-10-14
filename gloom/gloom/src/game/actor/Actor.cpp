@@ -16,14 +16,24 @@ Actor::Actor(const std::string& name)
 {
 }
 
-void Actor::Render()
+void Actor::OnSpawned()
+{
+	for (const auto& component : m_Components)
+	{
+		assert(component != nullptr);
+
+		component->OnParentSpawned();
+	}
+}
+
+void Actor::Render(const Camera& camera)
 {
 	std::vector<RendererComponent*> rendererComponents = FindComponentsByType<RendererComponent>();
 	for (const auto& rendererComponent : rendererComponents)
 	{
 		assert(rendererComponent != nullptr);
 
-		rendererComponent->Render();
+		rendererComponent->Render(camera);
 	}
 }
 

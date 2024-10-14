@@ -9,6 +9,8 @@ class DirectionalLightComponent : public LightComponent
 public:
 	DirectionalLightComponent(DirectionalLight* directionalLight);
 
+	void OnParentSpawned() override;
+
 	DirectionalLight* GetDirectionalLight() { return m_DirectionalLight; }
 
 private:

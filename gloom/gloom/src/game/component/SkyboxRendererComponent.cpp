@@ -8,12 +8,12 @@ SkyboxRendererComponent::SkyboxRendererComponent(GraphicsEngine& graphicsEngine,
 {
 }
 
-void SkyboxRendererComponent::Render()
+void SkyboxRendererComponent::Render(const Camera& camera)
 {
 	if (!m_Skybox)
 	{
 		return;
 	}
 
-	m_GraphicsEngine.Render(*m_Skybox);
+	m_GraphicsEngine.Render(camera, *m_Skybox);
 }

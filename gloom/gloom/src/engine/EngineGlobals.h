@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "graphics/engine/GraphicsEngine.h"
 #include "util/logging/Logger.h"
 #include "util/logging/LoggingManager.h"
 
@@ -22,11 +23,13 @@
 class EngineGlobalsInstance
 {
 public:
-	EngineGlobalsInstance(LoggingManager& loggingManager);
+	EngineGlobalsInstance(GraphicsEngine& graphicsEngine, LoggingManager& loggingManager);
 
+	GraphicsEngine& GetGraphicsEngine() { return m_GraphicsEngine; }
 	LoggingManager& GetLoggingManager() { return m_LoggingManager; }
 
 private:
+	GraphicsEngine& m_GraphicsEngine;
 	LoggingManager& m_LoggingManager;
 };
 
