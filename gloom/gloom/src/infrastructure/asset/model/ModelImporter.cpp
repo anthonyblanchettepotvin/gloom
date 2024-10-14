@@ -163,10 +163,6 @@ Material* ModelImporter::ImportMaterial(const aiMaterial& material)
 		Asset* phongMaterialAsset = m_AssetManager.CreateBlankAsset(ObjectType(typeid(Material)), materialAssetName);
 		Material* phongMaterial = (Material*)phongMaterialAsset->GetObject();
 		phongMaterial->SetMaterialTemplate(m_GraphicsEngine.GetMaterialTemplate(phongShader));
-		if (!phongMaterial)
-		{
-			return nullptr;
-		}
 
 		MaterialAttribute<Texture*>* diffuseTexture = phongMaterial->FindAttribute<MaterialAttribute<Texture*>>("material.texture_diffuse1");
 		std::vector<Texture*> diffuseTextures = ImportMaterialTextures(material, aiTextureType_DIFFUSE);
