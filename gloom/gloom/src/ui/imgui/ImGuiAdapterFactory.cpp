@@ -1,6 +1,7 @@
 #include "ImGuiAdapterFactory.h"
 
 #include "../../engine/graphics/cubemap/Cubemap.h"
+#include "../../engine/graphics/shader/Shader.h"
 #include "../../engine/graphics/texture/Texture.h"
 #include "../../engine/object/Object.h"
 #include "../../game/actor/Actor.h"
@@ -12,6 +13,7 @@
 #include "adapter/ImGuiCubemapAdapter.h"
 #include "adapter/ImGuiDirectionalLightComponentAdapter.h"
 #include "adapter/ImGuiPointLightComponentAdapter.h"
+#include "adapter/ImGuiShaderAdapter.h"
 #include "adapter/ImGuiTextureAdapter.h"
 #include "adapter/ImGuiTransformComponentAdapter.h"
 
@@ -45,6 +47,11 @@ std::unique_ptr<ImGuiAdapter> ImGuiAdapterFactory::CreateAdapter(Object* object)
 	if (PointLightComponent* castedComponent = dynamic_cast<PointLightComponent*>(object))
 	{
 		return std::make_unique<ImGuiPointLightComponentAdapter>(*castedComponent);
+	}
+
+	if (Shader* shader = dynamic_cast<Shader*>(object))
+	{
+		return std::make_unique<ImGuiShaderAdapter>(*shader);
 	}
 
 	if (Texture* texture = dynamic_cast<Texture*>(object))
