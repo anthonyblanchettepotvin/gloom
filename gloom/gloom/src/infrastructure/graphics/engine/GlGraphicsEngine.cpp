@@ -9,7 +9,6 @@
 #include "../../../engine/graphics/lighting/PointLight.h"
 #include "../../../engine/graphics/material/Material.h"
 #include "../../../engine/graphics/material/MaterialAttribute.h"
-#include "../../../engine/graphics/material/MaterialAttributes.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
 #include "../../../engine/graphics/sprite/Sprite.h"
 #include "../../../engine/graphics/skybox/Skybox.h"
@@ -30,7 +29,6 @@
 #include "../uniformbuffer/GlUniformBufferDataTypes.h"
 #include "../mesh/GlMesh.h"
 #include "../shader/GlShader.h"
-#include "../shader/GlShaderImporter.h"
 #include "../skybox/GlSkybox.h"
 #include "../sprite/GlSprite.h"
 #include "../texture/GlTexture.h"
@@ -77,16 +75,6 @@ void GlGraphicsEngine::EndFrame()
 	m_GraphicsData.GetTextureAttachment().RenderToFrame(m_GraphicsData.GetFrame()); // TODO: Tell, don't ask?
 }
 
-std::unique_ptr<Shader> GlGraphicsEngine::CreateShader()
-{
-	return std::make_unique<GlShader>();
-}
-
-std::unique_ptr<Shader> GlGraphicsEngine::ImportShader(const std::string& filePath)
-{
-	return GlShaderImporter().Import(filePath);
-}
-
 void GlGraphicsEngine::RegisterLight(DirectionalLight& directionalLight) // TODO: Add const to directionalLight.
 {
 	m_GraphicsData.RegisterLight(directionalLight);
@@ -99,17 +87,18 @@ void GlGraphicsEngine::RegisterLight(PointLight& pointLight) // TODO: Add const 
 
 void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh) // TODO: Add const to mesh.
 {
-	if (!mesh.GetMaterial() || !mesh.GetMaterial()->GetShader())
+	if (!mesh.GetMaterial() || !mesh.GetMaterial() || !mesh.GetMaterial()->GetMaterialTemplate())
 	{
 		return;
 	}
 
+	const Material* material = mesh.GetMaterial();
+
 	GlMesh& glMesh = m_GraphicsData.GetOrCreateMesh(mesh);
-	Material* material = mesh.GetMaterial();
+	GlShader& glShader = m_GraphicsData.GetOrCreateShader(material->GetMaterialTemplate()->GetShader());
 
-	ApplyMaterial(*material);
+	ApplyMaterial(glShader, *material);
 
-	GlShader& glShader = *(GlShader*)material->GetShader(); // TODO: Having to cast the shader to GlShader is sad.
 	glShader.SetFloatMat4("modelXform", mesh.GetTransform());
 	glShader.BindToUniformBuffers(m_GraphicsData.GetUniformBufferRegistry());
 
@@ -123,17 +112,18 @@ void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh) // TODO: Add con
 
 void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox) // TODO: Add const to skybox.
 {
-	if (!skybox.GetMaterial() || !skybox.GetMaterial()->GetShader())
+	if (!skybox.GetMaterial() || !skybox.GetMaterial() || !skybox.GetMaterial()->GetMaterialTemplate())
 	{
 		return;
 	}
 
+	const Material* material = skybox.GetMaterial();
+
 	GlSkybox& glSkybox = m_GraphicsData.GetOrCreateSkybox(skybox);
-	Material* material = skybox.GetMaterial();
+	GlShader& glShader = m_GraphicsData.GetOrCreateShader(material->GetMaterialTemplate()->GetShader());
 
-	ApplyMaterial(*material);
+	ApplyMaterial(glShader, *material);
 
-	GlShader& glShader = *(GlShader*)material->GetShader(); // TODO: Having to cast the shader to GlShader is sad.
 	glShader.BindToUniformBuffers(m_GraphicsData.GetUniformBufferRegistry());
 	
 	UpdateUniformBuffers(camera);
@@ -146,17 +136,18 @@ void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox) // TODO: Add
 
 void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite) // TODO: Add const to sprite.
 {
-	if (!sprite.GetMaterial() || !sprite.GetMaterial()->GetShader())
+	if (!sprite.GetMaterial() || !sprite.GetMaterial() || !sprite.GetMaterial()->GetMaterialTemplate())
 	{
 		return;
 	}
 
+	const Material* material = sprite.GetMaterial();
+
 	GlSprite& glSprite = m_GraphicsData.GetOrCreateSprite(sprite);
-	Material* material = sprite.GetMaterial();
+	GlShader& glShader = m_GraphicsData.GetOrCreateShader(material->GetMaterialTemplate()->GetShader());
 
-	ApplyMaterial(*material);
+	ApplyMaterial(glShader, *material);
 
-	GlShader& glShader = *(GlShader*)material->GetShader(); // TODO: Having to cast the shader to GlShader is sad.
 	glShader.SetFloatMat4("modelXform", sprite.GetTransform());
 	glShader.BindToUniformBuffers(m_GraphicsData.GetUniformBufferRegistry());
 
@@ -168,41 +159,39 @@ void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite) // TODO: Add
 	m_SamplerIndex = 0;
 }
 
+const MaterialTemplate* GlGraphicsEngine::GetMaterialTemplate(const Shader& shader)
+{
+	return &m_GraphicsData.GetOrCreateShader(shader).GetMaterialTemplate();
+}
+
 void* GlGraphicsEngine::GetTextureId(const Texture& texture)
 {
 	return (void*)m_GraphicsData.GetOrCreateTexture(texture).GetId();
 }
 
-void GlGraphicsEngine::ApplyMaterial(Material& material)
+void GlGraphicsEngine::ApplyMaterial(GlShader& shader, const Material& material)
 {
-	if (GlShader* glShader = dynamic_cast<GlShader*>(material.GetShader()))
-	{
-		glShader->Use();
+	shader.Use();
 
-		for (const auto& attribute : material.GetAttributes())
-		{
-			ApplyMaterialAttributeToShader(*glShader, attribute);
-		}
-	}
-	else
+	for (const auto& attribute : material.GetAttributes())
 	{
-		gLogErrorMessage(ERR_MSG_EXPECTS_GL_SHADER);
+		ApplyMaterialAttribute(shader, attribute);
 	}
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute)
+void GlGraphicsEngine::ApplyMaterialAttribute(GlShader& shader, const MaterialAttributeBase* attribute)
 {
-	if (const CubemapMaterialAttribute* cubemapAttribute = dynamic_cast<const CubemapMaterialAttribute*>(attribute))
+	if (const MaterialAttribute<Cubemap*>* cubemapAttribute = dynamic_cast<const MaterialAttribute<Cubemap*>*>(attribute))
 	{
-		ApplyMaterialAttributeToShader(shader, *cubemapAttribute);
+		ApplyMaterialAttribute(shader, *cubemapAttribute);
 	}
-	else if (const FloatMaterialAttribute* floatAttribute = dynamic_cast<const FloatMaterialAttribute*>(attribute))
+	else if (const MaterialAttribute<float>* floatAttribute = dynamic_cast<const MaterialAttribute<float>*>(attribute))
 	{
-		ApplyMaterialAttributeToShader(shader, *floatAttribute);
+		ApplyMaterialAttribute(shader, *floatAttribute);
 	}
-	else if (const TextureMaterialAttribute* textureAttribute = dynamic_cast<const TextureMaterialAttribute*>(attribute))
+	else if (const MaterialAttribute<Texture*>* textureAttribute = dynamic_cast<const MaterialAttribute<Texture*>*>(attribute))
 	{
-		ApplyMaterialAttributeToShader(shader, *textureAttribute);
+		ApplyMaterialAttribute(shader, *textureAttribute);
 	}
 	else
 	{
@@ -210,7 +199,7 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const Ma
 	}
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const CubemapMaterialAttribute& attribute)
+void GlGraphicsEngine::ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Cubemap*>& attribute)
 {
 	const Cubemap* cubemap = attribute.GetValue();
 	if (!cubemap)
@@ -221,17 +210,17 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const Cu
 	GlCubemap& glCubemap = m_GraphicsData.GetOrCreateCubemap(*cubemap);
 
 	glCubemap.Use(m_SamplerIndex);
-	shader.SetInt(attribute.GetName(), m_SamplerIndex);
+	shader.SetInt(attribute.GetMaterialAttributeTemplate().GetName(), m_SamplerIndex);
 
 	m_SamplerIndex++;
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const FloatMaterialAttribute& attribute)
+void GlGraphicsEngine::ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<float>& attribute)
 {
-	shader.SetFloat(attribute.GetName(), attribute.GetValue());
+	shader.SetFloat(attribute.GetMaterialAttributeTemplate().GetName(), attribute.GetValue());
 }
 
-void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const TextureMaterialAttribute& attribute)
+void GlGraphicsEngine::ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Texture*>& attribute)
 {
 	const Texture* texture = attribute.GetValue();
 	if (!texture)
@@ -242,7 +231,7 @@ void GlGraphicsEngine::ApplyMaterialAttributeToShader(GlShader& shader, const Te
 	GlTexture& glTexture = m_GraphicsData.GetOrCreateTexture(*texture);
 
 	glTexture.Use(m_SamplerIndex);
-	shader.SetInt(attribute.GetName(), m_SamplerIndex);
+	shader.SetInt(attribute.GetMaterialAttributeTemplate().GetName(), m_SamplerIndex);
 
 	m_SamplerIndex++;
 }

@@ -8,14 +8,11 @@
 #include "GlGraphicsData.h"
 
 class Camera;
-class CubemapMaterialAttribute;
 class DirectionalLight;
-class FloatMaterialAttribute;
 class GlShader;
 class Material;
-class MaterialAttribute;
+class MaterialAttributeBase;
 class PointLight;
-class TextureMaterialAttribute;
 
 class GlGraphicsEngine : public GraphicsEngine
 {
@@ -25,15 +22,14 @@ public:
 	void StartFrame() override;
 	void EndFrame() override;
 
-	std::unique_ptr<Shader> CreateShader() override;
-	std::unique_ptr<Shader> ImportShader(const std::string& filePath) override;
-
 	void RegisterLight(DirectionalLight& directionalLight) override;
 	void RegisterLight(PointLight& pointLight) override;
 
 	void Render(const Camera&, Mesh& mesh) override;
 	void Render(const Camera&, Skybox& skybox) override;
 	void Render(const Camera&, Sprite& sprite) override;
+
+	const MaterialTemplate* GetMaterialTemplate(const Shader& shader) override;
 	
 	void* GetTextureId(const Texture& texture) override;
 
@@ -41,11 +37,12 @@ private:
 	void UpdateUniformBuffers(const Camera& camera);
 	void SendUniformBuffersToDevice();
 
-	void ApplyMaterial(Material& material);
-	void ApplyMaterialAttributeToShader(GlShader& shader, const MaterialAttribute* attribute);
-	void ApplyMaterialAttributeToShader(GlShader& shader, const CubemapMaterialAttribute& attribute);
-	void ApplyMaterialAttributeToShader(GlShader& shader, const FloatMaterialAttribute& attribute);
-	void ApplyMaterialAttributeToShader(GlShader& shader, const TextureMaterialAttribute& attribute);
+	void ApplyMaterial(GlShader& shader, const Material& material);
+	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttributeBase* attribute);
+	// TODO: The following methods could be templated and we could use template specialization for the Cubemap* and Texture* cases.
+	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Cubemap*>& attribute);
+	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<float>& attribute);
+	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Texture*>& attribute);
 
 	GlGraphicsData m_GraphicsData;
 

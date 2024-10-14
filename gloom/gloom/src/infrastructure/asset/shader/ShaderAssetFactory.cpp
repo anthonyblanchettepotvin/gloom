@@ -10,5 +10,5 @@ ShaderAssetFactory::ShaderAssetFactory(GraphicsEngine& graphicsEngine)
 
 std::unique_ptr<Object> ShaderAssetFactory::CreateBlankObject()
 {
-    return m_GraphicsEngine.CreateShader();
+    return std::make_unique<Shader>();
 }

@@ -186,7 +186,6 @@
     <ClCompile Include="src\infrastructure\asset\cubemap\CubemapImporter.cpp" />
     <ClCompile Include="src\infrastructure\asset\model\ModelImporter.cpp" />
     <ClCompile Include="src\engine\graphics\shader\ShaderRegistry.cpp" />
-    <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialAttribute.cpp" />
     <ClCompile Include="src\engine\graphics\material\MaterialTemplate.cpp" />
     <ClCompile Include="src\engine\object\ObjectID.cpp" />
@@ -210,7 +209,7 @@
     <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsEngine.cpp" />
     <ClCompile Include="src\engine\graphics\engine\GraphicsEngine.cpp" />
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp" />
-    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderImporter.cpp" />
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderParser.cpp" />
     <ClCompile Include="src\engine\graphics\material\Material.cpp" />
     <ClCompile Include="src\engine\graphics\cubemap\Cubemap.cpp" />
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c" />
@@ -294,7 +293,6 @@
     <ClInclude Include="src\infrastructure\asset\cubemap\CubemapImporter.h" />
     <ClInclude Include="src\infrastructure\asset\model\ModelImporter.h" />
     <ClInclude Include="src\engine\graphics\shader\ShaderRegistry.h" />
-    <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialAttribute.h" />
     <ClInclude Include="src\engine\graphics\material\MaterialTemplate.h" />
     <ClInclude Include="src\engine\object\ObjectID.h" />
@@ -318,7 +316,7 @@
     <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsEngine.h" />
     <ClInclude Include="src\engine\graphics\engine\GraphicsEngine.h" />
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h" />
-    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderImporter.h" />
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderParser.h" />
     <ClInclude Include="src\engine\graphics\material\Material.h" />
     <ClInclude Include="src\engine\graphics\cubemap\Cubemap.h" />
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h" />

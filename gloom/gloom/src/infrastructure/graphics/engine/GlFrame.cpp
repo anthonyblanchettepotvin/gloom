@@ -1,17 +1,47 @@
 #include "GlFrame.h"
 
-#include <stdexcept>
-
 #include <glad/glad.h>
 
-#include "../../../engine/EngineHelpers.h"
+#include <fstream>
+#include <sstream>
 
-#include "../shader/GlShader.h"
+#include "../../../engine/EngineGlobals.h"
+
 #include "../texture/GlTexture.h"
+
+#define FRAME_SHADER_PATH "..\\..\\assets\\shaders\\render.shader" // TODO: Move the shader in a OpenGL-specific folder.
+
+std::string ImportFrameShaderCode()
+{
+	std::ifstream frameShaderFile;
+	std::stringstream frameShaderFileBuf;
+
+	try
+	{
+		frameShaderFile.open(FRAME_SHADER_PATH);
+		frameShaderFileBuf << frameShaderFile.rdbuf();
+		frameShaderFile.close();
+	}
+	catch (std::exception e)
+	{
+		std::stringstream ss;
+		ss << "Could not import frame shader " << FRAME_SHADER_PATH << ".";
+		gLogErrorMessageForKey("GlFrame", ss.str());
+
+		return nullptr;
+	}
+
+	return frameShaderFileBuf.str();
+}
+
+GlFrame::GlFrame()
+	: m_Shader(ImportFrameShaderCode()), m_GlShader(m_Shader)
+{
+}
 
 void GlFrame::RenderTexture(GlTexture& texture)
 {
-	m_Shader->Use();
+	m_GlShader.Use();
 
 	glBindVertexArray(m_Vao);
 	texture.Use(0);
@@ -21,18 +51,11 @@ void GlFrame::RenderTexture(GlTexture& texture)
 	texture.Free();
 	glBindVertexArray(0);
 
-	m_Shader->Free();
+	m_GlShader.Free();
 }
 
-void GlFrame::Initialize(std::unique_ptr<GlShader>& shader)
+void GlFrame::Initialize()
 {
-	if (!shader)
-	{
-		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(shader));
-	}
-
-	m_Shader = std::move(shader);
-
 	float vertices[] = {
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
