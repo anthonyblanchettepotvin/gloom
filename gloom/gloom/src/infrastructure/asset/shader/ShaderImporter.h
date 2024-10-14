@@ -4,8 +4,6 @@
 
 #include "../../../engine/asset/AssetImporter.h"
 
-class GraphicsEngine;
-
 class ShaderImporter : public AssetImporter<const std::string&>
 {
 public:

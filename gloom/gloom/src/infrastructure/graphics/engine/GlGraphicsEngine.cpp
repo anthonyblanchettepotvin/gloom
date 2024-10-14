@@ -8,6 +8,7 @@
 #include "../../../engine/graphics/lighting/DirectionalLight.h"
 #include "../../../engine/graphics/lighting/PointLight.h"
 #include "../../../engine/graphics/material/Material.h"
+#include "../../../engine/graphics/material/MaterialAttribute.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
 #include "../../../engine/graphics/sprite/Sprite.h"
 #include "../../../engine/graphics/skybox/Skybox.h"
