@@ -28,7 +28,7 @@ std::string ImportFrameShaderCode()
 		ss << "Could not import frame shader " << FRAME_SHADER_PATH << ".";
 		gLogErrorMessageForKey("GlFrame", ss.str());
 
-		return nullptr;
+		return std::string();
 	}
 
 	return frameShaderFileBuf.str();
