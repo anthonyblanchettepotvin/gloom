@@ -39,7 +39,6 @@ private:
 
 	void ApplyMaterial(GlShader& shader, const Material& material);
 	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttributeBase* attribute);
-	// TODO: The following methods could be templated and we could use template specialization for the Cubemap* and Texture* cases.
 	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Cubemap*>& attribute);
 	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<float>& attribute);
 	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Texture*>& attribute);

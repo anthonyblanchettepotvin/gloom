@@ -151,6 +151,8 @@ Material* ModelImporter::ImportMaterial(const aiMaterial& material)
 		return m_ImportedMaterial[materialName];
 	}
 
+	std::string materialAssetName = m_AssetName + "." + materialName;
+
 	int materialShadingModel;
 	material.Get(AI_MATKEY_SHADING_MODEL, materialShadingModel);
 
@@ -158,7 +160,7 @@ Material* ModelImporter::ImportMaterial(const aiMaterial& material)
 	{
 		Shader& phongShader = m_ShaderRegistry.FindShader(ShadingModel::Phong);
 
-		Asset* phongMaterialAsset = m_AssetManager.CreateBlankAsset(ObjectType(typeid(Material)), "TODO: CHANGE ME");
+		Asset* phongMaterialAsset = m_AssetManager.CreateBlankAsset(ObjectType(typeid(Material)), materialAssetName);
 		Material* phongMaterial = (Material*)phongMaterialAsset->GetObject();
 		phongMaterial->SetMaterialTemplate(m_GraphicsEngine.GetMaterialTemplate(phongShader));
 		if (!phongMaterial)
@@ -221,8 +223,9 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(const aiMaterial& ma
 		else
 		{
 			std::string textureName = GenerateTextureName(textureAbsolutePath);
+			std::string textureAssetName = m_AssetName + "." + textureName;
 
-			Asset* textureAsset = m_TextureImporter.Import(textureName, textureAbsolutePath);
+			Asset* textureAsset = m_TextureImporter.Import(textureAssetName, textureAbsolutePath);
 			if (!textureAsset)
 			{
 				continue;

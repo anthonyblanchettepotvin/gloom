@@ -8,7 +8,6 @@
 #include "../../../engine/graphics/lighting/DirectionalLight.h"
 #include "../../../engine/graphics/lighting/PointLight.h"
 #include "../../../engine/graphics/material/Material.h"
-#include "../../../engine/graphics/material/MaterialAttribute.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
 #include "../../../engine/graphics/sprite/Sprite.h"
 #include "../../../engine/graphics/skybox/Skybox.h"
@@ -72,20 +71,20 @@ void GlGraphicsEngine::EndFrame()
 	//if (settingsComponent.GetDepthTestingEnabledReference())
 	glDisable(GL_DEPTH_TEST);
 
-	m_GraphicsData.GetTextureAttachment().RenderToFrame(m_GraphicsData.GetFrame()); // TODO: Tell, don't ask?
+	m_GraphicsData.GetTextureAttachment().RenderToFrame(m_GraphicsData.GetFrame());
 }
 
-void GlGraphicsEngine::RegisterLight(DirectionalLight& directionalLight) // TODO: Add const to directionalLight.
+void GlGraphicsEngine::RegisterLight(DirectionalLight& directionalLight)
 {
 	m_GraphicsData.RegisterLight(directionalLight);
 }
 
-void GlGraphicsEngine::RegisterLight(PointLight& pointLight) // TODO: Add const to pointLight.
+void GlGraphicsEngine::RegisterLight(PointLight& pointLight)
 {
 	m_GraphicsData.RegisterLight(pointLight);
 }
 
-void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh) // TODO: Add const to mesh.
+void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh)
 {
 	if (!mesh.GetMaterial() || !mesh.GetMaterial() || !mesh.GetMaterial()->GetMaterialTemplate())
 	{
@@ -110,7 +109,7 @@ void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh) // TODO: Add con
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox) // TODO: Add const to skybox.
+void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox)
 {
 	if (!skybox.GetMaterial() || !skybox.GetMaterial() || !skybox.GetMaterial()->GetMaterialTemplate())
 	{
@@ -134,7 +133,7 @@ void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox) // TODO: Add
 	m_SamplerIndex = 0;
 }
 
-void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite) // TODO: Add const to sprite.
+void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite)
 {
 	if (!sprite.GetMaterial() || !sprite.GetMaterial() || !sprite.GetMaterial()->GetMaterialTemplate())
 	{
