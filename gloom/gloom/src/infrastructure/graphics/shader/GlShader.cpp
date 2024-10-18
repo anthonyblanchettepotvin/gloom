@@ -44,6 +44,16 @@ void GlShader::Free()
 	glUseProgram(0);
 }
 
+void GlShader::ApplyMaterial(const Material& material, GlGraphicsData& graphicsData)
+{
+	Use();
+
+	for (const auto& attribute : material.GetAttributes())
+	{
+		ApplyMaterialAttribute(attribute, graphicsData);
+	}
+}
+
 void GlShader::SetBool(const std::string& name, bool value)
 {
 	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), (int)value);
@@ -251,16 +261,6 @@ unsigned int GlShader::LinkShaders(unsigned int vertexShaderId, unsigned int fra
 	}
 
 	return programId;
-}
-
-void GlShader::ApplyMaterial(const Material& material, GlGraphicsData& graphicsData)
-{
-	Use();
-
-	for (const auto& attribute : material.GetAttributes())
-	{
-		ApplyMaterialAttribute(attribute, graphicsData);
-	}
 }
 
 void GlShader::ApplyMaterialAttribute(const MaterialAttributeBase* attribute, GlGraphicsData& graphicsData)
