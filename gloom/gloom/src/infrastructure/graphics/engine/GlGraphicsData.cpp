@@ -211,6 +211,16 @@ void GlGraphicsData::SendUniformBuffersToDevice()
 	}
 }
 
+size_t GlGraphicsData::NextSamplerIndex()
+{
+	return m_SamplerIndex++;
+}
+
+void GlGraphicsData::ResetSamplerIndex()
+{
+	m_SamplerIndex = 0;
+}
+
 void GlGraphicsData::InitializeUniformBuffers()
 {
 	/* Here we create our Uniform Buffer Objects (UBOs). Each shader that defines a uniform

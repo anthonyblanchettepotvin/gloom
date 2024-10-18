@@ -7,8 +7,12 @@
 
 #include "../../../engine/graphics/material/MaterialTemplate.h"
 
+class Cubemap;
+class GlGraphicsData;
 class GlUniformBufferRegistry;
+class Material;
 class Shader;
+class Texture;
 
 class GlShader
 {
@@ -17,6 +21,8 @@ public:
 
 	void Use();
 	void Free();
+
+	void ApplyMaterial(const Material& material, GlGraphicsData& graphicsData);
 
 	void SetBool(const std::string& name, bool value);
 	void SetInt(const std::string& name, int value);
@@ -38,6 +44,11 @@ private:
 	unsigned int CompileFragmentShader();
 
 	unsigned int LinkShaders(unsigned int vertexShaderId, unsigned int fragmentShaderId);
+
+	void ApplyMaterialAttribute(const MaterialAttributeBase* attribute, GlGraphicsData& graphicsData);
+	void ApplyMaterialAttribute(const MaterialAttribute<Cubemap*>& attribute, GlGraphicsData& graphicsData);
+	void ApplyMaterialAttribute(const MaterialAttribute<float>& attribute, GlGraphicsData& graphicsData);
+	void ApplyMaterialAttribute(const MaterialAttribute<Texture*>& attribute, GlGraphicsData& graphicsData);
 
 	const Shader& m_Shader;
 

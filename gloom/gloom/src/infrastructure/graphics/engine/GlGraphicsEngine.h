@@ -9,10 +9,12 @@
 
 class Camera;
 class DirectionalLight;
-class GlShader;
-class Material;
-class MaterialAttributeBase;
+class Mesh;
 class PointLight;
+class Skybox;
+class Shader;
+class Sprite;
+class Texture;
 
 class GlGraphicsEngine : public GraphicsEngine
 {
@@ -37,13 +39,5 @@ private:
 	void UpdateUniformBuffers(const Camera& camera);
 	void SendUniformBuffersToDevice();
 
-	void ApplyMaterial(GlShader& shader, const Material& material);
-	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttributeBase* attribute);
-	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Cubemap*>& attribute);
-	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<float>& attribute);
-	void ApplyMaterialAttribute(GlShader& shader, const MaterialAttribute<Texture*>& attribute);
-
 	GlGraphicsData m_GraphicsData;
-
-	size_t m_SamplerIndex = 0;
 };

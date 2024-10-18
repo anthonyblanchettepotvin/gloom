@@ -57,6 +57,9 @@ public:
 	void UpdateUniformBuffers(const Camera& camera);
 	void SendUniformBuffersToDevice();
 
+	size_t NextSamplerIndex();
+	void ResetSamplerIndex();
+
 private:
 	void InitializeUniformBuffers();
 
@@ -76,4 +79,6 @@ private:
 	std::unordered_map<ObjectID, GlSkybox> m_GlSkyboxes;
 	std::unordered_map<ObjectID, GlSprite> m_GlSprites;
 	std::unordered_map<ObjectID, GlTexture> m_GlTextures;
+
+	size_t m_SamplerIndex = 0;
 };
