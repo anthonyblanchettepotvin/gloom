@@ -44,73 +44,6 @@ void GlShader::Free()
 	glUseProgram(0);
 }
 
-void GlShader::ApplyMaterial(const Material& material, GlGraphicsData& graphicsData)
-{
-	Use();
-
-	for (const auto& attribute : material.GetAttributes())
-	{
-		ApplyMaterialAttribute(attribute, graphicsData);
-	}
-}
-
-void GlShader::ApplyMaterialAttribute(const MaterialAttributeBase* attribute, GlGraphicsData& graphicsData)
-{
-	if (const MaterialAttribute<Cubemap*>* cubemapAttribute = dynamic_cast<const MaterialAttribute<Cubemap*>*>(attribute))
-	{
-		ApplyMaterialAttribute(*cubemapAttribute, graphicsData);
-	}
-	else if (const MaterialAttribute<float>* floatAttribute = dynamic_cast<const MaterialAttribute<float>*>(attribute))
-	{
-		ApplyMaterialAttribute(*floatAttribute, graphicsData);
-	}
-	else if (const MaterialAttribute<Texture*>* textureAttribute = dynamic_cast<const MaterialAttribute<Texture*>*>(attribute))
-	{
-		ApplyMaterialAttribute(*textureAttribute, graphicsData);
-	}
-	else
-	{
-		gLogErrorMessage(ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED);
-	}
-}
-
-void GlShader::ApplyMaterialAttribute(const MaterialAttribute<Cubemap*>& attribute, GlGraphicsData& graphicsData)
-{
-	const Cubemap* cubemap = attribute.GetValue();
-	if (!cubemap)
-	{
-		return;
-	}
-
-	size_t samplerIndex = graphicsData.NextSamplerIndex();
-
-	GlCubemap& glCubemap = graphicsData.GetOrCreateCubemap(*cubemap);
-	glCubemap.Use(samplerIndex);
-
-	SetInt(attribute.GetMaterialAttributeTemplate().GetName(), samplerIndex);
-}
-
-void GlShader::ApplyMaterialAttribute(const MaterialAttribute<float>& attribute, GlGraphicsData& graphicsData)
-{
-	SetFloat(attribute.GetMaterialAttributeTemplate().GetName(), attribute.GetValue());
-}
-
-void GlShader::ApplyMaterialAttribute(const MaterialAttribute<Texture*>& attribute, GlGraphicsData& graphicsData)
-{
-	const Texture* texture = attribute.GetValue();
-	if (!texture)
-	{
-		return;
-	}
-
-	size_t samplerIndex = graphicsData.NextSamplerIndex();
-
-	GlTexture& glTexture = graphicsData.GetOrCreateTexture(*texture);
-	glTexture.Use(samplerIndex);
-
-	SetInt(attribute.GetMaterialAttributeTemplate().GetName(), samplerIndex);
-}
-
 void GlShader::SetBool(const std::string& name, bool value)
 {
 	glUniform1i(glGetUniformLocation(m_Id, name.c_str()), (int)value);
@@ -318,4 +251,71 @@ unsigned int GlShader::LinkShaders(unsigned int vertexShaderId, unsigned int fra
 	}
 
 	return programId;
+}
+
+void GlShader::ApplyMaterial(const Material& material, GlGraphicsData& graphicsData)
+{
+	Use();
+
+	for (const auto& attribute : material.GetAttributes())
+	{
+		ApplyMaterialAttribute(attribute, graphicsData);
+	}
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttributeBase* attribute, GlGraphicsData& graphicsData)
+{
+	if (const MaterialAttribute<Cubemap*>* cubemapAttribute = dynamic_cast<const MaterialAttribute<Cubemap*>*>(attribute))
+	{
+		ApplyMaterialAttribute(*cubemapAttribute, graphicsData);
+	}
+	else if (const MaterialAttribute<float>* floatAttribute = dynamic_cast<const MaterialAttribute<float>*>(attribute))
+	{
+		ApplyMaterialAttribute(*floatAttribute, graphicsData);
+	}
+	else if (const MaterialAttribute<Texture*>* textureAttribute = dynamic_cast<const MaterialAttribute<Texture*>*>(attribute))
+	{
+		ApplyMaterialAttribute(*textureAttribute, graphicsData);
+	}
+	else
+	{
+		gLogErrorMessage(ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED);
+	}
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttribute<Cubemap*>& attribute, GlGraphicsData& graphicsData)
+{
+	const Cubemap* cubemap = attribute.GetValue();
+	if (!cubemap)
+	{
+		return;
+	}
+
+	size_t samplerIndex = graphicsData.NextSamplerIndex();
+
+	GlCubemap& glCubemap = graphicsData.GetOrCreateCubemap(*cubemap);
+	glCubemap.Use(samplerIndex);
+
+	SetInt(attribute.GetMaterialAttributeTemplate().GetName(), samplerIndex);
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttribute<float>& attribute, GlGraphicsData& graphicsData)
+{
+	SetFloat(attribute.GetMaterialAttributeTemplate().GetName(), attribute.GetValue());
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttribute<Texture*>& attribute, GlGraphicsData& graphicsData)
+{
+	const Texture* texture = attribute.GetValue();
+	if (!texture)
+	{
+		return;
+	}
+
+	size_t samplerIndex = graphicsData.NextSamplerIndex();
+
+	GlTexture& glTexture = graphicsData.GetOrCreateTexture(*texture);
+	glTexture.Use(samplerIndex);
+
+	SetInt(attribute.GetMaterialAttributeTemplate().GetName(), samplerIndex);
 }
