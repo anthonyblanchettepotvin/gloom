@@ -1,6 +1,6 @@
 #include "MaterialAttribute.h"
 
-MaterialAttribute::MaterialAttribute(const std::string& name)
+MaterialAttributeTemplateBase::MaterialAttributeTemplateBase(const std::string& name)
 	: m_Name(name)
 {
 }

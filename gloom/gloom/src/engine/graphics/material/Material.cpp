@@ -1,29 +1,24 @@
 #include "Material.h"
 
 #include <cassert>
-#include <stdexcept>
 
-#include "../../EngineHelpers.h"
+#include "MaterialTemplate.h"
 
-#include "../shader/Shader.h"
-
-Material::Material(Shader* shader, std::vector<std::unique_ptr<MaterialAttribute>>& attributes)
-	: m_Shader(shader)
+Material::Material(const MaterialTemplate* materialTemplate)
+	: m_MaterialTemplate(materialTemplate)
 {
-	for (const auto& attribute : attributes)
-	{
-		if (!attribute)
-		{
-			throw std::invalid_argument(ARGUMENT_CONTAINS_NULLPTR(attributes));
-		}
-	}
-
-	m_Attributes = std::move(attributes);
 }
 
-std::vector<const MaterialAttribute*> Material::GetAttributes() const
+void Material::SetMaterialTemplate(const MaterialTemplate* materialTemplate)
 {
-	std::vector<const MaterialAttribute*> attributes;
+	m_MaterialTemplate = materialTemplate;
+
+	ResetAttributes();
+}
+
+std::vector<const MaterialAttributeBase*> Material::GetAttributes() const
+{
+	std::vector<const MaterialAttributeBase*> attributes;
 
 	for (const auto& attribute : m_Attributes)
 	{
@@ -33,4 +28,21 @@ std::vector<const MaterialAttribute*> Material::GetAttributes() const
 	}
 
 	return attributes;
+}
+
+void Material::ResetAttributes()
+{
+	for (auto& attribute : m_Attributes)
+	{
+		attribute.release();
+	}
+
+	m_Attributes.clear();
+
+	for (const auto& materialTemplateAttribute : m_MaterialTemplate->GetAttributes())
+	{
+		assert(materialTemplateAttribute != nullptr);
+
+		m_Attributes.emplace_back(std::move(materialTemplateAttribute->InstantiateMaterialAttribute()));
+	}
 }

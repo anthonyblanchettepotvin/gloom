@@ -7,18 +7,29 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../../../engine/EngineGlobals.h"
-#include "../../../engine/graphics/material/MaterialAttributes.h"
+#include "../../../engine/graphics/cubemap/Cubemap.h"
+#include "../../../engine/graphics/material/Material.h"
+#include "../../../engine/graphics/material/MaterialAttribute.h"
+#include "../../../engine/graphics/shader/Shader.h"
+#include "../../../engine/graphics/texture/Texture.h"
 
+#include "../cubemap/GlCubemap.h"
+#include "../engine/GlGraphicsData.h"
+#include "../texture/GlTexture.h"
 #include "../uniformbuffer/GlUniformBuffer.h"
 #include "../uniformbuffer/GlUniformBufferRegistry.h"
+
+#include "GlShaderParser.h"
 
 #define MAX_UNIFORM_NAME_BUF_LENGTH 32
 #define MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH 32
 
 #define MATERIAL_STRUCT_NAME "material"
 
-GlShader::GlShader(const std::string& vertexShader, const std::string& fragmentShader)
-	: m_VertexShader(vertexShader), m_FragmentShader(fragmentShader)
+#define ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED "Material attribute type is not supported."
+
+GlShader::GlShader(const Shader& shader)
+	: m_Shader(shader), m_MaterialTemplate(shader)
 {
 	Initialize();
 }
@@ -31,6 +42,73 @@ void GlShader::Use()
 void GlShader::Free()
 {
 	glUseProgram(0);
+}
+
+void GlShader::ApplyMaterial(const Material& material, GlGraphicsData& graphicsData)
+{
+	Use();
+
+	for (const auto& attribute : material.GetAttributes())
+	{
+		ApplyMaterialAttribute(attribute, graphicsData);
+	}
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttributeBase* attribute, GlGraphicsData& graphicsData)
+{
+	if (const MaterialAttribute<Cubemap*>* cubemapAttribute = dynamic_cast<const MaterialAttribute<Cubemap*>*>(attribute))
+	{
+		ApplyMaterialAttribute(*cubemapAttribute, graphicsData);
+	}
+	else if (const MaterialAttribute<float>* floatAttribute = dynamic_cast<const MaterialAttribute<float>*>(attribute))
+	{
+		ApplyMaterialAttribute(*floatAttribute, graphicsData);
+	}
+	else if (const MaterialAttribute<Texture*>* textureAttribute = dynamic_cast<const MaterialAttribute<Texture*>*>(attribute))
+	{
+		ApplyMaterialAttribute(*textureAttribute, graphicsData);
+	}
+	else
+	{
+		gLogErrorMessage(ERR_MSG_MATERIAL_ATTRIBUTE_TYPE_NOT_SUPPORTED);
+	}
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttribute<Cubemap*>& attribute, GlGraphicsData& graphicsData)
+{
+	const Cubemap* cubemap = attribute.GetValue();
+	if (!cubemap)
+	{
+		return;
+	}
+
+	size_t samplerIndex = graphicsData.NextSamplerIndex();
+
+	GlCubemap& glCubemap = graphicsData.GetOrCreateCubemap(*cubemap);
+	glCubemap.Use(samplerIndex);
+
+	SetInt(attribute.GetMaterialAttributeTemplate().GetName(), samplerIndex);
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttribute<float>& attribute, GlGraphicsData& graphicsData)
+{
+	SetFloat(attribute.GetMaterialAttributeTemplate().GetName(), attribute.GetValue());
+}
+
+void GlShader::ApplyMaterialAttribute(const MaterialAttribute<Texture*>& attribute, GlGraphicsData& graphicsData)
+{
+	const Texture* texture = attribute.GetValue();
+	if (!texture)
+	{
+		return;
+	}
+
+	size_t samplerIndex = graphicsData.NextSamplerIndex();
+
+	GlTexture& glTexture = graphicsData.GetOrCreateTexture(*texture);
+	glTexture.Use(samplerIndex);
+
+	SetInt(attribute.GetMaterialAttributeTemplate().GetName(), samplerIndex);
 }
 
 void GlShader::SetBool(const std::string& name, bool value)
@@ -81,6 +159,47 @@ void GlShader::BindToUniformBuffers(const GlUniformBufferRegistry& uniformBuffer
 	}
 }
 
+void GlShader::Initialize()
+{
+	std::tuple<std::string, std::string> parsedShader = GlShaderParser::Parse(m_Shader.GetCode());
+	m_VertexShader = std::get<0>(parsedShader);
+	m_FragmentShader = std::get<1>(parsedShader);
+
+	unsigned int vertexShaderId = CompileVertexShader();
+	unsigned int fragmentShaderId = CompileFragmentShader();
+
+	m_Id = LinkShaders(vertexShaderId, fragmentShaderId);
+
+	glDeleteShader(vertexShaderId);
+	glDeleteShader(fragmentShaderId);
+
+	InitializeUniformBufferNames();
+	InitializeMaterialTemplate();
+}
+
+void GlShader::InitializeUniformBufferNames()
+{
+	if (m_Id == 0)
+	{
+		return;
+	}
+
+	GLint nbUniformBlocks;
+	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORM_BLOCKS, &nbUniformBlocks);
+
+	GLchar uniformBlockNameBuf[MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH];
+	GLsizei uniformBlockNameBufLength;
+
+	for (size_t i = 0; i < nbUniformBlocks; i++)
+	{
+		glGetActiveUniformBlockName(m_Id, (GLint)i, MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH, &uniformBlockNameBufLength, uniformBlockNameBuf);
+
+		std::string uniformBlockName = (std::string)uniformBlockNameBuf;
+
+		m_UniformBufferNames.push_back(uniformBlockName);
+	}
+}
+
 void GlShader::InitializeMaterialTemplate()
 {
 	if (m_Id == 0)
@@ -110,19 +229,19 @@ void GlShader::InitializeMaterialTemplate()
 			{
 			case GL_FLOAT:
 			{
-				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<FloatMaterialAttribute>(attributeName);
+				std::unique_ptr<MaterialAttributeTemplateBase> attribute = std::make_unique<MaterialAttributeTemplate<float>>(attributeName);
 				m_MaterialTemplate.AddAttribute(attribute);
 				break;
 			}
 			case GL_SAMPLER_2D:
 			{
-				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<TextureMaterialAttribute>(attributeName);
+				std::unique_ptr<MaterialAttributeTemplateBase> attribute = std::make_unique<MaterialAttributeTemplate<Texture*>>(attributeName);
 				m_MaterialTemplate.AddAttribute(attribute);
 				break;
 			}
 			case GL_SAMPLER_CUBE:
 			{
-				std::unique_ptr<MaterialAttribute> attribute = std::make_unique<CubemapMaterialAttribute>(attributeName);
+				std::unique_ptr<MaterialAttributeTemplateBase> attribute = std::make_unique<MaterialAttributeTemplate<Cubemap*>>(attributeName);
 				m_MaterialTemplate.AddAttribute(attribute);
 				break;
 			}
@@ -130,44 +249,6 @@ void GlShader::InitializeMaterialTemplate()
 				break;
 			}
 		}
-	}
-
-	m_IsMaterialTemplateInitialized = true;
-}
-
-void GlShader::Initialize()
-{
-	unsigned int vertexShaderId = CompileVertexShader();
-	unsigned int fragmentShaderId = CompileFragmentShader();
-
-	m_Id = LinkShaders(vertexShaderId, fragmentShaderId);
-
-	glDeleteShader(vertexShaderId);
-	glDeleteShader(fragmentShaderId);
-
-	InitializeUniformBufferNames();
-}
-
-void GlShader::InitializeUniformBufferNames()
-{
-	if (m_Id == 0)
-	{
-		return;
-	}
-
-	GLint nbUniformBlocks;
-	glGetProgramiv(m_Id, GL_ACTIVE_UNIFORM_BLOCKS, &nbUniformBlocks);
-
-	GLchar uniformBlockNameBuf[MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH];
-	GLsizei uniformBlockNameBufLength;
-
-	for (size_t i = 0; i < nbUniformBlocks; i++)
-	{
-		glGetActiveUniformBlockName(m_Id, (GLint)i, MAX_UNIFORM_BLOCK_NAME_BUF_LENGTH, &uniformBlockNameBufLength, uniformBlockNameBuf);
-
-		std::string uniformBlockName = (std::string)uniformBlockNameBuf;
-
-		m_UniformBufferNames.push_back(uniformBlockName);
 	}
 }
 

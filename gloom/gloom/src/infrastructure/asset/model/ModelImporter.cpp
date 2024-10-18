@@ -12,8 +12,9 @@
 
 #include "../../../engine/EngineGlobals.h"
 #include "../../../engine/asset/Asset.h"
+#include "../../../engine/graphics/engine/GraphicsEngine.h"
 #include "../../../engine/graphics/material/Material.h"
-#include "../../../engine/graphics/material/MaterialAttributes.h"
+#include "../../../engine/graphics/material/MaterialAttribute.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
 #include "../../../engine/graphics/model/Model.h"
 #include "../../../engine/graphics/shader/Shader.h"
@@ -23,8 +24,8 @@
 
 #include "../texture/TextureImporter.h"
 
-ModelImporter::ModelImporter(AssetManager& assetManager, TextureImporter& textureImporter, ShaderRegistry& shaderRegistry)
-	: AssetImporter(assetManager), m_TextureImporter(textureImporter), m_ShaderRegistry(shaderRegistry)
+ModelImporter::ModelImporter(AssetManager& assetManager, TextureImporter& textureImporter, ShaderRegistry& shaderRegistry, GraphicsEngine& graphicsEngine)
+	: AssetImporter(assetManager), m_TextureImporter(textureImporter), m_ShaderRegistry(shaderRegistry), m_GraphicsEngine(graphicsEngine)
 {
 }
 
@@ -150,6 +151,8 @@ Material* ModelImporter::ImportMaterial(const aiMaterial& material)
 		return m_ImportedMaterial[materialName];
 	}
 
+	std::string materialAssetName = m_AssetName + "." + materialName;
+
 	int materialShadingModel;
 	material.Get(AI_MATKEY_SHADING_MODEL, materialShadingModel);
 
@@ -157,25 +160,25 @@ Material* ModelImporter::ImportMaterial(const aiMaterial& material)
 	{
 		Shader& phongShader = m_ShaderRegistry.FindShader(ShadingModel::Phong);
 
-		Material* phongMaterial = phongShader.CreateMaterialInstance();
-		if (!phongMaterial)
-			return nullptr;
+		Asset* phongMaterialAsset = m_AssetManager.CreateBlankAsset(ObjectType(typeid(Material)), materialAssetName);
+		Material* phongMaterial = (Material*)phongMaterialAsset->GetObject();
+		phongMaterial->SetMaterialTemplate(m_GraphicsEngine.GetMaterialTemplate(phongShader));
 
-		TextureMaterialAttribute* diffuseTexture = phongMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_diffuse1");
+		MaterialAttribute<Texture*>* diffuseTexture = phongMaterial->FindAttribute<MaterialAttribute<Texture*>>("material.texture_diffuse1");
 		std::vector<Texture*> diffuseTextures = ImportMaterialTextures(material, aiTextureType_DIFFUSE);
 		if (!diffuseTextures.empty())
 		{
 			diffuseTexture->SetValue(diffuseTextures[0]);
 		}
 
-		TextureMaterialAttribute* specularTexture = phongMaterial->FindAttribute<TextureMaterialAttribute>("material.texture_specular1");
+		MaterialAttribute<Texture*>* specularTexture = phongMaterial->FindAttribute<MaterialAttribute<Texture*>>("material.texture_specular1");
 		std::vector<Texture*> specularTextures = ImportMaterialTextures(material, aiTextureType_SPECULAR);
 		if (!specularTextures.empty())
 		{
 			specularTexture->SetValue(specularTextures[0]);
 		}
 
-		FloatMaterialAttribute* shininess = phongMaterial->FindAttribute<FloatMaterialAttribute>("material.shininess");
+		MaterialAttribute<float>* shininess = phongMaterial->FindAttribute<MaterialAttribute<float>>("material.shininess");
 		if (shininess)
 		{
 			shininess->SetValue(4.0f);
@@ -216,8 +219,9 @@ std::vector<Texture*> ModelImporter::ImportMaterialTextures(const aiMaterial& ma
 		else
 		{
 			std::string textureName = GenerateTextureName(textureAbsolutePath);
+			std::string textureAssetName = m_AssetName + "." + textureName;
 
-			Asset* textureAsset = m_TextureImporter.Import(textureName, textureAbsolutePath);
+			Asset* textureAsset = m_TextureImporter.Import(textureAssetName, textureAbsolutePath);
 			if (!textureAsset)
 			{
 				continue;
