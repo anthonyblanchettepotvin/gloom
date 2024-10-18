@@ -99,7 +99,7 @@
     <ClCompile Include="src\vendor\tfd\tinyfiledialogs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderImporter.cpp">
+    <ClCompile Include="src\infrastructure\graphics\shader\GlShaderParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\infrastructure\graphics\shader\GlShader.cpp">
@@ -133,9 +133,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\graphics\material\MaterialAttribute.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\graphics\material\MaterialAttributes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\object\ObjectID.cpp">
@@ -318,7 +315,7 @@
     <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsContext.cpp">
+    <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -410,7 +407,7 @@
     <ClInclude Include="src\vendor\tfd\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderImporter.h">
+    <ClInclude Include="src\infrastructure\graphics\shader\GlShaderParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\infrastructure\graphics\shader\GlShader.h">
@@ -444,9 +441,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\graphics\material\MaterialAttribute.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\graphics\material\MaterialAttributes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\object\ObjectID.h">
@@ -641,7 +635,7 @@
     <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsContext.h">
+    <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

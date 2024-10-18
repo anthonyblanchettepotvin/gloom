@@ -7,6 +7,7 @@
 
 #include "../cubemap/GlCubemap.h"
 #include "../mesh/GlMesh.h"
+#include "../shader/GlShader.h"
 #include "../skybox/GlSkybox.h"
 #include "../sprite/GlSprite.h"
 #include "../texture/GlTexture.h"
@@ -23,6 +24,7 @@ class DirectionalLight;
 class GlUniformBufferRegistry;
 class Mesh;
 class PointLight;
+class Shader;
 class Skybox;
 class Sprite;
 class Texture;
@@ -47,12 +49,16 @@ public:
 
 	GlCubemap& GetOrCreateCubemap(const Cubemap& cubemap);
 	GlMesh& GetOrCreateMesh(const Mesh& mesh);
+	GlShader& GetOrCreateShader(const Shader& shader);
 	GlSkybox& GetOrCreateSkybox(const Skybox& skybox);
 	GlSprite& GetOrCreateSprite(const Sprite& sprite);
 	GlTexture& GetOrCreateTexture(const Texture& texture);
 
 	void UpdateUniformBuffers(const Camera& camera);
 	void SendUniformBuffersToDevice();
+
+	size_t NextSamplerIndex();
+	void ResetSamplerIndex();
 
 private:
 	void InitializeUniformBuffers();
@@ -69,7 +75,10 @@ private:
 
 	std::unordered_map<ObjectID, GlCubemap> m_GlCubemaps;
 	std::unordered_map<ObjectID, GlMesh> m_GlMeshes;
+	std::unordered_map<ObjectID, GlShader> m_GlShaders;
 	std::unordered_map<ObjectID, GlSkybox> m_GlSkyboxes;
 	std::unordered_map<ObjectID, GlSprite> m_GlSprites;
 	std::unordered_map<ObjectID, GlTexture> m_GlTextures;
+
+	size_t m_SamplerIndex = 0;
 };

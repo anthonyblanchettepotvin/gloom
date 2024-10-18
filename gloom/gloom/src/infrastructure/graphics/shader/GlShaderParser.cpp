@@ -1,13 +1,8 @@
-#include "GlShaderImporter.h"
-
-#include <iostream>
-#include <sstream>
+#include "GlShaderParser.h"
 
 #include <glad/glad.h>
 
-#include "../../../engine/EngineGlobals.h"
-
-#include "GlShader.h"
+#include <tuple>
 
 const std::string START_VERTEX_SHADER_TOKEN = "START_VERTEX_SHADER";
 const std::string END_VERTEX_SHADER_TOKEN = "END_VERTEX_SHADER";
@@ -15,47 +10,30 @@ const std::string END_VERTEX_SHADER_TOKEN = "END_VERTEX_SHADER";
 const std::string START_FRAGMENT_SHADER_TOKEN = "START_FRAGMENT_SHADER";
 const std::string END_FRAGMENT_SHADER_TOKEN = "END_FRAGMENT_SHADER";
 
-std::unique_ptr<GlShader> GlShaderImporter::Import(const std::string& filePath)
+std::tuple<std::string, std::string> GlShaderParser::Parse(const std::string& code)
 {
-	std::ifstream shaderFile;
+	std::stringstream codeBuf(code);
 
-	std::string version;
-	std::string vertexShader;
-	std::string fragmentShader;
-
-	try
-	{
-		shaderFile.open(filePath);
-
-		version = ParseVersion(shaderFile);
-		vertexShader = ParseVertexShader(shaderFile);
-		fragmentShader = ParseFragmentShader(shaderFile);
-	}
-	catch (std::exception e)
-	{
-		std::stringstream ss;
-		ss << "Could not import shader " << filePath << ".";
-		gLogErrorMessage(ss.str());
-
-		return nullptr;
-	}
+	std::string version = ParseVersion(codeBuf);
+	std::string vertexShader = ParseVertexShader(codeBuf);
+	std::string fragmentShader = ParseFragmentShader(codeBuf);
 
 	vertexShader = AssembleShader({ version, vertexShader });
 	fragmentShader = AssembleShader({ version, fragmentShader });
 
-	return std::make_unique<GlShader>(vertexShader, fragmentShader);
+	return std::make_tuple(vertexShader, fragmentShader);
 }
 
-std::string GlShaderImporter::ParseVersion(std::ifstream& file) const
+std::string GlShaderParser::ParseVersion(std::stringstream& codeBuf)
 {
 	std::string version;
 
-	std::getline(file, version);
+	std::getline(codeBuf, version);
 
 	return version;
 }
 
-std::string GlShaderImporter::ParseVertexShader(std::ifstream& file) const
+std::string GlShaderParser::ParseVertexShader(std::stringstream& codeBuf)
 {
 	std::stringstream vertexShader;
 
@@ -63,7 +41,7 @@ std::string GlShaderImporter::ParseVertexShader(std::ifstream& file) const
 	bool endTokenFound = false;
 
 	std::string line;
-	while (std::getline(file, line))
+	while (std::getline(codeBuf, line))
 	{
 		if (line == START_VERTEX_SHADER_TOKEN) // FIXME: if line has whitespaces, it won't enter the condition
 		{
@@ -84,7 +62,7 @@ std::string GlShaderImporter::ParseVertexShader(std::ifstream& file) const
 	return vertexShader.str();
 }
 
-std::string GlShaderImporter::ParseFragmentShader(std::ifstream& file) const
+std::string GlShaderParser::ParseFragmentShader(std::stringstream& codeBuf)
 {
 	std::stringstream fragmentShader;
 
@@ -92,7 +70,7 @@ std::string GlShaderImporter::ParseFragmentShader(std::ifstream& file) const
 	bool endTokenFound = false;
 
 	std::string line;
-	while (std::getline(file, line))
+	while (std::getline(codeBuf, line))
 	{
 		if (line == START_FRAGMENT_SHADER_TOKEN) // FIXME: if line has whitespaces, it won't enter the condition
 		{
@@ -113,7 +91,7 @@ std::string GlShaderImporter::ParseFragmentShader(std::ifstream& file) const
 	return fragmentShader.str();
 }
 
-std::string GlShaderImporter::AssembleShader(const std::vector<std::string>& parts) const
+std::string GlShaderParser::AssembleShader(const std::vector<std::string>& parts)
 {
 	std::stringstream shader;
 

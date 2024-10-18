@@ -2,19 +2,25 @@
 
 #include <memory>
 
-class GlShader;
+#include "../../../engine/graphics/shader/Shader.h"
+
+#include "../shader/GlShader.h"
+
 class GlTexture;
 
 class GlFrame
 {
 public:
-	void Initialize(std::unique_ptr<GlShader>& shader);
+	GlFrame();
+
+	void Initialize();
 
 	void RenderTexture(GlTexture& texture);
 
 private:
-	std::unique_ptr<GlShader> m_Shader = nullptr;
+	Shader m_Shader;
+	GlShader m_GlShader;
 
-	unsigned int m_Vao;
-	unsigned int m_Vbo;
+	unsigned int m_Vao = 0;
+	unsigned int m_Vbo = 0;
 };
