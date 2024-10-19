@@ -314,7 +314,7 @@ int main()
 
 	// Shader
 	AssetDescriptor shaderAssetDescriptor(ObjectType(typeid(Shader)), "Shader");
-	std::unique_ptr<AssetFactory> shaderAssetFactory = std::make_unique<ShaderAssetFactory>(graphicsEngine);
+	std::unique_ptr<AssetFactory> shaderAssetFactory = std::make_unique<ShaderAssetFactory>();
 	assetRegistry.DefineAsset(shaderAssetDescriptor, shaderAssetFactory);
 
 	// World
