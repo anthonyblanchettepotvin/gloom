@@ -39,6 +39,9 @@ void Material::ResetAttributes()
 
 	m_Attributes.clear();
 
+	if (!m_MaterialTemplate)
+		return;
+
 	for (const auto& materialTemplateAttribute : m_MaterialTemplate->GetAttributes())
 	{
 		assert(materialTemplateAttribute != nullptr);

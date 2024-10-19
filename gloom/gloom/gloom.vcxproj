@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\graphics\scene\Scene.cpp" />
     <ClCompile Include="src\ui\imgui\adapter\ImGuiShaderAdapter.cpp" />
     <ClCompile Include="src\infrastructure\graphics\engine\GlGraphicsData.cpp" />
     <ClCompile Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.cpp" />
@@ -250,6 +251,7 @@
     <ClCompile Include="src\infrastructure\asset\world\WorldAssetFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\graphics\scene\Scene.h" />
     <ClInclude Include="src\ui\imgui\adapter\ImGuiShaderAdapter.h" />
     <ClInclude Include="src\infrastructure\graphics\engine\GlGraphicsData.h" />
     <ClInclude Include="src\infrastructure\graphics\uniformbuffer\GlUniformBufferRegistry.h" />

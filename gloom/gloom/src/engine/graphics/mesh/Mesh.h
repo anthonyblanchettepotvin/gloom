@@ -24,6 +24,7 @@ public:
 
 	void SetMaterial(Material* material) { m_Material = material; }
 	Material* GetMaterial() { return m_Material; }
+	const Material* const GetMaterial() const { return m_Material; }
 
 protected:
 	glm::mat4 m_Transform{ 0.0f };

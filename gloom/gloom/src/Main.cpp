@@ -439,35 +439,35 @@ int main()
 
 	Actor skyboxActor("Skybox");
 
-	std::unique_ptr<ActorComponent> skyboxRendererComponent = std::make_unique<SkyboxRendererComponent>(graphicsEngine, skybox);
+	std::unique_ptr<ActorComponent> skyboxRendererComponent = std::make_unique<SkyboxRendererComponent>(skybox);
 	skyboxActor.AddComponent(skyboxRendererComponent);
 
 	Actor backpackActor("Backpack");
 
 	std::unique_ptr<ActorComponent> backpackTransformComponent = std::make_unique<TransformComponent>();
 	backpackActor.AddComponent(backpackTransformComponent);
-	std::unique_ptr<ActorComponent> backpackRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, backpackModel);
+	std::unique_ptr<ActorComponent> backpackRendererComponent = std::make_unique<ModelRendererComponent>(backpackModel);
 	backpackActor.AddComponent(backpackRendererComponent);
 
 	Actor testActor("Test");
 
 	std::unique_ptr<ActorComponent> testTransformComponent = std::make_unique<TransformComponent>(glm::vec3(4.0f, 0.0f, 0.0f));
 	testActor.AddComponent(testTransformComponent);
-	std::unique_ptr<ActorComponent> testRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, testModel);
+	std::unique_ptr<ActorComponent> testRendererComponent = std::make_unique<ModelRendererComponent>(testModel);
 	testActor.AddComponent(testRendererComponent);
 
 	Actor cubeActor("Cube");
 
 	std::unique_ptr<ActorComponent> cubeTransformComponent = std::make_unique<TransformComponent>(glm::vec3(-4.0f, 0.0f, 0.0f));
 	cubeActor.AddComponent(cubeTransformComponent);
-	std::unique_ptr<ActorComponent> cubeRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, cubeModel);
+	std::unique_ptr<ActorComponent> cubeRendererComponent = std::make_unique<ModelRendererComponent>(cubeModel);
 	cubeActor.AddComponent(cubeRendererComponent);
 
 	Actor suzanneActor("Suzanne");
 
 	std::unique_ptr<ActorComponent> suzanneTransformComponent = std::make_unique<TransformComponent>(glm::vec3(0.0f, 0.0f, 2.0f));
 	suzanneActor.AddComponent(suzanneTransformComponent);
-	std::unique_ptr<ActorComponent> suzanneRendererComponent = std::make_unique<ModelRendererComponent>(graphicsEngine, suzanneModel);
+	std::unique_ptr<ActorComponent> suzanneRendererComponent = std::make_unique<ModelRendererComponent>(suzanneModel);
 	suzanneActor.AddComponent(suzanneRendererComponent);
 
 	// --- Lights ---
@@ -480,7 +480,7 @@ int main()
 	pointLightActor.AddComponent(pointLightTransformComponent);
 	std::unique_ptr<ActorComponent> pointLightComponent = std::make_unique<PointLightComponent>(&pointLight);
 	pointLightActor.AddComponent(pointLightComponent);
-	std::unique_ptr<ActorComponent> pointLightRendererComponent = std::make_unique<SpriteRendererComponent>(graphicsEngine, pointLightSprite);
+	std::unique_ptr<ActorComponent> pointLightRendererComponent = std::make_unique<SpriteRendererComponent>(pointLightSprite);
 	pointLightActor.AddComponent(pointLightRendererComponent);
 
 	Actor directionalLightActor("Directional light");
@@ -545,24 +545,22 @@ int main()
 
 		NewImGuiFrame();
 
-		graphicsEngine.StartFrame();
+		graphicsEngine.RenderScene(gameManager.GetLoadedWorld()->GetScene(), g_Camera);
 
 		// --- Draw actors ---
 
-		backpackActor.Render(g_Camera);
+		/*backpackActor.Render(g_Camera);
 		cubeActor.Render(g_Camera);
 		testActor.Render(g_Camera);
-		suzanneActor.Render(g_Camera);
+		suzanneActor.Render(g_Camera);*/
 		/* We could've render the skybox first, but we would render fragments that might be overridden
 		by the rest of the scene. Knowing that, we render it last and by exploiting depth testing - see
 		comments in the skybox vertex shader -, still make it look like it's behind everything. Plus,
 		using this neat little trick, we don't have to call glDepthMask with GL_FALSE before rendering the
 		skybox and then call it again with GL_TRUE. */
-		skyboxActor.Render(g_Camera);
+		//skyboxActor.Render(g_Camera);
 		/* We need to render the actors with transparency last. */
-		pointLightActor.Render(g_Camera);
-
-		graphicsEngine.EndFrame();
+		//pointLightActor.Render(g_Camera);
 
 		ui.Render();
 

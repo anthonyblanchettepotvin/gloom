@@ -15,6 +15,7 @@ public:
 	glm::mat4 GetTransform() const { return m_Transform; }
 
 	Material* GetMaterial() { return m_Material; }
+	const Material* const GetMaterial() const { return m_Material; }
 
 protected:
 	glm::mat4 m_Transform{ 0.0f };

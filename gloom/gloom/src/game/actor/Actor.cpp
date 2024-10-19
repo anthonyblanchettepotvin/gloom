@@ -6,8 +6,8 @@
 
 #include "../../engine/EngineHelpers.h"
 
-#include "../component/TransformComponent.h"
-#include "../component/RendererComponent.h"
+#include "../component/ActorComponent.h"
+#include "../world/World.h"
 
 #define COMPONENT_ALREADY_ADDED_TO_ACTOR "Component is already added to the actor."
 
@@ -16,8 +16,10 @@ Actor::Actor(const std::string& name)
 {
 }
 
-void Actor::OnSpawned()
+void Actor::OnSpawned(World& world)
 {
+	m_World = &world;
+
 	for (const auto& component : m_Components)
 	{
 		assert(component != nullptr);
@@ -26,15 +28,16 @@ void Actor::OnSpawned()
 	}
 }
 
-void Actor::Render(const Camera& camera)
+void Actor::OnDespawned()
 {
-	std::vector<RendererComponent*> rendererComponents = FindComponentsByType<RendererComponent>();
-	for (const auto& rendererComponent : rendererComponents)
+	for (const auto& component : m_Components)
 	{
-		assert(rendererComponent != nullptr);
+		assert(component != nullptr);
 
-		rendererComponent->Render(camera);
+		component->OnParentDespawned();
 	}
+
+	m_World = nullptr;
 }
 
 void Actor::AddComponent(std::unique_ptr<ActorComponent>& component)

@@ -1,19 +1,25 @@
 #include "SkyboxRendererComponent.h"
 
-#include "../../engine/graphics/engine/GraphicsEngine.h"
+#include "../../engine/graphics/scene/Scene.h"
 #include "../../engine/graphics/skybox/Skybox.h"
 
-SkyboxRendererComponent::SkyboxRendererComponent(GraphicsEngine& graphicsEngine, Skybox* skybox)
-	: RendererComponent(graphicsEngine), m_Skybox(skybox)
+SkyboxRendererComponent::SkyboxRendererComponent(Skybox* skybox)
+	: m_Skybox(skybox)
 {
 }
 
-void SkyboxRendererComponent::Render(const Camera& camera)
+void SkyboxRendererComponent::RegisterToScene(Scene& scene)
 {
 	if (!m_Skybox)
-	{
 		return;
-	}
 
-	m_GraphicsEngine.Render(camera, *m_Skybox);
+	scene.Register(*m_Skybox);
+}
+
+void SkyboxRendererComponent::UnregisterFromScene(Scene& scene)
+{
+	if (!m_Skybox)
+		return;
+
+	scene.Unregister(*m_Skybox);
 }

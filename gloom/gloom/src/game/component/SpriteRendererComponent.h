@@ -7,9 +7,10 @@ class Sprite;
 class SpriteRendererComponent : public RendererComponent
 {
 public:
-	SpriteRendererComponent(GraphicsEngine& graphicsEngine, Sprite* sprite);
+	SpriteRendererComponent(Sprite* sprite);
 
-	void Render(const Camera& camera) override;
+	void RegisterToScene(Scene& scene) override;
+	void UnregisterFromScene(Scene& scene) override;
 
 	const Sprite* GetSprite() const { return m_Sprite; }
 

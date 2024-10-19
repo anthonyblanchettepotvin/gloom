@@ -10,15 +10,15 @@
 
 class ActorComponent;
 class Camera;
+class World;
 
 class Actor : public Object
 {
 public:
 	Actor(const std::string& name);
 
-	void OnSpawned();
-
-	void Render(const Camera& camera);
+	void OnSpawned(World& world);
+	void OnDespawned();
 
 	void AddComponent(std::unique_ptr<ActorComponent>& component);
 
@@ -32,10 +32,14 @@ public:
 
 	std::vector<ActorComponent*> GetComponents();
 
+	World* GetWorld() { return m_World; }
+
 private:
 	std::string m_Name;
 
 	std::vector<std::unique_ptr<ActorComponent>> m_Components;
+
+	World* m_World = nullptr;
 };
 
 template<typename T>

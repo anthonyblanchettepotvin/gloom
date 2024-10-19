@@ -8,6 +8,7 @@
 #include "../../../engine/graphics/lighting/PointLight.h"
 #include "../../../engine/graphics/material/Material.h"
 #include "../../../engine/graphics/mesh/Mesh.h"
+#include "../../../engine/graphics/scene/Scene.h"
 #include "../../../engine/graphics/sprite/Sprite.h"
 #include "../../../engine/graphics/skybox/Skybox.h"
 #include "../../../engine/graphics/texture/Texture.h"
@@ -28,8 +29,60 @@ void GlGraphicsEngine::Initialize(size_t width, size_t height)
 	m_GraphicsData.Initialize(width, height);
 }
 
-void GlGraphicsEngine::StartFrame()
+void GlGraphicsEngine::RenderScene(const Scene& scene, const Camera& camera)
 {
+	// Register the lights before the uniform buffers are updated.
+	for (const auto& directionalLight : scene.GetDirectionalLights())
+	{
+		if (directionalLight == nullptr) // TODO: Hate having to null-check here.
+			continue;
+
+		RegisterLight(*directionalLight);
+	}
+
+	for (const auto& pointLight : scene.GetPointLights())
+	{
+		if (pointLight == nullptr) // TODO: Hate having to null-check here.
+			continue;
+
+		RegisterLight(*pointLight);
+	}
+
+	StartFrame(camera);
+
+	// TODO: Visit the scene and render in the correct order (i.e., render transparent objects first, from furthest to closest).
+
+	for (const auto& mesh : scene.GetMeshes())
+	{
+		if (mesh == nullptr) // TODO: Hate having to null-check here.
+			continue;
+
+		Render(*mesh, camera);
+	}
+
+	for (const auto& sprite : scene.GetSprites())
+	{
+		if (sprite == nullptr) // TODO: Hate having to null-check here.
+			continue;
+
+		Render(*sprite, camera);
+	}
+
+	for (const auto& skybox : scene.GetSkyboxes())
+	{
+		if (skybox == nullptr) // TODO: Hate having to null-check here.
+			continue;
+
+		Render(*skybox, camera);
+	}
+
+	EndFrame();
+}
+
+void GlGraphicsEngine::StartFrame(const Camera& camera)
+{
+	m_FrameStartTime = std::chrono::system_clock::now();
+
 	// --- RENDERING PROCESS, STEP 1 ---
 	/* During this step, we render the actual scene into our custom framebuffer. The result
 	will be stored into the color attachment, which in our case is a texture. We will then
@@ -43,6 +96,9 @@ void GlGraphicsEngine::StartFrame()
 	to make sure the quad is rendered in front of everything else. */
 	//if (settingsComponent.GetDepthTestingEnabledReference())
 	glEnable(GL_DEPTH_TEST);
+
+	m_GraphicsData.UpdateUniformBuffers(camera);
+	m_GraphicsData.SendUniformBuffersToDevice();
 }
 
 void GlGraphicsEngine::EndFrame()
@@ -60,26 +116,32 @@ void GlGraphicsEngine::EndFrame()
 	glDisable(GL_DEPTH_TEST);
 
 	m_GraphicsData.GetTextureAttachment().RenderToFrame(m_GraphicsData.GetFrame());
+
+	m_FrameEndTime = std::chrono::system_clock::now();
+	m_FrameDuration = std::chrono::duration_cast<std::chrono::milliseconds>(m_FrameEndTime - m_FrameStartTime);
+
+	gLogInfoMessage(std::to_string(m_FrameDuration.count()));
 }
 
-void GlGraphicsEngine::RegisterLight(DirectionalLight& directionalLight)
+void GlGraphicsEngine::RegisterLight(const DirectionalLight& directionalLight)
 {
 	m_GraphicsData.RegisterLight(directionalLight);
 }
 
-void GlGraphicsEngine::RegisterLight(PointLight& pointLight)
+void GlGraphicsEngine::RegisterLight(const PointLight& pointLight)
 {
 	m_GraphicsData.RegisterLight(pointLight);
 }
 
-void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh)
+void GlGraphicsEngine::Render(const Mesh& mesh, const Camera& camera)
 {
-	if (!mesh.GetMaterial() || !mesh.GetMaterial() || !mesh.GetMaterial()->GetMaterialTemplate())
-	{
-		return;
-	}
-
 	const Material* material = mesh.GetMaterial();
+	if (!material)
+		return; // TODO: LogWarning
+
+	const MaterialTemplate* materialTemplate = material->GetMaterialTemplate();
+	if (!materialTemplate)
+		return; // TODO: LogWarning
 
 	GlMesh& glMesh = m_GraphicsData.GetOrCreateMesh(mesh);
 	GlShader& glShader = m_GraphicsData.GetOrCreateShader(material->GetMaterialTemplate()->GetShader());
@@ -88,55 +150,48 @@ void GlGraphicsEngine::Render(const Camera& camera, Mesh& mesh)
 	glShader.SetFloatMat4("modelXform", mesh.GetTransform());
 	glShader.BindToUniformBuffers(m_GraphicsData.GetUniformBufferRegistry());
 
-	UpdateUniformBuffers(camera);
-	SendUniformBuffersToDevice();
-
 	glMesh.Render();
 
 	m_GraphicsData.ResetSamplerIndex();
 }
 
-void GlGraphicsEngine::Render(const Camera& camera, Skybox& skybox)
+void GlGraphicsEngine::Render(const Skybox& skybox, const Camera& camera)
 {
-	if (!skybox.GetMaterial() || !skybox.GetMaterial() || !skybox.GetMaterial()->GetMaterialTemplate())
-	{
-		return;
-	}
-
 	const Material* material = skybox.GetMaterial();
+	if (!material)
+		return; // TODO: LogWarning
+
+	const MaterialTemplate* materialTemplate = material->GetMaterialTemplate();
+	if (!materialTemplate)
+		return; // TODO: LogWarning
 
 	GlSkybox& glSkybox = m_GraphicsData.GetOrCreateSkybox(skybox);
 	GlShader& glShader = m_GraphicsData.GetOrCreateShader(material->GetMaterialTemplate()->GetShader());
 
 	glShader.ApplyMaterial(*material, m_GraphicsData);
 	glShader.BindToUniformBuffers(m_GraphicsData.GetUniformBufferRegistry());
-	
-	UpdateUniformBuffers(camera);
-	SendUniformBuffersToDevice();
 
 	glSkybox.Render();
 
 	m_GraphicsData.ResetSamplerIndex();
 }
 
-void GlGraphicsEngine::Render(const Camera& camera, Sprite& sprite)
+void GlGraphicsEngine::Render(const Sprite& sprite, const Camera& camera)
 {
-	if (!sprite.GetMaterial() || !sprite.GetMaterial() || !sprite.GetMaterial()->GetMaterialTemplate())
-	{
-		return;
-	}
-
 	const Material* material = sprite.GetMaterial();
+	if (!material)
+		return; // TODO: LogWarning
+
+	const MaterialTemplate* materialTemplate = material->GetMaterialTemplate();
+	if (!materialTemplate)
+		return; // TODO: LogWarning
 
 	GlSprite& glSprite = m_GraphicsData.GetOrCreateSprite(sprite);
-	GlShader& glShader = m_GraphicsData.GetOrCreateShader(material->GetMaterialTemplate()->GetShader());
+	GlShader& glShader = m_GraphicsData.GetOrCreateShader(materialTemplate->GetShader());
 
 	glShader.ApplyMaterial(*material, m_GraphicsData);
 	glShader.SetFloatMat4("modelXform", sprite.GetTransform());
 	glShader.BindToUniformBuffers(m_GraphicsData.GetUniformBufferRegistry());
-
-	UpdateUniformBuffers(camera);
-	SendUniformBuffersToDevice();
 
 	glSprite.Render();
 
@@ -151,14 +206,4 @@ const MaterialTemplate* GlGraphicsEngine::GetMaterialTemplate(const Shader& shad
 void* GlGraphicsEngine::GetTextureId(const Texture& texture)
 {
 	return (void*)m_GraphicsData.GetOrCreateTexture(texture).GetId();
-}
-
-void GlGraphicsEngine::UpdateUniformBuffers(const Camera& camera)
-{
-	m_GraphicsData.UpdateUniformBuffers(camera);
-}
-
-void GlGraphicsEngine::SendUniformBuffersToDevice()
-{
-	m_GraphicsData.SendUniformBuffersToDevice();
 }

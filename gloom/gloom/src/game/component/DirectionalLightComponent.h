@@ -9,7 +9,8 @@ class DirectionalLightComponent : public LightComponent
 public:
 	DirectionalLightComponent(DirectionalLight* directionalLight);
 
-	void OnParentSpawned() override;
+	void RegisterToScene(Scene& scene) override;
+	void UnregisterFromScene(Scene& scene) override;
 
 	DirectionalLight* GetDirectionalLight() { return m_DirectionalLight; }
 

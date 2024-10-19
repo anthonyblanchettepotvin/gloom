@@ -2,16 +2,14 @@
 
 #include "ActorComponent.h"
 
-class Camera;
-class GraphicsEngine;
+class Scene;
 
 class RendererComponent : public ActorComponent
 {
 public:
-	RendererComponent(GraphicsEngine& graphicsEngine);
+	void OnParentSpawned() override;
+	void OnParentDespawned() override;
 
-	virtual void Render(const Camera& camera) = 0;
-
-protected:
-	GraphicsEngine& m_GraphicsEngine;
+	virtual void RegisterToScene(Scene& scene) = 0;
+	virtual void UnregisterFromScene(Scene& scene) = 0;
 };

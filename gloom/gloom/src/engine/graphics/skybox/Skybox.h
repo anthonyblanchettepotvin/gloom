@@ -10,6 +10,7 @@ public:
 	Skybox(Material* material);
 
 	Material* GetMaterial() { return m_Material; }
+	const Material* const GetMaterial() const { return m_Material; }
 
 protected:
 	Material* m_Material;

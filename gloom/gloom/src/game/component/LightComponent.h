@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ActorComponent.h"
+#include "RendererComponent.h"
 
-class LightComponent : public ActorComponent
+class LightComponent : public RendererComponent
 {
 };

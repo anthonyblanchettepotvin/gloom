@@ -7,9 +7,10 @@ class Skybox;
 class SkyboxRendererComponent : public RendererComponent
 {
 public:
-	SkyboxRendererComponent(GraphicsEngine& graphicsEngine, Skybox* skybox);
+	SkyboxRendererComponent(Skybox* skybox);
 
-	void Render(const Camera& camera) override;
+	void RegisterToScene(Scene& scene) override;
+	void UnregisterFromScene(Scene& scene) override;
 
 	const Skybox* GetSkybox() const { return m_Skybox; }
 

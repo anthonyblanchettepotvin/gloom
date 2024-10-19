@@ -3,3 +3,7 @@
 void ActorComponent::OnParentSpawned()
 {
 }
+
+void ActorComponent::OnParentDespawned()
+{
+}

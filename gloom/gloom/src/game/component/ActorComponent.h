@@ -10,6 +10,7 @@ public:
 	virtual ~ActorComponent() = default;
 
 	virtual void OnParentSpawned();
+	virtual void OnParentDespawned();
 
 	void SetParent(Actor* parent) { m_Parent = parent; }
 

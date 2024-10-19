@@ -9,7 +9,8 @@ class PointLightComponent : public LightComponent
 public:
 	PointLightComponent(PointLight* pointLight);
 
-	void OnParentSpawned() override;
+	void RegisterToScene(Scene& scene) override;
+	void UnregisterFromScene(Scene& scene) override;
 
 	PointLight* GetPointLight() { return m_PointLight; }
 
