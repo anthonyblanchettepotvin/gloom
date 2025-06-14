@@ -2,13 +2,17 @@
 
 #include <memory>
 
+enum class TextureFormat;
+
 class GlFrame;
 class GlTexture;
 
 class GlTextureAttachment
 {
 public:
-	void Initialize(size_t width, size_t height);
+	virtual ~GlTextureAttachment() = default;
+
+	void Initialize(size_t width, size_t height, TextureFormat format);
 
 	void RenderToFrame(GlFrame& frame);
 

@@ -4,8 +4,12 @@
 
 #include <glad/glad.h>
 
+#include "../../../engine/EngineHelpers.h"
+
 #include "GlRenderbufferAttachment.h"
 #include "GlTextureAttachment.h"
+
+#define TEXTURE_ALREADY_ATTACHED "Texture is already attached to the framebuffer."
 
 void GlFramebuffer::Initialize()
 {
@@ -37,15 +41,34 @@ void GlFramebuffer::AttachRenderbuffer(const GlRenderbufferAttachment& renderbuf
 	Unbind();
 }
 
-void GlFramebuffer::AttachTexture(const GlTextureAttachment& textureAttachment)
+void GlFramebuffer::AttachTexture(std::unique_ptr<GlTextureAttachment>& textureAttachment)
 {
+	if (!textureAttachment)
+	{
+		throw std::invalid_argument(ARGUMENT_IS_NULLPTR(textureAttachment));
+	}
+
+	auto it = std::find(m_TextureAttachments.begin(), m_TextureAttachments.end(), textureAttachment);
+	if (it != m_TextureAttachments.end())
+	{
+		throw std::runtime_error(TEXTURE_ALREADY_ATTACHED);
+	}
+
+	size_t textureAttachmentIndex = m_TextureAttachments.size();
+	GLenum textureAttachmentAttachment = GL_COLOR_ATTACHMENT0 + m_TextureAttachments.size();
+
+	m_TextureAttachments.emplace_back(std::move(textureAttachment));
+	m_TextureAttachmentsAttachment.emplace_back(textureAttachmentAttachment);
+
 	Bind();
 
 	// Texture attachment
 	/* We attach the texture to the framebuffer
 	as a color attachment. Note that we can attach a texture as a depth and/or stencil attachment too.
 	In that case, we would need to change the texture's format accordingly. */
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureAttachment.GetId(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, textureAttachmentAttachment, GL_TEXTURE_2D, m_TextureAttachments[textureAttachmentIndex]->GetId(), 0);
+
+	glDrawBuffers(m_TextureAttachments.size(), m_TextureAttachmentsAttachment.data());
 
 	Unbind();
 }

@@ -38,9 +38,10 @@ public:
 	void RegisterLight(const PointLight& pointLight);
 
 	GlFrame& GetFrame() { return m_Frame; }
-	GlFramebuffer& GetFramebuffer() { return m_Framebuffer; }
+
 	GlRenderbufferAttachment& GetRenderbufferAttachement() { return m_RenderbufferAttachment; }
-	GlTextureAttachment& GetTextureAttachment() { return m_TextureAttachment; }
+	GlTextureAttachment& GetColorTextureAttachment() { return *m_ColorTextureAttachment; }
+	GlFramebuffer& GetOpaqueFramebuffer() { return m_OpaqueFramebuffer; }
 
 	GlUniformBufferRegistry& GetUniformBufferRegistry() { return m_UniformBufferRegistry; }
 
@@ -64,9 +65,12 @@ private:
 	void InitializeUniformBuffers();
 
 	GlFrame m_Frame;
-	GlFramebuffer m_Framebuffer;
+
 	GlRenderbufferAttachment m_RenderbufferAttachment;
-	GlTextureAttachment m_TextureAttachment;
+	GlTextureAttachment* m_ColorTextureAttachment;
+	GlFramebuffer m_OpaqueFramebuffer;
+
+	GlFramebuffer m_TransparentFramebuffer;
 
 	GlUniformBufferRegistry m_UniformBufferRegistry;
 

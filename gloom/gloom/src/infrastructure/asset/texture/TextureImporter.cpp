@@ -30,5 +30,15 @@ std::unique_ptr<Object> TextureImporter::ImportObject(const std::string& assetNa
 		return nullptr;
 	}
 
-	return std::make_unique<Texture>(width, height, channelCount, data, true);
+	const TextureFormat* textureFormat = FindTextureFormat(channelCount, sizeof(unsigned char) * 8);
+	if (!textureFormat)
+	{
+		std::stringstream ss;
+		ss << "Could not find appropriate texture format for " << filePath << ".";
+		gLogErrorMessage(ss.str());
+
+		return nullptr;
+	}
+
+	return std::make_unique<Texture>(width, height, *textureFormat, data, true);
 }

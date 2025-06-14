@@ -35,7 +35,17 @@ std::unique_ptr<Object> CubemapImporter::ImportObject(const std::string& assetNa
 			return nullptr;
 		}
 
-		textures.emplace_back(std::make_unique<Texture>(width, height, channelCount, data, false));
+		const TextureFormat* textureFormat = FindTextureFormat(channelCount, sizeof(unsigned char) * 8);
+		if (!textureFormat)
+		{
+			std::stringstream ss;
+			ss << "Could not find appropriate texture format for " << faceFilePath << ".";
+			gLogErrorMessage(ss.str());
+
+			return nullptr;
+		}
+
+		textures.emplace_back(std::make_unique<Texture>(width, height, *textureFormat, data, false));
 	}
 
 	return std::make_unique<Cubemap>(textures);

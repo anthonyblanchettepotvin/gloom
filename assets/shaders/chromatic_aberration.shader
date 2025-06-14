@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 
 START_VERTEX_SHADER
 

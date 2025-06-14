@@ -22,8 +22,8 @@ void ImGuiTextureAdapter::Render()
 	int textureHeight = m_Texture.GetHeight();
 	ImGui::InputInt("Height", &textureHeight, NULL, NULL, ImGuiInputTextFlags_ReadOnly);
 
-	int textureChannelCount = m_Texture.GetChannelCount();
-	ImGui::InputInt("Channel Count", &textureChannelCount, NULL, NULL, ImGuiInputTextFlags_ReadOnly);
+	int textureComponentCount = m_Texture.GetComponentCount();
+	ImGui::InputInt("Component Count", &textureComponentCount, NULL, NULL, ImGuiInputTextFlags_ReadOnly);
 }
 
 ImVec2 ImGuiTextureAdapter::GetTexturePreviewUvStart() const

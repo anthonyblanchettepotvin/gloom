@@ -87,7 +87,7 @@ void GlGraphicsEngine::StartFrame(const Camera& camera)
 	/* During this step, we render the actual scene into our custom framebuffer. The result
 	will be stored into the color attachment, which in our case is a texture. We will then
 	use this texture during step 2 and render it on a quad that fits the screen perfectly. */
-	m_GraphicsData.GetFramebuffer().Bind();
+	m_GraphicsData.GetOpaqueFramebuffer().Bind();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -106,7 +106,7 @@ void GlGraphicsEngine::EndFrame()
 	// --- RENDERING PROCESS, STEP 2 ---
 	/* During this step, we render a quad that fits the screen perfectly using the texture that was
 	generated during step 1. */
-	m_GraphicsData.GetFramebuffer().Unbind();
+	m_GraphicsData.GetOpaqueFramebuffer().Unbind();
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -115,7 +115,7 @@ void GlGraphicsEngine::EndFrame()
 	//if (settingsComponent.GetDepthTestingEnabledReference())
 	glDisable(GL_DEPTH_TEST);
 
-	m_GraphicsData.GetTextureAttachment().RenderToFrame(m_GraphicsData.GetFrame());
+	m_GraphicsData.GetColorTextureAttachment().RenderToFrame(m_GraphicsData.GetFrame());
 
 	m_FrameEndTime = std::chrono::system_clock::now();
 	m_FrameDuration = std::chrono::duration_cast<std::chrono::milliseconds>(m_FrameEndTime - m_FrameStartTime);

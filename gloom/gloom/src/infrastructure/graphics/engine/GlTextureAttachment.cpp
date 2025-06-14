@@ -6,9 +6,9 @@
 
 #include "GlFrame.h"
 
-void GlTextureAttachment::Initialize(size_t width, size_t height)
+void GlTextureAttachment::Initialize(size_t width, size_t height, TextureFormat format)
 {
-	m_Texture = std::make_unique<GlTexture>(Texture(width, height, 3, nullptr));
+	m_Texture = std::make_unique<GlTexture>(Texture(width, height, format, nullptr));
 }
 
 void GlTextureAttachment::RenderToFrame(GlFrame& frame)

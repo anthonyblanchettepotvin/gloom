@@ -24,14 +24,28 @@
 void GlGraphicsData::Initialize(size_t width, size_t height)
 {
 	m_Frame.Initialize();
-	m_Framebuffer.Initialize();
+
 	m_RenderbufferAttachment.Initialize(width, height);
-	m_TextureAttachment.Initialize(width, height);
 
-	m_Framebuffer.AttachRenderbuffer(m_RenderbufferAttachment);
-	m_Framebuffer.AttachTexture(m_TextureAttachment);
+	std::unique_ptr<GlTextureAttachment> colorTextureAttachment = std::make_unique<GlTextureAttachment>();
+	m_ColorTextureAttachment = colorTextureAttachment.get();
+	colorTextureAttachment->Initialize(width, height, TextureFormat::RGB);
 
-	if (!m_Framebuffer.IsComplete())
+	m_OpaqueFramebuffer.Initialize();
+	m_OpaqueFramebuffer.AttachRenderbuffer(m_RenderbufferAttachment);
+	m_OpaqueFramebuffer.AttachTexture(colorTextureAttachment);
+
+	std::unique_ptr<GlTextureAttachment> accumTextureAttachment = std::make_unique<GlTextureAttachment>();
+	accumTextureAttachment->Initialize(width, height, TextureFormat::RGBA16F);
+
+	std::unique_ptr<GlTextureAttachment> revealTextureAttachment = std::make_unique<GlTextureAttachment>();
+	revealTextureAttachment->Initialize(width, height, TextureFormat::R);
+	
+	m_TransparentFramebuffer.Initialize();
+	m_TransparentFramebuffer.AttachTexture(accumTextureAttachment);
+	m_TransparentFramebuffer.AttachTexture(revealTextureAttachment);
+
+	if (!m_OpaqueFramebuffer.IsComplete())
 	{
 		throw std::runtime_error(EX_MSG_FRAMEBUFFER_IS_INCOMPLETE);
 	}

@@ -2,6 +2,8 @@
 
 typedef unsigned int GLenum;
 
+enum class TextureFormat;
+
 class Cubemap;
 
 class GlCubemap
@@ -15,7 +17,9 @@ public:
 	unsigned int GetId() const { return m_Id; }
 
 private:
-	GLenum ChannelCountToFormat(size_t channelCount) const;
+	GLenum TextureFormatToGlInternalFormat(const TextureFormat& textureFormat) const;
+	GLenum TextureFormatToGlFormat(const TextureFormat& textureFormat) const;
+	GLenum TextureFormatToGlType(const TextureFormat& textureFormat) const;
 
 	const Cubemap& m_Cubemap;
 

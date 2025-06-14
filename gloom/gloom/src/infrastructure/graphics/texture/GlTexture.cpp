@@ -13,16 +13,13 @@ GlTexture::GlTexture(const Texture& texture)
 	bound texture. */
 	glBindTexture(GL_TEXTURE_2D, m_Id);
 
-	GLenum format = ChannelCountToFormat(m_Texture.GetChannelCount());
+	GLenum glInternalFormat = TextureFormatToGlInternalFormat(m_Texture.GetFormat());
+	GLenum glFormat = TextureFormatToGlFormat(m_Texture.GetFormat());
+	GLenum glType = TextureFormatToGlType(m_Texture.GetFormat());
 
 	/* We assign the loaded image's data to the currently bound texture. */
-	glTexImage2D(GL_TEXTURE_2D, 0, format, (GLsizei)m_Texture.GetWidth(), (GLsizei)m_Texture.GetHeight(), 0, format, GL_UNSIGNED_BYTE, m_Texture.GetData());
+	glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, (GLsizei)m_Texture.GetWidth(), (GLsizei)m_Texture.GetHeight(), 0, glFormat, glType, m_Texture.GetData());
 	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	/* We unbind our texture. */
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -44,19 +41,50 @@ void GlTexture::Free()
 	m_Index = 0;
 }
 
-GLenum GlTexture::ChannelCountToFormat(size_t channelCount) const
+GLenum GlTexture::TextureFormatToGlInternalFormat(const TextureFormat& textureFormat) const
 {
-	switch (channelCount)
+	switch (textureFormat)
 	{
-	case 1:
+	case TextureFormat::R:
 		return GL_RED;
-	case 2:
+	case TextureFormat::RG:
 		return GL_RG;
-	case 3:
+	case TextureFormat::RGB:
 		return GL_RGB;
-	case 4:
+	case TextureFormat::RGBA:
 		return GL_RGBA;
-	default:
+	case TextureFormat::RGBA16F:
+		return GL_RGBA16F;
+	}
+}
+
+GLenum GlTexture::TextureFormatToGlFormat(const TextureFormat& textureFormat) const
+{
+	switch (textureFormat)
+	{
+	case TextureFormat::R:
+		return GL_RED;
+	case TextureFormat::RG:
+		return GL_RG;
+	case TextureFormat::RGB:
 		return GL_RGB;
+	case TextureFormat::RGBA:
+		return GL_RGBA;
+	case TextureFormat::RGBA16F:
+		return GL_RGBA;
+	}
+}
+
+GLenum GlTexture::TextureFormatToGlType(const TextureFormat& textureFormat) const
+{
+	switch (textureFormat)
+	{
+	case TextureFormat::R:
+	case TextureFormat::RG:
+	case TextureFormat::RGB:
+	case TextureFormat::RGBA:
+		return GL_UNSIGNED_BYTE;
+	case TextureFormat::RGBA16F:
+		return GL_HALF_FLOAT;
 	}
 }

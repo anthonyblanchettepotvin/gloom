@@ -12,6 +12,7 @@ class Asset
 {
 public:
 	Asset(const AssetDescriptor& assetDescriptor, const std::string& name, std::unique_ptr<Object>& object);
+	virtual ~Asset() = default;
 
 	AssetID GetId() const { return m_Id; }
 
